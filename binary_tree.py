@@ -1,3 +1,17 @@
+class Queue(object):
+    def __init__(self):
+        self.items = []
+
+    def enqueue( self, item ):
+        self.items.insert(0, item)
+
+    def dequeue( self ):
+        if not self.is_empty():
+            return self.items.pop()
+
+    def is_empty( self ):
+        return len(self.items) == 0
+
 class Node(object):
     def __init__(self, value):
         self.value = value
@@ -16,10 +30,26 @@ class BinaryTree(object):
         if cur_node is not None:
             # inorder traversal
             self._print_tree(cur_node.left)
-            print(str(cur_node.value), end=', ')
+            print(str(cur_node.value), end='-')
             self._print_tree(cur_node.right)
 
     # level-order traversal
+    def level_order_traversal( self, node ):
+        if node is None:
+            return
+        queue = Queue()
+        queue.enqueue(node)
+        traversal = ''
+        while len(queue.items) > 0:
+            traversal += str(queue.items[-1].value) + '-'
+            node = queue.dequeue()
+
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        print(traversal)
 
     # find maximum element(with recursion)
 
@@ -94,4 +124,5 @@ tree.root.left.left = Node(40)
 tree.root.left.right = Node(50)
 tree.root.right.left = Node(60)
 tree.print_tree()
-
+print('')
+tree.level_order_traversal(tree.root)
