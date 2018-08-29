@@ -299,24 +299,211 @@ class BinaryTree(object):
         return node
 
     # find number of leaves(without recursion)
+    def number_of_leaves( self ):
+        if self.root is None:
+            return 0
+        queue = Queue()
+        queue.enqueue(self.root)
+        leaves_count = 0
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            if not node.left and not node.right:
+                leaves_count+=1
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        return leaves_count
 
     # find number of full nodes(without recursion)
+    def number_of_fullnodes( self ):
+        if self.root is None:
+            return 0
+        queue = Queue()
+        queue.enqueue(self.root)
+        fullnodes_count = 0
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            if node.left and node.right:
+                fullnodes_count+=1
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        return fullnodes_count
 
     # find number of half nodes(nodes with one child only)(without recursion)
+    def number_of_halfnodes( self ):
+        if self.root is None:
+            return 0
+        queue = Queue()
+        queue.enqueue(self.root)
+        halfnodes_count = 0
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            if (node.left and not node.right) or (node.right and not node.left):
+                halfnodes_count+=1
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        return halfnodes_count
 
     # structurally identical trees, return true
+    def structurally_identical( self, root1, root2 ):
+        if root1 is root2 is None:
+            return True
 
-    # diameter/width of tree
+        if root1 and root2:
+            return(root1.value == root2.value
+                   and self.structurally_identical(root1.left, root2.left)
+                   and self.structurally_identical(root1.right, root2.right))
+
+        return False
 
     # find level with maximum sum
+    def level_with_maximum_sum( self ):
+        if self.root is not None:
+            queue = Queue()
+            current_level_list, max_level_list = [], []
+            current_level_sum, max_sum = 0, float('-inf')
+            marker_node = Node(float('-inf'))
+
+            queue.enqueue( self.root )
+            queue.enqueue(marker_node)
+
+            while not queue.is_empty():
+                node = queue.dequeue()
+
+                # if all nodes of this level are traversed
+                if node == marker_node:
+                    if max_sum < current_level_sum:
+                        max_sum = current_level_sum
+                        max_level_list.clear()
+                        max_level_list = current_level_list.copy()
+
+                    current_level_sum = 0
+                    current_level_list.clear()
+
+                    # add marker_node only when queue has some element
+                    if not queue.is_empty():
+                        queue.enqueue(marker_node)
+
+                # else traverse all nodes of this level
+                else:
+                    current_level_sum += node.value
+                    current_level_list.append(node)
+                    if node.left:
+                        queue.enqueue(node.left)
+                    if node.right:
+                        queue.enqueue(node.right)
+
+            max_string = ''
+            for n in max_level_list:
+                max_string += str(n.value) + '-'
+            print( 'Maximum sum level is: ' + max_string)
+            print ('sum of this level is: ' + str(max_sum))
 
     # print all root-to-leaf paths
+    def paths_root_to_leaf( self ):
+        if self.root is None:
+            return
+        path, result = Stack(), []
+        self._paths_root_to_leaf(self.root, path, result)
+        return result
 
-    # maximum path sum (from any start-to-end path)
+    def _paths_root_to_leaf( self, node, path, result ):
+        if node is None:
+            return
+
+        # for leaf node, form a string with all nodes' value from root to the leaf path
+        if node.left is node.right is None:
+            ans = ''
+            for p in path.items:
+                ans += str(p.value)+ '-'
+            ans+= str(node.value)
+            result.append(ans)
+
+        if node.left:
+            path.push(node)
+            self._paths_root_to_leaf(node.left, path, result)
+            path.pop()
+
+        if node.right:
+            path.push(node)
+            self._paths_root_to_leaf(node.right, path, result)
+            path.pop()
+
+    # maximum path sum
+    def maximum_path_sum( self ):
+        if self.root is None:
+            return
+        path, result = Stack(), []
+        self._maximum_path_sum(self.root, path, result)
+        return max(result)
+
+    def _maximum_path_sum( self, node, path, result ):
+        if node is None:
+            return
+        if node.left is node.right is None:
+            sum = node.value
+            for p in path.items:
+                sum += p.value
+            result.append(sum)
+
+        if node.left:
+            path.push(node)
+            self._maximum_path_sum(node.left, path, result)
+            path.pop()
+
+        if node.right:
+            path.push(node)
+            self._maximum_path_sum(node.right, path, result)
+            path.pop()
 
     # check the existence of path with given sum
+    def path_existence_with_sum(self, sum):
+        if self.root is sum is None:
+            return
+        path = Stack()
+        return self._path_existence_with_sum(self.root, path, sum)
+
+    def _path_existence_with_sum(self, node, path, sum):
+        if node is None:
+            return False
+        if node.left is node.right is None:
+            s = sum
+            for p in path.items:
+                s -= p.value
+            s -= node.value
+            if s == 0:
+                return True
+
+        if node.left:
+            path.push(node)
+            self._path_existence_with_sum(node.left, path, sum)
+            path.pop()
+
+        if node.right:
+            path.push(node)
+            self._path_existence_with_sum(node.right, path, sum)
+            path.pop()
+
+        return False
 
     # convert tree to its mirror
+    def tree_mirror( self, node ):
+        if node is None:
+            return
+        self.tree_mirror(node.left)
+        self.tree_mirror(node.right)
+        node.left, node.right = node.right, node.left
 
     # least common ancestor of two nodes
 
@@ -326,17 +513,17 @@ class BinaryTree(object):
 
     # zigzag tree traversal
 
-
-
-
+    # diameter/width of tree
 
 
 
 #       110
 #      /   \
 #   200      30
-#  /  \     /
-# 140  50   6
+#  /  \     /  \\
+# 140  50   6  32
+#  //
+# 1
 
 tree = BinaryTree(110)
 tree.root.left = Node(200)
@@ -359,6 +546,7 @@ print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion
 print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
 
 tree.insert_node(32)
+tree.insert_node(1)
 print('inserting node 32...')
 tree.print_tree()
 print('')
@@ -366,12 +554,43 @@ print('')
 print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.root)))
 print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.root)))
 
+print('Deepest node value: '+ str(tree.deepest_node().value))
+
+print('Number of leaves: '+ str(tree.number_of_leaves()))
+
+print('Number of Full nodes: '+ str(tree.number_of_fullnodes()))
+
+print('Number of Half nodes: '+ str(tree.number_of_halfnodes()))
+
+print('Paths from root to leaf:' + str(tree.paths_root_to_leaf()))
+
+tree2 = BinaryTree(110)
+tree2.insert_node(200)
+tree2.insert_node(30)
+tree2.insert_node(140)
+tree2.insert_node(50)
+tree2.insert_node(6)
+tree2.insert_node(32)
+tree2.insert_node(1)
+if tree.structurally_identical(tree.root, tree2.root ):
+    print('Trees are structurally identical')
+else:
+    print('Trees are not structurally identical')
+
+# tree.level_with_maximum_sum()
+# print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
+
+print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(451)))
+
+tree.tree_mirror(tree.root)
+print('Mirror of tree ...')
+tree.print_tree()
+print('')
+
 print('Reversing the tree ...')
 tree.reverse_tree(tree.root)
 tree.print_tree()
 print('')
-
-print('Deepest node value: '+ str(tree.deepest_node().value))
 
 if tree.delete_node(32):
     print('success to delete')
