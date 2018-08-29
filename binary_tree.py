@@ -12,6 +12,20 @@ class Queue(object):
     def is_empty( self ):
         return len(self.items) == 0
 
+class Stack(object):
+    def __init__(self):
+        self.items = []
+
+    def push( self, item ):
+        self.items.append(item)
+
+    def pop( self ):
+        if not self.is_empty():
+            return self.items.pop()
+
+    def is_empty( self ):
+        return len(self.items) == 0
+
 class Node(object):
     def __init__(self, value):
         self.value = value
@@ -25,7 +39,8 @@ class BinaryTree(object):
     # Inorder traversal
     def print_tree( self ):
         if self.root is not None:
-            print('Inorder Traversal:'+ str(self._print_tree(self.root)))
+            print('Inorder Traversal:', end=' ')
+            self._print_tree(self.root)
 
     def _print_tree( self, cur_node ):
         if cur_node is not None:
@@ -127,16 +142,114 @@ class BinaryTree(object):
         return ('Sorry, not found in this tree')
 
     # insert an element
+    def insert_node( self, value ):
+        newNode = None
+        if value:
+            newNode = Node(value)
+        if self.root is None:
+            self.root = newNode
+            return
+        queue= Queue()
+        queue.enqueue(self.root)
+
+        while len(queue.items) > 0:
+            node = queue.dequeue()
+            if node.left is None:
+                node.left = newNode
+                break
+            else:
+                queue.enqueue(node.left)
+            if node.right is None:
+                node.right = newNode
+                break
+            else:
+                queue.enqueue(node.right)
+        return
 
     # find size of tree(with recursion)
+    def size_with_recursion( self, node):
+        if node is None:
+            return 0
+        return 1 + (self.size_with_recursion(node.left)) + (self.size_with_recursion(node.right))
 
     # find size of tree(without recursion)
+    def size_without_recursion( self, node ):
+        if node is None:
+            return 0
+        queue = Queue()
+        queue.enqueue(node)
+        size = 0
+
+        while len(queue.items) > 0:
+            node = queue.dequeue()
+            size+=1
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+        return size
 
     # print tree in reverse-order( from leaves to root) using level-order
+    def reverse_tree( self, n):
+        if n is None:
+            return
+        stack = Stack()
+        stack.push(n)
+
+        while len(stack.items) > 0:
+            node = stack.pop()
+            node.left, node.right = node.right, node.left
+
+            if node.left:
+                stack.push(node.left)
+            if node.right:
+                stack.push(node.right)
+
+        return n
 
     # delete the tree
+    def delete_tree( self ):
+        if self.root is None:
+            return
+        queue = Queue()
+        queue.enqueue(self.root)
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            node.value = None
+
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
 
     # delete a given element in tree
+    def delete_node( self, item ):
+        if self.root is None or item is None:
+            return
+        last_node = self.deepest_node()
+
+        if self.root.value == item:
+            self.root.value = last_node.value
+            self.deepest_node().value = None
+            return 1
+
+        queue= Queue()
+        queue.enqueue(self.root)
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            if node.value == item:
+                node.value = last_node.value
+                self.deepest_node().value = None
+                return 1
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        return 0
 
     # height/depth of node(with recursion)
     def height_with_recursion( self, node ):
@@ -169,6 +282,21 @@ class BinaryTree(object):
                 node_count-=1
 
     # find deepest node of tree
+    def deepest_node( self ):
+        if self.root is None:
+            return
+        queue = Queue()
+        queue.enqueue(self.root)
+        node = None
+
+        while not queue.is_empty():
+            node = queue.dequeue()
+            if node.left:
+                queue.enqueue(node.left)
+            if node.right:
+                queue.enqueue(node.right)
+
+        return node
 
     # find number of leaves(without recursion)
 
@@ -218,10 +346,41 @@ tree.root.left.right = Node(50)
 tree.root.right.left = Node(6)
 tree.print_tree()
 print('')
+
 tree.level_order_traversal(tree.root)
+
 tree.maximum_element_without_recursion()
 tree.maximum_element_with_recursion()
+
 print(tree.search_element_without_recursion(140))
 #print(tree.search_element_with_recursion(140))
+
 print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
 print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
+
+tree.insert_node(32)
+print('inserting node 32...')
+tree.print_tree()
+print('')
+
+print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.root)))
+print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.root)))
+
+print('Reversing the tree ...')
+tree.reverse_tree(tree.root)
+tree.print_tree()
+print('')
+
+print('Deepest node value: '+ str(tree.deepest_node().value))
+
+if tree.delete_node(32):
+    print('success to delete')
+    tree.print_tree()
+    print('')
+else:
+    print('Item not found in tree')
+
+print('deleting tree ...')
+tree.delete_tree()
+tree.print_tree()
+print('')
