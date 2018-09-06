@@ -367,49 +367,6 @@ class BinaryTree(object):
 
         return False
 
-    # find level with maximum sum
-    def level_with_maximum_sum( self ):
-        if self.root is not None:
-            queue = Queue()
-            current_level_list, max_level_list = [], []
-            current_level_sum, max_sum = 0, float('-inf')
-            marker_node = Node(float('-inf'))
-
-            queue.enqueue( self.root )
-            queue.enqueue(marker_node)
-
-            while not queue.is_empty():
-                node = queue.dequeue()
-
-                # if all nodes of this level are traversed
-                if node == marker_node:
-                    if max_sum < current_level_sum:
-                        max_sum = current_level_sum
-                        max_level_list.clear()
-                        max_level_list = current_level_list.copy()
-
-                    current_level_sum = 0
-                    current_level_list.clear()
-
-                    # add marker_node only when queue has some element
-                    if not queue.is_empty():
-                        queue.enqueue(marker_node)
-
-                # else traverse all nodes of this level
-                else:
-                    current_level_sum += node.value
-                    current_level_list.append(node)
-                    if node.left:
-                        queue.enqueue(node.left)
-                    if node.right:
-                        queue.enqueue(node.right)
-
-            max_string = ''
-            for n in max_level_list:
-                max_string += str(n.value) + '-'
-            print( 'Maximum sum level is: ' + max_string)
-            print ('sum of this level is: ' + str(max_sum))
-
     # print all root-to-leaf paths
     def paths_root_to_leaf( self ):
         if self.root is None:
@@ -440,6 +397,14 @@ class BinaryTree(object):
             self._paths_root_to_leaf(node.right, path, result)
             path.pop()
 
+    # convert tree to its mirror
+    def tree_mirror( self, node ):
+        if node is None:
+            return
+        self.tree_mirror( node.left )
+        self.tree_mirror( node.right )
+        node.left, node.right = node.right, node.left
+
     # maximum path sum
     def maximum_path_sum( self ):
         if self.root is None:
@@ -468,52 +433,169 @@ class BinaryTree(object):
             path.pop()
 
     # check the existence of path with given sum
-    def path_existence_with_sum(self, sum):
-        if self.root is sum is None:
-            return
-        path = Stack()
-        return self._path_existence_with_sum(self.root, path, sum)
+    def path_existence_with_sum(self, node, s):
 
-    def _path_existence_with_sum(self, node, path, sum):
+        # return true if we run out of tree and sum = 0
         if node is None:
-            return False
-        if node.left is node.right is None:
-            s = sum
-            for p in path.items:
-                s -= p.value
-            s -= node.value
-            if s == 0:
+            return (s == 0)
+        else:
+            ans = 0
+            # check both subtrees
+            subSum = s - node.value
+            # return true if leaf node and sum becomes 0
+            if node.left is node.right is None and subSum == 0:
                 return True
 
-        if node.left:
-            path.push(node)
-            self._path_existence_with_sum(node.left, path, sum)
-            path.pop()
+            if node.left:
+                ans = ans or self.path_existence_with_sum(node.left, subSum)
+            if node.right:
+                ans = ans or self.path_existence_with_sum(node.right, subSum)
 
-        if node.right:
-            path.push(node)
-            self._path_existence_with_sum(node.right, path, sum)
-            path.pop()
+            return ans
+
+    # least common ancestor of two nodes
+    def least_common_ancestors( self,root, value1, value2 ):
+        if root is None:
+            return
+        if root.value == value1 or root.value == value2:
+            return root
+        left = self.least_common_ancestors(root.left, value1, value2)
+        right = self.least_common_ancestors(root.right, value1, value2)
+        if left is right is None:
+            return
+        if left is not None and right is not None:
+            return root
+        if left:
+            return left
+        else:
+            return right
+
+    # find all ancestors of a node (non-recursive)
+    def all_ancestors_iteratively( self, key ):
+        if self.root is None:
+            return
+        return self._all_ancestors_iteratively(self.root, key)
+
+    def _all_ancestors_iteratively( self, node, key ):
+        if node is None:
+            return
+        stack = Stack()
+
+        while True:
+            # if node whose ancestors to be printed is reached, then break this while loop
+            if node and node.value == key:
+                break
+            # traverse the left side, so that their right subtrees can be traversed later
+            while node and node.value != key:
+                stack.push(node)
+                node = node.left
+            # for node at top of stack, if right subtree doesn't exist then pop the node
+            # we dont need this node anymore
+            if stack.items[-1].right is None:
+                node = stack.pop()
+                # if popped node is right child of top then remove the top node as well. Left child of top is processed before.
+                while not stack.is_empty() and stack.items[-1].right == node:
+                    node = stack.pop()
+            # stack not empty then set node as right child of top and traverse the right subtree
+            if not stack.is_empty():
+                node = stack.items[-1].right
+
+        # assuming that key is in the tree
+        # if stack not empty, print contents of stack
+        print('Ancestors of node '+str(key)+' are: ', end='')
+        while not stack.is_empty():
+            print(stack.pop().value, end='  ')
+
+        return
+
+    # find all ancestors of a node (recursive)
+    def all_ancestors_recursively( self,node, key ):
+        if node is None:
+            return False
+
+        if node.value == key:
+            return True
+
+        if self.all_ancestors_recursively(node.left, key) or self.all_ancestors_recursively(node.right, key):
+            print(node.value, end =' ')
+            return True
 
         return False
 
-    # convert tree to its mirror
-    def tree_mirror( self, node ):
-        if node is None:
+    # zigzag tree traversal / level-order traversal in spiral order
+    # 1st way -- using 2 stacks, 2nd way -- using a deque or linked list
+    def zigzag_traversal( self ):
+        if self.root is None:
             return
-        self.tree_mirror(node.left)
-        self.tree_mirror(node.right)
-        node.left, node.right = node.right, node.left
+        stack1 = Stack()
+        stack2 = Stack()
+        result = []
+        stack1.push(self.root)
+        while not stack1.is_empty() or not stack2.is_empty():
+            while not stack1.is_empty():
+                node = stack1.pop()
+                result.append(node.value)
+                if node.left:
+                    stack2.push(node.left)
+                if node.right:
+                    stack2.push(node.right)
 
-    # least common ancestor of two nodes
+            while not stack2.is_empty():
+                node = stack2.pop()
+                result.append(node.value)
+                if node.right:
+                    stack1.push(node.right)
+                if node.left:
+                    stack1.push(node.left)
+
+        return result
+
+    # diameter/width of tree (maximum number of nodes between 2 leaf nodes in a tree)
+    def diameter_of_tree( self , node):
+        if node is None:
+            return 0
+        left_height = self.height_with_recursion(node.left)
+        right_height = self.height_with_recursion(node.right)
+
+        left_diameter = self.diameter_of_tree(node.left)
+        right_diameter = self.diameter_of_tree(node.right)
+
+        # Return max of the following tree:
+        # 1) Diameter of left subtree
+        # 2) Diameter of right subtree
+        # 3) Height of left subtree + height of right subtree +1
+        return max( max(left_diameter, right_diameter), 1+left_height+right_height )
+
 
     # construct binary tree from inorder and preorder traversals
+    preindex = 0
+    def construct_from_inorder_and_preorder( self, in_order, pre_order, in_start, in_end ):
+        if in_start > in_end:
+            return
 
-    # find all ancestors of a node
+        # pick current node from pre_order using preindex
+        node = Node(pre_order[self.preindex])
+        self.preindex += 1
 
-    # zigzag tree traversal
+        # if this node has no children then return
+        if in_start == in_end:
+            return node
+        # else find the index of this node in in_order
+        in_index = self._search(in_order, in_start, in_end, node.value)
 
-    # diameter/width of tree
+        # using index in in_order, construct left and right subtrees
+        node.left = self.construct_from_inorder_and_preorder(in_order, pre_order, in_start, in_index-1)
+        node.right = self.construct_from_inorder_and_preorder(in_order, pre_order, in_index+1, in_end)
+
+        return node
+
+    # Function to find index of value in arr[start...end]. Assumes value is present in in_order
+    def _search( self, arr, start, end, value ):
+        for i in range( start, end + 1 ):
+            if arr[i] == value:
+                return i
+
+
 
 
 
@@ -577,10 +659,27 @@ if tree.structurally_identical(tree.root, tree2.root ):
 else:
     print('Trees are not structurally identical')
 
-# tree.level_with_maximum_sum()
-# print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
+print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
 
-print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(451)))
+print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.root, 451)))
+
+print('Least common ancestor of two given nodes: ' + str(tree.least_common_ancestors(tree.root, 200, 6).value))
+
+tree.all_ancestors_iteratively(50)
+print('')
+
+tree.all_ancestors_recursively(tree.root, 50)
+print('are the Ancestors of node (recursively) ')
+
+print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_traversal()))
+
+print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.root)))
+
+in_order = [9, 8, 4, 2, 10, 5, 10, 1, 6, 3, 13, 12, 7]
+pre_order = [1, 2, 4, 8, 9, 5, 10, 10, 3, 6, 7, 12, 13]
+print('constructing tree from inorder and preorder traversals:')
+tree._print_tree(tree.construct_from_inorder_and_preorder(in_order, pre_order, 0, len(in_order)-1))
+print('')
 
 tree.tree_mirror(tree.root)
 print('Mirror of tree ...')
