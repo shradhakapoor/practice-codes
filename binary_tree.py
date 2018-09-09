@@ -12,6 +12,7 @@ class Queue(object):
     def is_empty( self ):
         return len(self.items) == 0
 
+
 class Stack(object):
     def __init__(self):
         self.items = []
@@ -26,11 +27,13 @@ class Stack(object):
     def is_empty( self ):
         return len(self.items) == 0
 
+
 class Node(object):
     def __init__(self, value):
         self.value = value
         self.left = None
         self.right = None
+
 
 class BinaryTree(object):
     def __init__(self, value):
@@ -606,99 +609,99 @@ class BinaryTree(object):
 # 140  50   6  32
 #  //
 # 1
-
-tree = BinaryTree(110)
-tree.root.left = Node(200)
-tree.root.right = Node(30)
-tree.root.left.left = Node(140)
-tree.root.left.right = Node(50)
-tree.root.right.left = Node(6)
-tree.print_tree()
-print('')
-
-tree.level_order_traversal(tree.root)
-
-tree.maximum_element_without_recursion()
-tree.maximum_element_with_recursion()
-
-print(tree.search_element_without_recursion(140))
-#print(tree.search_element_with_recursion(140))
-
-print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
-print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
-
-tree.insert_node(32)
-tree.insert_node(1)
-print('inserting node 32...')
-tree.print_tree()
-print('')
-
-print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.root)))
-print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.root)))
-
-print('Deepest node value: '+ str(tree.deepest_node().value))
-
-print('Number of leaves: '+ str(tree.number_of_leaves()))
-
-print('Number of Full nodes: '+ str(tree.number_of_fullnodes()))
-
-print('Number of Half nodes: '+ str(tree.number_of_halfnodes()))
-
-print('Paths from root to leaf:' + str(tree.paths_root_to_leaf()))
-
-tree2 = BinaryTree(110)
-tree2.insert_node(200)
-tree2.insert_node(30)
-tree2.insert_node(140)
-tree2.insert_node(50)
-tree2.insert_node(6)
-tree2.insert_node(32)
-tree2.insert_node(1)
-if tree.structurally_identical(tree.root, tree2.root ):
-    print('Trees are structurally identical')
-else:
-    print('Trees are not structurally identical')
-
-print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
-
-print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.root, 451)))
-
-print('Least common ancestor of two given nodes: ' + str(tree.least_common_ancestors(tree.root, 200, 6).value))
-
-tree.all_ancestors_iteratively(50)
-print('')
-
-tree.all_ancestors_recursively(tree.root, 50)
-print('are the Ancestors of node (recursively) ')
-
-print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_traversal()))
-
-print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.root)))
-
-in_order = [9, 8, 4, 2, 10, 5, 10, 1, 6, 3, 13, 12, 7]
-pre_order = [1, 2, 4, 8, 9, 5, 10, 10, 3, 6, 7, 12, 13]
-print('constructing tree from inorder and preorder traversals:')
-tree._print_tree(tree.construct_from_inorder_and_preorder(in_order, pre_order, 0, len(in_order)-1))
-print('')
-
-tree.tree_mirror(tree.root)
-print('Mirror of tree ...')
-tree.print_tree()
-print('')
-
-print('Reversing the tree ...')
-tree.reverse_tree(tree.root)
-tree.print_tree()
-print('')
-
-if tree.delete_node(32):
-    print('success to delete')
+if __name__ == "__main__":
+    tree = BinaryTree(110)
+    tree.root.left = Node(200)
+    tree.root.right = Node(30)
+    tree.root.left.left = Node(140)
+    tree.root.left.right = Node(50)
+    tree.root.right.left = Node(6)
     tree.print_tree()
     print('')
-else:
-    print('Item not found in tree')
 
-print('deleting tree ...')
-tree.delete_tree()
-tree.print_tree()
+    tree.level_order_traversal(tree.root)
+
+    tree.maximum_element_without_recursion()
+    tree.maximum_element_with_recursion()
+
+    print(tree.search_element_without_recursion(140))
+    #print(tree.search_element_with_recursion(140))
+
+    print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
+    print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
+
+    tree.insert_node(32)
+    tree.insert_node(1)
+    print('inserting node 32...')
+    tree.print_tree()
+    print('')
+
+    print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.root)))
+    print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.root)))
+
+    print('Deepest node value: '+ str(tree.deepest_node().value))
+
+    print('Number of leaves: '+ str(tree.number_of_leaves()))
+
+    print('Number of Full nodes: '+ str(tree.number_of_fullnodes()))
+
+    print('Number of Half nodes: '+ str(tree.number_of_halfnodes()))
+
+    print('Paths from root to leaf:' + str(tree.paths_root_to_leaf()))
+
+    tree2 = BinaryTree(110)
+    tree2.insert_node(200)
+    tree2.insert_node(30)
+    tree2.insert_node(140)
+    tree2.insert_node(50)
+    tree2.insert_node(6)
+    tree2.insert_node(32)
+    tree2.insert_node(1)
+    if tree.structurally_identical(tree.root, tree2.root ):
+        print('Trees are structurally identical')
+    else:
+        print('Trees are not structurally identical')
+
+    print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
+
+    print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.root, 451)))
+
+    print('Least common ancestor of two given nodes: ' + str(tree.least_common_ancestors(tree.root, 200, 6).value))
+
+    tree.all_ancestors_iteratively(50)
+    print('')
+
+    tree.all_ancestors_recursively(tree.root, 50)
+    print('are the Ancestors of node (recursively) ')
+
+    print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_traversal()))
+
+    print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.root)))
+
+    in_order = [9, 8, 4, 2, 10, 5, 10, 1, 6, 3, 13, 12, 7]
+    pre_order = [1, 2, 4, 8, 9, 5, 10, 10, 3, 6, 7, 12, 13]
+    print('constructing tree from inorder and preorder traversals:')
+    tree._print_tree(tree.construct_from_inorder_and_preorder(in_order, pre_order, 0, len(in_order)-1))
+    print('')
+
+    tree.tree_mirror(tree.root)
+    print('Mirror of tree ...')
+    tree.print_tree()
+    print('')
+
+    print('Reversing the tree ...')
+    tree.reverse_tree(tree.root)
+    tree.print_tree()
+    print('')
+
+    if tree.delete_node(32):
+        print('success to delete')
+        tree.print_tree()
+        print('')
+    else:
+        print('Item not found in tree')
+
+    print('deleting tree ...')
+    tree.delete_tree()
+    tree.print_tree()
 print('')
