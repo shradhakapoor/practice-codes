@@ -204,14 +204,35 @@ class Binary_Search_Tree(object):
 
         return stack
 
-    # tell the successor of a node in BST
-    def successor_of_node( self ):
-
-    # tell the predecessor of a node in BST
-
     # given 2 nodes, find the lowest common ancestor in BST
+    def lowest_common_ancestor( self, root, value1, value2 ):
+        if root is None:
+            return
+        if root.value > max(value1, value2):
+            return self.lowest_common_ancestor(root.left, value1, value2)
+        elif root.value < min(value1, value2):
+            return self.lowest_common_ancestor(root.right, value1, value2)
+        else:
+            return root
 
-    # find shortest path between 2 nodes
+    # find shortest distance between 2 nodes
+    def shortest_distance_between_two_nodes( self,root, value1, value2 ):
+        if root is None:
+            return 0
+        if root.value > value1 and root.value > value2:
+            return self.shortest_distance_between_two_nodes(root.left, value1, value2)
+        if root.value < value1 and root.value < value2:
+            return self.shortest_distance_between_two_nodes(root.right, value1, value2)
+        if (root.value >= value1 and root.value <= value2) or (root.value <= value1 and root.value >= value2):
+            return self.distance_from_root(root, value1) + self.distance_from_root(root, value2)
+
+    def distance_from_root( self, node, value ):
+        if node.value == value:
+            return 0
+        elif node.value > value:
+            return 1+ self.distance_from_root(node.left, value)
+        else:
+            return 1+ self.distance_from_root(node.right, value)
 
     # count number of BSTs possible with n nodes
 
@@ -234,6 +255,10 @@ class Binary_Search_Tree(object):
     # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
 
     # delete an element
+
+    # tell inorder successor of given key in BST
+
+    # tell the predecessor of a node in BST
 
 
 # BST
@@ -279,3 +304,7 @@ print('\nIs this binary tree a bst?(non-effecient solution):', str(bst.check_bin
 print('Is this binary tree a bst?(effecient solution):', str(bst.check_binarytree_is_bst_effeciently(tree.root)))
 
 print('kth smallest element in tree:', str(bst.kth_smallest_element(2)))
+
+print('lowest common ancestor of two nodes:', str(bst.lowest_common_ancestor(bst.root, 700, 900).value))
+
+print('shortest distance between two nodes:', str(bst.shortest_distance_between_two_nodes(bst.root, 200, 450)) )
