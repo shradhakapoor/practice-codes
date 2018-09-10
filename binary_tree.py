@@ -704,4 +704,4 @@ if __name__ == "__main__":
     print('deleting tree ...')
     tree.delete_tree()
     tree.print_tree()
-print('')
+    print('')

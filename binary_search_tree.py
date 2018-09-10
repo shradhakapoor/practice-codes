@@ -258,29 +258,6 @@ class Binary_Search_Tree(object):
 
         return result
 
-    # convert BST to circular doubly linked list with space complexity(1)
-    prev = None
-
-    def bst_to_circular_doubly_linkedlist( self, root, head ):
-        # initially, root points to root of the linked list and head is None
-
-        if root is None: return
-
-        # basically we are doing inorder traversal and inside we write steps for converting bst to dll
-
-        self.bst_to_circular_doubly_linkedlist(root.left, head)
-
-        if self.prev is None:
-            head = root
-        else:
-            root.left = self.prev
-            self.prev.right = root
-
-        # make current node as prev node
-        self.prev = root
-
-        self.bst_to_circular_doubly_linkedlist(root.right, head)
-
     # convert sorted array to BST, time complexity O(n)
     def sorted_array_to_bst( self, arr ):
         if len(arr) == 0: return
@@ -449,6 +426,29 @@ class Binary_Search_Tree(object):
                 root = root.right
             else: root = root.left
         return store
+
+    # convert BST to circular doubly linked list with space complexity(1)
+    prev = None
+
+    def bst_to_circular_doubly_linkedlist( self, root, head ):
+        # initially, root points to root of the linked list and head is None
+
+        if root is None: return
+
+        # basically we are doing inorder traversal and inside we write steps for converting bst to dll
+
+        self.bst_to_circular_doubly_linkedlist( root.left, head )
+
+        if self.prev is None:
+            head = root
+        else:
+            root.left = self.prev
+            self.prev.right = root
+
+        # make current node as prev node
+        self.prev = root
+
+        self.bst_to_circular_doubly_linkedlist( root.right, head )
 
     # convert sorted doubly linked list to balanced BST
 
