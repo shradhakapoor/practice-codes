@@ -427,6 +427,38 @@ class Binary_Search_Tree(object):
             else: root = root.left
         return store
 
+    # convert sorted singly linked list to height balanced BST
+    cur = None
+
+    def sorted_ll_to_bst( self, list_head ):
+        if not list_head: return
+        self.cur = list_head
+        n = self.getSize_of_list(list_head)
+        return self._sorted_ll_to_bst(n)
+
+    def _sorted_ll_to_bst( self, list_size ):
+        if list_size <= 0: return
+
+        left = self._sorted_ll_to_bst(int(list_size/2))
+
+        root = Node(self.cur.value)
+
+        self.cur = self.cur.right
+
+        right = self._sorted_ll_to_bst(list_size - int(list_size/2) -1)
+
+        root.left = left
+        root.right = right
+
+        return root
+
+    def getSize_of_list( self, head ):
+        n = 0
+        while head:
+            head = head.right
+            n += 1
+        return n
+
     # convert BST to circular doubly linked list with space complexity(1)
     prev = None
 
@@ -450,11 +482,26 @@ class Binary_Search_Tree(object):
 
         self.bst_to_circular_doubly_linkedlist( root.right, head )
 
-    # convert sorted doubly linked list to balanced BST
-
     # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
+    def check_elements_same_in_bsts( self, root1, root2 ):
+        # base cases
+        if not root1 and not root2: return True
+        if (root2 and not root1) or (root1 and not root2): return False
 
-    # convert singly linked list (sorted in ascending order) to height balanced BST
+        # create 2 sets and store elements in both bsts to it
+        set1, set2 = set(), set()
+        self._insert_to_set(root1, set1)
+        self._insert_to_set(root2, set2)
+
+        return (set1 == set2)
+
+    def _insert_to_set( self, root, s ):
+        if not root: return
+        self._insert_to_set(root.left, s)
+        s.add(root.value)
+        self._insert_to_set(root.right, s)
+
+
 
 
 # BST
@@ -525,7 +572,15 @@ bst._print(bst.remove_elements_outside_range(bst.root, 100, 750))
 print('\nDelete a node in tree:', end=' ')
 bst._print(bst.delete(bst.root, 500))
 
+# 5->100->2050->10000
+linked_list = Node(5)
+linked_list.right = Node(100)
+linked_list.right.right = Node(2050)
+linked_list.right.right.right = Node(10000)
+print('\nConvert sorted linked list to bst:',end = ' ')
+bst._print(bst.sorted_ll_to_bst(linked_list))
+
+print('\nCheck whether 2 BSTs have same set of elements', bst.check_elements_same_in_bsts(bst.root, bst.root))
+
 # print('\nConvert BST to circular doubly linked list:', end='\n ')
 # bst.bst_to_circular_doubly_linkedlist(bst.root, None)
-
-
