@@ -459,6 +459,25 @@ class Binary_Search_Tree(object):
             n += 1
         return n
 
+    # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
+    def check_elements_same_in_bsts( self, root1, root2 ):
+        # base cases
+        if not root1 and not root2: return True
+        if (root2 and not root1) or (root1 and not root2): return False
+
+        # create 2 sets and store elements in both bsts to it
+        set1, set2 = set(), set()
+        self._insert_to_set(root1, set1)
+        self._insert_to_set(root2, set2)
+
+        return (set1 == set2)
+
+    def _insert_to_set( self, root, s ):
+        if not root: return
+        self._insert_to_set(root.left, s)
+        s.add(root.value)
+        self._insert_to_set(root.right, s)
+
     # convert BST to circular doubly linked list with space complexity(1)
     prev = None
 
@@ -481,25 +500,6 @@ class Binary_Search_Tree(object):
         self.prev = root
 
         self.bst_to_circular_doubly_linkedlist( root.right, head )
-
-    # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
-    def check_elements_same_in_bsts( self, root1, root2 ):
-        # base cases
-        if not root1 and not root2: return True
-        if (root2 and not root1) or (root1 and not root2): return False
-
-        # create 2 sets and store elements in both bsts to it
-        set1, set2 = set(), set()
-        self._insert_to_set(root1, set1)
-        self._insert_to_set(root2, set2)
-
-        return (set1 == set2)
-
-    def _insert_to_set( self, root, s ):
-        if not root: return
-        self._insert_to_set(root.left, s)
-        s.add(root.value)
-        self._insert_to_set(root.right, s)
 
 
 
