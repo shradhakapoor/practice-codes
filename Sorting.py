@@ -46,7 +46,18 @@
 
 # given an array of n elements, each integer in range [1, n^3]. sort array in O(n) time
 
-#
+# given arrays A and B, a number K, determine whether there exists a∈A, b∈B such that a+b = K, time O{n.logn)
+
+# given arrays A and B, a number K, determine whether there exists a∈A, b∈B, c∈C such that a+b+c = K, time O{n.logn)
+
+# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (counting sort)
+
+# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (quick sort)
+
+# better sorting method for linked list - Merge sort
+
+# merge two sorted arrays. first array of size m+n with m elements, second array with n elements
+
 
 
 
