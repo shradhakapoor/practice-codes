@@ -93,6 +93,31 @@
 
 # given array of 2n+1 elements, n elements appear twice and 1 integer appears once.find the integer in O(n) operations
 
+# given n story building and m eggs, assume an egg breaks if its thrown from floor F or higher, otherwise not break.
+# Determine floor F while breaking O(logn) eggs
+
+# given array of n distinct integers, find local minimum: an index i such that A[i-1]<A[i]<A[i+1] in O(logn)
+
+# given a number n , find number of trailing zeros in n!
+
+# given array of 2n integers in format a1a2a3...anb1b2b3...bn shuffle array to a1b1a2b2a3b3...anbn without extra memory
+# using brute force
+
+# given array of 2n integers in format a1a2a3...anb1b2b3...bn shuffle array to a1b1a2b2a3b3...anbn without extra memory
+# using divide and conquer
+
+# given array, find maximum j-i such that A[j]>A[i]. ex: {34,8,10,3,2,80,30,33,1} output: 6 (j=7 i=1)- brute force
+
+# given array, find maximum j-i such that A[j]>A[i]. ex: {34,8,10,3,2,80,30,33,1} output: 6 (j=7 i=1)- time O(n) space O(n)
+
+# given array, check whether list is pairwise sorted or not
+
+# given array of n, print frequencies of elements without using extra space.all elements are +ve,editable and less than n
+
+
+
+
+
 
 
 
