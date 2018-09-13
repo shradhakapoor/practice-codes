@@ -1,8 +1,3 @@
-x=2
-
-def f():
-    global x
-    print(x)
-    x+=1
-
-f()
+x = [1,2,3,4]
+del x[2]
+print(x)
