@@ -32,7 +32,7 @@ class Priority_Queue(object):
     def dequeue_given_key( self, key ):
         for i in range(self.pqueue_size()):
             if self.items[i].priority_value == key:
-                del self.items[i]
+                self.items[i].priority_value = None
         self.prioritize_items()
 
     # arrange the elements in order of their priorities, smaller priority no. to larger
@@ -43,9 +43,14 @@ class Priority_Queue(object):
         while not isSorted:
             isSorted = True
             for i in range(lastUnsorted):
-                if self.items[i].priority_value > self.items[(i+1)].priority_value:
-                    self.items[i].priority_value, self.items[(i+1)].priority_value =\
-                        self.items[(i+1)].priority_value, self.items[i].priority_value
+                j = i+1
+                if self.items[i].priority_value is None:
+                    continue
+                while self.items[j].priority_value is None:
+                    j += 1
+                if self.items[i].priority_value > self.items[(j)].priority_value:
+                    self.items[i].priority_value, self.items[(j)].priority_value =\
+                        self.items[(j)].priority_value, self.items[i].priority_value
                     isSorted = False
             lastUnsorted -= 1
 
@@ -83,7 +88,9 @@ print('\nDequeue element with min key(highest priority)', str(p.priority_value))
 pq.print_pqueue()
 
 print('kth smallest priority element:', str(pq.kth_smallest_key(3).key_value))
-print('Dequeue given key:', pq.dequeue_given_key(4))
+
+print('\nDequeue given key:', end= '\n')
+pq.dequeue_given_key(4)
 pq.print_pqueue()
 
 
