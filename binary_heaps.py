@@ -85,11 +85,68 @@ class Binary_Heap(object):
         else:
             return
 
-    # build MaxHeap
+# maxheap property - parent should always be greater than or equal to each of its children
 
-    # insert an element in MaxHeap
+    # percolate up in maxheap
+    def percolate_up_maxheap( self, currentnode_index ):
+        # parent of current node = index of current node/ 2
+        while currentnode_index // 2 > 0:
+            if self.heap_list[currentnode_index] > self.heap_list[currentnode_index // 2]:
+                self.heap_list[currentnode_index], self.heap_list[currentnode_index // 2] = \
+                    self.heap_list[currentnode_index // 2], self.heap_list[currentnode_index]
+
+            # move up to parent of current node
+            currentnode_index = currentnode_index // 2
+
+    # percolate down in maxheap
+    def percolate_down_maxheap( self, currentnode_index ):
+        while currentnode_index*2 <= self.heap_size:
+            maxchild_index = self.maximum_child_index(currentnode_index)
+            if self.heap_list[currentnode_index] < self.heap_list[maxchild_index]:
+                self.heap_list[currentnode_index], self.heap_list[maxchild_index] = \
+                    self.heap_list[maxchild_index], self.heap_list[currentnode_index]
+
+            currentnode_index = maxchild_index
+
+    # get index of largest value child
+    def maximum_child_index( self, parent_index ):
+        if parent_index * 2 + 1 > self.heap_size:
+            return parent_index * 2
+        elif self.heap_list[parent_index * 2 + 1] > self.heap_list[parent_index * 2]:
+            return parent_index * 2 + 1
+        else:
+            return parent_index * 2
+
+    # insert element in maxheap
+    def insert_maxheap( self, value ):
+        self.heap_list.append(value)
+        self.heap_size += 1
+        self.percolate_up_maxheap(self.heap_size)
+
+    # delete max element in maxheap
+    def delete_max_maxheap( self ):
+        # deleted value = root of maxheap
+        return_value = self.heap_list[1]
+
+        self.heap_list[1] = self.heap_list[self.heap_size]
+        self.heap_size -= 1
+        self.heap_list.pop()
+        self.percolate_down_maxheap(1)
+
+        return return_value
+
+    # build MaxHeap with given list of integers
+    def build_maxheap( self, alist ):
+        index = len(alist) // 2
+        self.heap_size = len(alist)
+        self.heap_list = [0] + alist[:]
+
+        while index > 0:
+            self.percolate_down_maxheap(index)
+            index -= 1
 
     # delete an arbitrary element from MinHeap
+
 
     # heap sort
 
@@ -166,3 +223,28 @@ print('Delete minimum element in minHeap:', minH.heap_list)
 print('maximum element in heap:', str(minH.get_max_in_minheap()))
 
 print('Deleting ith indexed element from minHeap:', str(minH.delete_ith_index_minheap(1)))
+
+# maxHeap formed by insertion
+#       500
+#     /    \
+#    200    10
+#   /  \
+# 20  100
+maxH = Binary_Heap()
+maxH.insert_maxheap(100)
+maxH.insert_maxheap(200)
+maxH.insert_maxheap(10)
+maxH.insert_maxheap(20)
+maxH.insert_maxheap(500)
+print('MaxHeap is:', maxH.heap_list)
+
+# maxHeap formed by input list
+#      10
+#     /  \
+#    60  40
+#   /  \
+# 300  75
+maxH.build_maxheap([40,60,10,300,75])
+print('Build maxHeap from given list of integers:', maxH.heap_list)
+
+
