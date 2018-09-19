@@ -203,9 +203,24 @@ class Binary_Heap(object):
         # sort first 10 numbers in descending order and keep track of lowest number in list
         # if incoming number is greater than the lowest number then insert the new number in its place and sort the list again
 
-    # merge k sorted lists with total n inputs altogether time complexity O(nk), space complexity O(1)
+    # merge k sorted(increasing order) arrays with total n inputs altogether time complexity O(nk), space complexity O(1)
+    def merge_2_sorted_lists( self, list1, list2 ):
+        n = len(list2)
+        m = len(list1)
+        # iterate through all elements of list2, starting from the last element
+        for i in range(n-1, -1, -1):
+            # find the smallest element in list1 that is greater than list2[i].
+            # move all elements one position ahead till smallest element is not found
+            last = list1[m-1]
+            j = m - 2
+            while j >= 0 and list1[j] > list2[i]:
+                list1[j+1] = list1[j]
+                j -= 1
 
-    # merge k sorted lists with total n inputs altogether time complexity O(nlogk), space complexity O(k) - using heaps
+            # if there is a greater element
+            if j!= m-2 or last > list2[i]:
+                list1[j+1] = list2[i]
+                list2[i] = last
 
     # given 2 arrays A and B each with n elements, find largest n pairs (A[i],B[j])
 
@@ -273,6 +288,17 @@ class queue_using_minheap(object):
     def is_empty( self ):
         return self.hp.heap_size == 0
 
+# merge k sorted arrays with total n inputs altogether time complexity O(nlogk), space complexity O(k) - using minheap
+    def merge_k_sorted_arrays_minheap( self, arrays, n, k ):
+        output = []
+
+        # create minheap with k heap nodes. Each heap node has first element of an array
+        min_hp = Binary_Heap()
+        for i in range(k):
+            # (arrays[i][0], array_number, next_index)
+            min_hp.insert_minheap((arrays[i][0], i, 1))
+
+        # now one by one get minimum element from minheap and replace it with next element of its array
 
 
 # minHeap formed by insertion
