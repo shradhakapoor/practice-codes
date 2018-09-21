@@ -1,3 +1,7 @@
+from collections import *
+
+
+
 class Binary_Heap(object):
     def __init__(self):
         # first element of heapList is zero for simpler integer division in later methods
@@ -151,6 +155,8 @@ class Binary_Heap(object):
             self.percolate_down_maxheap(index)
             index -= 1
 
+    # in maxHeap, check if kth largest item is >= x, runtime O(k)
+
     # heap sort in ascending order (using minheap)
     def heap_sort_ascending_order( self ):
         sorted_array = []
@@ -183,7 +189,7 @@ class Binary_Heap(object):
         # check in right child
         self.all_elements_less_than_k(k, position*2+1)
 
-    # merge 2 binary maxHeaps , size of first heap = m+n size of second heap = n , complexity O(m+n)
+    # merge 2 binary maxHeaps , time O(m + n) -- needed to build heap from array of m+n elements
     def merge_two_maxheaps( self, maxheap1, maxheap2 ):
 
         # copy all elements of heap2 to heap1 to be merged in next step
@@ -203,7 +209,6 @@ class Binary_Heap(object):
         # sort first 10 numbers in descending order and keep track of lowest number in list
         # if incoming number is greater than the lowest number then insert the new number in its place and sort the list again
 
-    # merge k sorted(increasing order) arrays with total n inputs altogether time complexity O(nk), space complexity O(1)
     def merge_2_sorted_lists( self, list1, list2 ):
         n = len(list2)
         m = len(list1)
@@ -223,25 +228,186 @@ class Binary_Heap(object):
                 list2[i] = last
 
     # given 2 arrays A and B each with n elements, find largest n pairs (A[i],B[j])
+    def largest_pairs_in_arrays( self, array1, array2 ):
+        n = len(array1)
+        result = list()
+
+        maxheap1, maxheap2 = Binary_Heap(), Binary_Heap()
+        maxheap1.build_maxheap( array1 )
+        maxheap2.build_maxheap( array2 )
+        while maxheap1.heap_size != 0:
+            result.append([maxheap1.delete_max_maxheap(), maxheap2.delete_max_maxheap()])
+
+        return result
 
     # min-max heap - structure that supports min and max in O(1) time, insert, deletemin, deletemax in O(logn) time
+        # solution: all operations of minheap and maxheap
 
-    # design heap data structure that supports finding the median in an infinite series of integers
+    # find the running median in an infinite series of integers, recommended time O(n.logn) using heaps
+    def median_in_running_stream( self, input_stream):
+        maxheap_lo = Binary_Heap()
+        minheap_hi = Binary_Heap()
+        medians = []
+        for i in range(len(input_stream)):
+            number = input_stream[i]
+            self.addNumber(number, maxheap_lo, minheap_hi)
+            self.rebalance(maxheap_lo, minheap_hi)
+            medians.append(self.get_median(maxheap_lo, minheap_hi))
 
-    # maximum number in sliding window - brute force
+        return medians
 
-    # maximum number in sliding winodw - using heap data structure
+    # add the incoming number to left or right side
+    def addNumber(self, number, maxheap_lo, minheap_hi):
+        if maxheap_lo.heap_size == 0 or number < maxheap_lo.heap_list[1]:
+            maxheap_lo.insert_maxheap(number)
+        else:
+            minheap_hi.insert_minheap(number)
 
-    # maximum number in sliding window - using double-ended-queue (perfect data structure for this problem)
+    # compare sizes of two heaps and rebalance them
+    def rebalance(self, maxheap_lo, minheap_hi):
+        bigger_size_heap = maxheap_lo if maxheap_lo.heap_size > minheap_hi.heap_size else minheap_hi
+        smaller_size_heap = maxheap_lo if maxheap_lo.heap_size < minheap_hi.heap_size else minheap_hi
 
-    # merge(union) two binary heaps
+        # if heaps have element difference by 2 or more then transfer the element from bigger size heap to smaller one
+        if bigger_size_heap.heap_size - smaller_size_heap.heap_size >= 2:
+            smaller_size_heap.insert_maxheap(bigger_size_heap.heap_list[1]) if smaller_size_heap == maxheap_lo \
+                else smaller_size_heap.insert_minheap(bigger_size_heap.heap_list[1])
+
+    # compute the median
+    def get_median(self, maxheap_lo, minheap_hi):
+        bigger_size_heap = maxheap_lo if maxheap_lo.heap_size > minheap_hi.heap_size else minheap_hi
+        smaller_size_heap = maxheap_lo if maxheap_lo.heap_size < minheap_hi.heap_size else minheap_hi
+
+        if bigger_size_heap.heap_size == smaller_size_heap.heap_size:
+            return float(bigger_size_heap.heap_list[1] + smaller_size_heap.heap_list[1] / 2)
+        else:
+            return bigger_size_heap.heap_list[1]
+
+    # maximum number in sliding window - brute force O(nk)
+
+    # maximum number in sliding window - using BST time O(n.logk)
+
+    # maximum number in sliding window - using double-ended-queue (perfect data structure for this problem) time O(n)
+    def max_in_sliding_window_DEqueue( self, input_array, k ):
+        # deQ will store useful indexes of array elements in every window and
+        # it will maintain decreasing order from front to rear
+        deQ = deque()
+        n = len(input_array)
+        result = []
+
+        # process first window of input_array, find max in it
+        for i in range(k):
+            # for every element, previous smaller elements are useless, so remove them from deQ
+            while deQ and input_array[i] >= input_array[deQ[-1]]:
+                deQ.pop()
+
+            # now add the input_array[i] to rear of deQ
+            deQ.append(i)
+
+        # process rest of the elements from k to n-1
+        for i in range(k, n):
+            # element at front of deQ is max from previous window
+            result.append(input_array[deQ[0]])
+
+            # remove the elements which are out of this window
+            while deQ and deQ[0] <= i-k:
+                # remove from front of deQ
+                deQ.popleft()
+
+            # for every element, previous smaller elements are useless, so remove them from deQ
+            while deQ and input_array[i] >= input_array[deQ[-1]]:
+                deQ.pop()
+
+            # now add the input_array[i] to rear of deQ
+            deQ.append( i )
+
+        result.append(input_array[deQ[0]])
+
+        return result
 
     # find minimum window in inputString which will contain all chars in Pattern in complexity O(n).
     # if no such window, return empty string. If multiple such windows, return one unique minimum window
+    def find_min_window_for_substring( self, input_str, pattern ):
 
-    # in maxHeap, check if kth largest item is >= x, runtime O(k)
+        # count occurence of chars in pattern
+        # defaultdict will return int 0 if key is not present
+        pattern_count_dict = defaultdict(int)
+        for ch in pattern:
+            pattern_count_dict[ch] += 1
+
+        remain_missing = len( pattern )
+        start_pos, end_pos = 0, float( 'inf' )
+        current_start = 0
+
+        # Enumerate function makes current_end indexes from 1
+        for current_end, ch in enumerate( input_str, 1 ):
+            # Whenever we encounter a character, no matter ch in pattern or not, we minus 1 in count dictionary
+            # But, only when ch is in pattern, we minus the length of remain_missing
+            # When the remain_missing is 0, we find a potential solution.
+            if pattern_count_dict[ch] > 0:
+                remain_missing -= 1
+            pattern_count_dict[ch] -= 1
+
+            if remain_missing == 0:
+                # Remove redundant character
+                # Try to find the fist position in input_str that makes pattern_count_dict value equals 0
+                # Which means we can't skip this character in input_str when returning answer
+                while pattern_count_dict[input_str[current_start]] < 0:
+                    pattern_count_dict[input_str[current_start]] += 1
+                    current_start += 1
+                if current_end - current_start < end_pos - start_pos:
+                    start_pos, end_pos = current_start, current_end
+
+                # We need to add 1 to current_start, and the correspondence value in dictionary, is because
+                # this is the first character of the potential answer. So, in future iteration, when we encounter this character,
+                # We can remove this currently first character to try to find a shorter answer.
+                pattern_count_dict[input_str[current_start]] += 1
+                remain_missing += 1
+                current_start += 1
+
+        return input_str[start_pos:end_pos] if end_pos != float( 'inf' ) else ''
 
     # Given k lists of sorted integers, find smallest range that includes atleast one number from each of k lists
+    # def shortest_range_in_k_sorted_lists( self, input, k ):
+    #     max = float('inf')
+    #     lst = [0] * k
+    #     # create a minheap with k heap nodes, each heapnode has first element of list
+    #     for i in range(k):
+    #         # storing (first element of list, index of list, index of next element to be stored from list)
+    #         lst.append([input[i][0], i, 1])
+    #
+    #         # store max element
+    #         if lst[i] > max:
+    #             max = lst[i]
+    #
+    #     # create the minheap of this list of firsrt elements of each list
+    #     minH = Binary_Heap()
+    #     minH.build_minheap(lst)
+    #
+    #     # now one by one get the minimum element from minheap and replace it with next element of its list
+    #     while True:
+    #         # Get the minimum element and store it in output
+    #         # update min value
+    #         # update range
+    #             # if (range > max - min + 1)
+    #             #     {
+    #             #         range = max - min + 1;
+    #             #     start = min;
+    #             #     end = max;
+    #             #     }
+    #         # replace the current root with next element from same list as current root. we have stored the indices of list and next element in list
+    #             # if (root.j < N)
+    #             #     {
+    #             #         root.element = arr[root.i][root.j];
+    #             #     root.j += 1;
+    #             #
+    #             #     // update max element
+    #             #     if (root.element > max)
+    #             #     max = root.element;
+    #             #     }
+    #         # break if we have reached end of any list
+    #         # Replace root with next element of list
+
 
 # implement stack using heap
 # meaning every new element is pushed with a key/priority higher than all current elements,
@@ -268,6 +434,7 @@ class stack_using_minheap(object):
     def is_empty( self ):
         return self.hp.heap_size == 0
 
+
 # implement queue using heap
 class queue_using_minheap(object):
     def __init__(self):
@@ -288,17 +455,19 @@ class queue_using_minheap(object):
     def is_empty( self ):
         return self.hp.heap_size == 0
 
+# merge k sorted(increasing order) arrays with total n inputs altogether time complexity O(nk), space complexity O(1)
+
 # merge k sorted arrays with total n inputs altogether time complexity O(nlogk), space complexity O(k) - using minheap
-    def merge_k_sorted_arrays_minheap( self, arrays, n, k ):
-        output = []
+def merge_k_sorted_arrays_minheap( self, arrays, n, k ):
+    output = []
 
-        # create minheap with k heap nodes. Each heap node has first element of an array
-        min_hp = Binary_Heap()
-        for i in range(k):
-            # (arrays[i][0], array_number, next_index)
-            min_hp.insert_minheap((arrays[i][0], i, 1))
+    # create minheap with k heap nodes. Each heap node has first element of an array
+    min_hp = Binary_Heap()
+    for i in range(k):
+        # (arrays[i][0], array_number, next_index)
+        min_hp.insert_minheap((arrays[i][0], i, 1))
 
-        # now one by one get minimum element from minheap and replace it with next element of its array
+    # now one by one get minimum element from minheap and replace it with next element of its array
 
 
 # minHeap formed by insertion
@@ -353,6 +522,8 @@ maxH.insert_maxheap(500)
 mx1 = maxH.heap_list
 print('MaxHeap is:', mx1)
 
+print('Largest pairs of n elements in two given arrays:',maxH.largest_pairs_in_arrays([40,60,10,300,75], [10,30,12,45, 54]))
+
 # maxHeap formed by input list
 #      10
 #     /  \
@@ -378,3 +549,10 @@ queue.enqueue(10)
 queue.enqueue(22)
 queue.enqueue(45)
 print('Queue implemented using minheap:', queue.hp.heap_list)
+
+print('Running Median of an infinite series of integers:', maxH.median_in_running_stream([1,2,3]))
+
+print('Maximum sliding window using doubly ended queue:', maxH.max_in_sliding_window_DEqueue([1,3,4,7,2,1,8,5], 3))
+
+# print('Minimum window for substring to find pattern in input string:', end=' ')
+print(maxH.find_min_window_for_substring('Shradha is getting married', 'asti'))
