@@ -1,7 +1,6 @@
 from collections import *
 
 
-
 class Binary_Heap(object):
     def __init__(self):
         # first element of heapList is zero for simpler integer division in later methods
