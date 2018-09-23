@@ -1,5 +1,19 @@
 from collections import defaultdict
 
+class Queue(object):
+    def __init__(self):
+        self.items = []
+
+    def enqueue( self, item ):
+        self.items.insert(0, item)
+
+    def dequeue( self ):
+        if not self.is_empty():
+            return self.items.pop()
+
+    def is_empty( self ):
+        return len(self.items) == 0
+
 # graph representation using adjacency matrix
 class Graph_adj_matrix(object):
     def __init__(self, no_of_vertices):
@@ -49,17 +63,10 @@ class adj_list_vertex(object):
     def add_neighbor( self, neighbor, cost ):
         self.connectedTo[neighbor] = cost
 
-    def __str__( self ):
-        return str(self.id) + 'connected to' + str([x for x in self.connectedTo])
-
-    def get_connections( self ):
-        # return all the id s connected to this vertex
-        return self.connectedTo
-
     def getId( self ):
         return self.id
 
-    def getWeight( self, neighbor ):
+    def getCost( self, neighbor ):
         return self.connectedTo[neighbor]
 
 # graph representation using adjacency list
@@ -76,6 +83,12 @@ class Graph_adj_list(object):
         newVertex = adj_list_vertex(id)
         self.vertices_list[id] = newVertex
 
+    def remove_vertex( self, id ):
+        self.no_of_vertices -= 1
+        if id in self.vertices_list.keys():
+            del self.vertices_list[id]
+
+
     def get_vertex( self, v ):
         if v in self.vertices_list:
             return self.vertices_list[v]
@@ -88,26 +101,70 @@ class Graph_adj_list(object):
         if to not in self.vertices_list:
             self.add_vertex(to)
         self.vertices_list[frm].add_neighbor(self.vertices_list[to], cost)
+        self.vertices_list[to].add_neighbor( self.vertices_list[frm], cost) # for undirected graphs only
 
     def get_vertices( self ):
         return self.vertices_list.keys()
-
-    def __contains__(self, id):
-        return id in self.vertices_list
 
     def __iter__(self):
         # iter creates an object that can be iterated one at a time
         return iter(self.vertices_list.values())
 
-# create an undirected graph using adjacency matrix
+    # graph traversal - Depth First Search, time O(V+E)
+    def depth_first_search( self):
+        def defaultvalue():
+            return False
+        # key= id, value= True/False
+        visited = defaultdict(defaultvalue)
 
-# create an undirected graph using adjacency list
+        # this loop is to handle the disconnected vertices of graph
+        for id in self.vertices_list.keys():
+            if visited[id] == False:
+                self._depth_first_search(id, visited)
 
-# create a directed acyclic graph
+    # recursive function for DFS or use stack for DFS
+    def _depth_first_search( self, curr_id, visited):
+        # mark current id as visited
+        visited[curr_id] = True
+        print(curr_id, end= ', ')
 
-# graph traversal - Depth First Search
+        # recur for all vertices adjacent to the curr_id
+        neighbor_nodes = self.vertices_list[curr_id].connectedTo
 
-# graph traversal - Breadth First Search
+        for node in neighbor_nodes:
+            if not visited[node.id]:
+                self._depth_first_search(node.id, visited)
+
+    # graph traversal - Breadth First Search, time O(V+E)
+    def breadth_first_search( self):
+        def defaultvalue():
+            return False
+
+        # key= id, value= True/False
+        visited = defaultdict( defaultvalue )
+
+        # queue for BFS
+        queue = Queue()
+
+        # this loop is to handle the disconnected vertices of graph
+        for id in self.vertices_list.keys():
+            # if an id is not visited then BFS through it
+            if not visited[id]:
+                visited[id] = True
+                queue.enqueue(id)
+
+                while not queue.is_empty():
+                    # dequeue an id from queue and print it
+                    curr_id = queue.dequeue()
+                    print(curr_id, end = ', ')
+
+                    # get adj vertices of curr_id. If any id is found with visited False then mark it and enqueue
+                    neighbor_nodes = self.vertices_list[curr_id].connectedTo
+
+                    for node in neighbor_nodes:
+                        if not visited[node.id]:
+                            queue.enqueue(node.id)
+                            visited[node.id] = True
 
 # topological sort in directed acyclic graph
 
@@ -167,7 +224,7 @@ class Graph_adj_list(object):
 
 
 if __name__ == '__main__':
-    # undirected graph - adjacency matrix
+    # create an undirected graph using adjacency matrix
     # a-10-b-20-e
     # |30  |40  |60
     # d-50-c ...d
@@ -187,7 +244,9 @@ if __name__ == '__main__':
     print('Graph representation in adjacency matrix:', end = '\n')
     print(*graph1.get_adjacency_matrix(), sep= '\n')
 
-    # undirected graph - adjacency list
+    # create a directed acyclic graph - adj matrix
+
+    # create an undirected graph using adjacency list
     graph2 = Graph_adj_list()
     graph2.add_vertex('a')
     graph2.add_vertex('b')
@@ -202,5 +261,13 @@ if __name__ == '__main__':
     graph2.add_edge('d', 'e', 60)
     print('Graph representation in adjacency list:', end = '\n')
     for v in graph2:
-        for key,value in v.get_connections().items():
+        for key,value in v.connectedTo.items():
             print('( %s , %s, %s)' % (v.getId(), key.getId(), value))
+
+    # create a directed acyclic graph - adj list
+
+    print('Depth first search using adj list undirected graph:', end=' ')
+    graph2.depth_first_search()
+
+    print( '\nBreadth first search using adj list undirected graph:', end=' ' )
+    graph2.breadth_first_search()
