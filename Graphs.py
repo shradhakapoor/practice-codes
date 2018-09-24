@@ -14,6 +14,20 @@ class Queue(object):
     def is_empty( self ):
         return len(self.items) == 0
 
+class Stack(object):
+    def __init__(self):
+        self.items = []
+
+    def push( self, value ):
+        self.items.append(value)
+
+    def pop( self ):
+        if not self.is_empty:
+            return self.items.pop()
+
+    def is_empty( self ):
+        return len(self.items) == 0
+
 # graph representation using adjacency matrix
 class Graph_adj_matrix(object):
     def __init__(self, no_of_vertices):
@@ -36,6 +50,11 @@ class Graph_adj_matrix(object):
         to_num = self.vertex_id_to_num_map[to]
         self.adjacency_matrix[frm_num][to_num] = cost
         self.adjacency_matrix[to_num][frm_num] = cost # for undirected graphs only
+
+    def add_edge_directed_graph( self, frm, to, cost = 0 ):
+        frm_num = self.vertex_id_to_num_map[frm]
+        to_num = self.vertex_id_to_num_map[to]
+        self.adjacency_matrix[frm_num][to_num] = cost
 
     def get_vertices( self ):
         return self.vertices_list
@@ -103,6 +122,13 @@ class Graph_adj_list(object):
         self.vertices_list[frm].add_neighbor(self.vertices_list[to], cost)
         self.vertices_list[to].add_neighbor( self.vertices_list[frm], cost) # for undirected graphs only
 
+    def add_edge_directed_graph( self, frm, to, cost = 0 ):
+        if frm not in self.vertices_list:
+            self.add_vertex(frm)
+        if to not in self.vertices_list:
+            self.add_vertex(to)
+        self.vertices_list[frm].add_neighbor(self.vertices_list[to], cost)
+
     def get_vertices( self ):
         return self.vertices_list.keys()
 
@@ -166,9 +192,40 @@ class Graph_adj_list(object):
                             queue.enqueue(node.id)
                             visited[node.id] = True
 
-# topological sort in directed acyclic graph
+    # topological sort in directed acyclic graph
+    def topological_sort_DAG( self ):
+        # mark all vertices as not visited
+        def defaultvalue():
+            return False
 
-# find shortest path in unweighted directed graph (modified BFS)
+        # key= id, value= True/False
+        visited = defaultdict( defaultvalue )
+        stack = Stack()
+
+        # this loop is to handle the disconnected vertices of graph
+        for id in self.vertices_list.keys():
+            if not visited[id]:
+                self._topological_sort_DAG(id, visited, stack)
+
+        return stack
+
+    def _topological_sort_DAG( self, curr_id, visited, stack ):
+        # mark curr_id as visited
+        visited[curr_id] = True
+
+        # recur for all adjacent/ neighbor vertices
+        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+
+        for node in neighbor_nodes:
+            if not visited[node.id]:
+                self._topological_sort_DAG(node.id, visited, stack)
+
+        # a vertex is pushed to stack only when all its adjacent vertices are already in stack
+        stack.items.insert(0,curr_id)
+
+    # find shortest path in unweighted directed graph (modified BFS)
+    # def shortest_path_modified_BFS( self ):
+
 
 # find shortest path in weighted directed graph (Dijkstra algorithm)
 
@@ -240,11 +297,24 @@ if __name__ == '__main__':
     graph1.add_edge('c', 'b', 40)
     graph1.add_edge('c', 'd', 50)
     graph1.add_edge('d', 'e', 60)
-
-    print('Graph representation in adjacency matrix:', end = '\n')
+    print('Undirected Graph representation in adjacency matrix:', end = '\n')
     print(*graph1.get_adjacency_matrix(), sep= '\n')
 
     # create a directed acyclic graph - adj matrix
+    graph4 = Graph_adj_matrix( 5 )
+    graph4.add_vertex( 0, 'a' )
+    graph4.add_vertex( 1, 'b' )
+    graph4.add_vertex( 2, 'c' )
+    graph4.add_vertex( 3, 'd' )
+    graph4.add_vertex( 4, 'e' )
+    graph4.add_edge_directed_graph( 'a', 'b', 10 )
+    graph4.add_edge_directed_graph( 'b', 'e', 20 )
+    graph4.add_edge_directed_graph( 'a', 'd', 30 )
+    graph4.add_edge_directed_graph( 'b', 'c', 40 )
+    graph4.add_edge_directed_graph( 'd', 'c', 60 )
+    graph4.add_edge_directed_graph( 'e', 'd', 50 )
+    print( 'Directed Graph representation in adjacency matrix:', end='\n' )
+    print( *graph4.get_adjacency_matrix(), sep='\n' )
 
     # create an undirected graph using adjacency list
     graph2 = Graph_adj_list()
@@ -259,15 +329,34 @@ if __name__ == '__main__':
     graph2.add_edge('b', 'c', 40)
     graph2.add_edge('c', 'd', 50)
     graph2.add_edge('d', 'e', 60)
-    print('Graph representation in adjacency list:', end = '\n')
+    print('Undirected Graph representation in adjacency list:', end = '\n')
     for v in graph2:
         for key,value in v.connectedTo.items():
             print('( %s , %s, %s)' % (v.getId(), key.getId(), value))
 
     # create a directed acyclic graph - adj list
+    graph3 = Graph_adj_list()
+    graph3.add_vertex( 'a' )
+    graph3.add_vertex( 'b' )
+    graph3.add_vertex( 'e' )
+    graph3.add_vertex( 'c' )
+    graph3.add_vertex( 'd' )
+    graph3.add_edge_directed_graph( 'a', 'b', 10 )
+    graph3.add_edge_directed_graph( 'b', 'e', 20 )
+    graph3.add_edge_directed_graph( 'a', 'd', 30 )
+    graph3.add_edge_directed_graph( 'b', 'c', 40 )
+    graph3.add_edge_directed_graph( 'd', 'c', 60 )
+    graph3.add_edge_directed_graph( 'e', 'd', 50 )
+    print( 'Directed Graph representation in adjacency list:', end='\n' )
+    for v in graph3:
+        for key, value in v.connectedTo.items():
+            print( '( %s , %s, %s)' % (v.getId(), key.getId(), value) )
 
     print('Depth first search using adj list undirected graph:', end=' ')
     graph2.depth_first_search()
 
     print( '\nBreadth first search using adj list undirected graph:', end=' ' )
     graph2.breadth_first_search()
+
+    print('\nTopological sorting DAG adj list:', graph3.topological_sort_DAG().items)
+
