@@ -1,4 +1,8 @@
 from collections import defaultdict
+import os
+__path__=[os.path.dirname(os.path.abspath(__file__))]
+from . import binary_heaps
+
 
 class Queue(object):
     def __init__(self):
@@ -35,7 +39,7 @@ class Graph_adj_matrix(object):
         self.adjacency_matrix = [[-1] * no_of_vertices for x in range(no_of_vertices)]
         self.vertices_list = [0] * no_of_vertices
 
-        def defaultvalue(): # return value for defaultdict of key is not present
+        def defaultvalue(): # return value for defaultdict if key is not present
             return -1
         # ex: a->0, b->1, c->2...
         self.vertex_id_to_num_map = defaultdict(defaultvalue)
@@ -71,12 +75,148 @@ class Graph_adj_matrix(object):
     def get_adjacency_matrix( self ):
         return self.adjacency_matrix
 
+    # find shortest path in weighted directed graph (Dijkstra algorithm)
+    # time O(E.logV) space O(E+V)when implemented using minheap. time O(V^2) otherwise
+
+    # implementing slower solution, using adj matrix
+    def dijkstra_algorithm( self, source ):
+        dist = [float( 'inf' )] * self.no_of_vertices
+        source = self.vertex_id_to_num_map[source]
+        dist[source] = 0
+        visited = [False] * self.no_of_vertices
+
+        for i in range( self.no_of_vertices ):
+            # find min distance vertex from vertices not yet processed
+            # u is always equal to source in first iteration
+            u = self._min_distance( dist, visited )
+
+            # put min distance vertex to shortest path tree
+            visited[u] = True
+
+            # update distance for adjacent vertices of current vertex,
+            # only if new distance is shorter than the current distance
+            # and vertex is not in shortest path tree
+            for v in range( self.no_of_vertices ):
+                newDistance = dist[u] + self.adjacency_matrix[u][v]
+                if self.adjacency_matrix[u][v] > 0 and visited[v] == False and \
+                    newDistance < dist[v]:
+                    dist[v] = newDistance
+
+        return distance
+
+    # returns vertex with min distance value among the set of vertices not yet included in shortest path tree
+    def _min_distance( self, dist, visited ):
+        min_dist = float('inf')
+        min_index = 0
+        for v in range(self.no_of_vertices):
+            if dist[v] < min_dist and visited[v] == False:
+                min_dist = dist[v]
+                min_index = v
+
+        return min_index
+
+    # find shortest distance from src to all vertices in weighted graph with negative edges (Bellman-Ford algorithm)
+    def bellman_ford_algorithm( self, src ):
+        src = self.vertex_id_to_num_map[src]
+        # 1. initialize distances from src to all other vertices as INFINITE
+        dist = [float( 'inf' )] * self.no_of_vertices
+        dist[src] = 0
+
+        # 2. Relax all edges | V | - 1 times.
+        # A simple shortest path from src to any other vertex can have at-most |V| - 1 edges
+        for i in range( self.no_of_vertices - 1 ):
+            # Update dist value and parent index of the adjacent vertices of the picked vertex.
+            # Consider only those vertices which are still in queue
+            for u, v, w in self.get_edges():
+                u, v = self.vertex_id_to_num_map[u], self.vertex_id_to_num_map[v]
+                if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                    dist[v] = dist[u] + w
+
+        # 3. check for negative-weight cycles
+        for u, v, w in self.get_edges():
+            u, v = self.vertex_id_to_num_map[u], self.vertex_id_to_num_map[v]
+            if dist[u] != float('inf') and dist[u] + w < dist[v]:
+                print('Graph contains negative weight cycle')
+                return
+
+        return dist
+
+    # find minimum spanning tree in undirected weighted graph - Prim's algorithm
+    # for unweighted graphs we consider all weights are equal
+    def prims_algorithm( self ):
+        # used to pick the minimum weight edge
+        min_weight_edge = [float('inf')] * self.no_of_vertices
+        parnt = [-1] * self.no_of_vertices
+
+        visited = [False] * self.no_of_vertices
+
+        # make vertex 0 as 0 so that it is picked as first vertex
+        min_weight_edge[0] = 0
+        parnt[0] = -1
+
+        for i in range(self.no_of_vertices):
+            # find min distance vertex from vertices not yet processed
+            # u is always equal to source in first iteration
+            u = self._min_distance( min_weight_edge, visited )
+
+            # put min distance vertex to shortest path tree
+            visited[u] = True
+
+            # update distance for adjacent vertices of current vertex,
+            # only if new distance is shorter than the current distance
+            # and vertex is not in shortest path tree
+            for v in range( self.no_of_vertices ):
+                if 0 < self.adjacency_matrix[u][v] < min_weight_edge[v] and visited[v] == False:
+                    min_weight_edge[v] = self.adjacency_matrix[u][v]
+                    parnt[v] = u
+
+        result = []
+        for i in range(1, self.no_of_vertices):
+            result.append('edge'+str(parnt[i])+'-'+str(i)+'->weight'+str(self.adjacency_matrix[i][parnt[i]]))
+
+        return result
+
+    # Given a graph as adjacency matrix, check whether graph has simple path from source to destination
+    # solution : start from source vertex, do either a BFS or DFS and if we find the destination vertex while traversal
+    # then the path exists otherwise not.
+
+    # Given a graph as adjacency matrix, print all simple paths from source to destination in graph
+    def print_all_paths_src_to_dst( self, src, dst ):
+        # Mark all the vertices as not visited
+        visited = [False] * self.no_of_vertices
+
+        # Create an array to store paths
+        path = []
+
+        src, dst = self.vertex_id_to_num_map[src], self.vertex_id_to_num_map[dst]
+        return self._print_all_paths_src_to_dst(src, dst, visited, path)
+
+    # prints all paths from u to dst
+    def _print_all_paths_src_to_dst( self, u, dst, visited, path ):
+        # mark current vertex as visited and append to path
+        visited[u] = True
+        path.append(u)
+
+        if u == dst:
+            return path
+        else:
+            # recur for all vertices adjacent to current vertex
+            for i in range(self.no_of_vertices):
+                if not visited[i]:
+                    self._print_all_paths_src_to_dst(i, dst, visited, path)
+
+        # Remove current vertex from path[] and mark it as unvisited
+        path.pop()
+        visited[u] = False
+
+
 class adj_list_vertex(object):
     def __init__(self, id):
         self.id = id
 
         def defaultvalue():
             return -1
+        # key = neighbor_id, value = cost
         self.connectedTo = defaultdict(defaultvalue)
 
     def add_neighbor( self, neighbor, cost ):
@@ -106,7 +246,6 @@ class Graph_adj_list(object):
         self.no_of_vertices -= 1
         if id in self.vertices_list.keys():
             del self.vertices_list[id]
-
 
     def get_vertex( self, v ):
         if v in self.vertices_list:
@@ -223,61 +362,79 @@ class Graph_adj_list(object):
         # a vertex is pushed to stack only when all its adjacent vertices are already in stack
         stack.items.insert(0,curr_id)
 
-    # find shortest path in unweighted directed graph (modified BFS)
-    # def shortest_path_modified_BFS( self ):
+    # find shortest distance from src to all vertices in unweighted directed graph (modified BFS)
+    def shortest_path_modified_BFS( self, source ):
 
+        def defaultvalue():
+            return False
+        visited = defaultdict(defaultvalue)
 
-# find shortest path in weighted directed graph (Dijkstra algorithm)
+        # key = id, value = shortest distance from source to this vertex
+        def defvalue():
+            return 0
+        distance = defaultdict(defvalue)
 
-# find shortest path in weighted directed graph with negative edges (Bellman-Ford algorithm)
+        # key = vertex id, value = parent to this vertex
+        def defaultval():
+            return None
+        parent = defaultdict(defaultval)
 
-# find shortes path in weighted acyclic graph
+        # queue for bfs
+        queue = Queue()
+        queue.enqueue(source)
+        visited[source] = True
 
-# find minimum spanning tree in undirected weighted graph - Prim's algorithm
-# for unweighted graphs we consider all weights are equal
+        while not queue.is_empty():
+            curr_id = queue.dequeue()
+            # get adj vertices of curr_id. If any id is found with visited False then mark it and enqueue
+            neighbor_nodes = self.vertices_list[curr_id].connectedTo
+            for node in neighbor_nodes:
+                if not visited[node.id]:
+                    queue.enqueue( node.id )
+                    visited[node.id] = True
+                    parent[node.id] = curr_id
+                    distance[node.id] = distance[curr_id] + 1
 
-# find minimum spanning tree in undirected weighted graph - Kruskal's algorithm
+        return parent, distance
 
-# Given a graph as adjacency matrix, check whether graph has simple path from source to destination
+    # find minimum spanning tree in undirected weighted graph - Kruskal's algorithm
 
-# Given a graph as adjacency matrix, count all simple paths from source to destination in graph
+    # find shortest path between every pair of vertices in graph. Assume graph doesn't have negative edges
+    # can be solved using n applications of Dijkstra
 
-# find shortest path between every pair of vertices in graph. Assume graph doesn't have negative edges
-# can be solved using n applications of Dijkstra
+    # find shortest path between every pair of vertices in graph. Assume graph has negative edges
+    # Floyd-Warshall algorithm
 
-# find shortest path between every pair of vertices in graph. Assume graph has negative edges
-# Floyd-Warshall algorithm
+    # find the cut-vertex in an undirected graph (DFS application)
+    # Cut-Vertex is a vertex if removed then graph splits into two disconnected components
 
-# find the cut-vertex in an undirected graph (DFS application)
-# Cut-Vertex is a vertex if removed then graph splits into two disconnected components
+    # find cut-edge in an undirected graph (DFS application)
+    # cut-edge is an edge if removed then graph splits into two disconnected components
 
-# find cut-edge in an undirected graph (DFS application)
-# cut-edge is an edge if removed then graph splits into two disconnected components
+    # find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem)
 
-# find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem)
+    # find strongly connected components (DFS application)
 
-# find strongly connected components (DFS application)
+    # count number of connected components of graph given as adjacent matrix (using DFS)
 
-# count number of connected components of graph given as adjacent matrix (using DFS)
+    # count number of connected components of graph given as adjacent matrix (using BFS)
 
-# count number of connected components of graph given as adjacent matrix (using BFS)
+    # detect a cycle in undirected graph in constant time, not necessarily a minimum spanning tree
 
-# detect a cycle in undirected graph in constant time, not necessarily a minimum spanning tree
+    # detect cycle in directed graph
 
-# detect cycle in directed graph
+    # find depth of directed acyclic graph
+    # for undirected graph, use simple unweighted shortest path algorithm and return highest no. among all distances
 
-# find depth of directed acyclic graph
-# for undirected graph, use simple unweighted shortest path algorithm and return highest no. among all distances
+    # determine whether a directed graph has a unique topological ordering
 
-# determine whether a directed graph has a unique topological ordering
+    # find lowest common ancestor of 2 vertices in directed acyclic graph "DAG"
 
-# find lowest common ancestor of 2 vertices in directed acyclic graph "DAG"
+    # Given DAG, find shortest ancestral path between two vertices
 
-# Given DAG, find shortest ancestral path between two vertices
+    # check two given graphs are isomorphic or not
 
-# check two given graphs are isomorphic or not
-
-# given directed graph, return the reverse graph. each edge from v to w is replaced by edge from w to v
+    # given directed graph, return the reverse graph. each edge from v to w is replaced by edge from w to v
 
 
 if __name__ == '__main__':
@@ -360,3 +517,20 @@ if __name__ == '__main__':
 
     print('\nTopological sorting DAG adj list:', graph3.topological_sort_DAG().items)
 
+    print('Shortest path in unweighted graph from source using modified BFS:', end = '\n')
+    parent, distance = graph2.shortest_path_modified_BFS( 'a' )
+    for d in distance.keys():
+        print(d,'is',distance[d],'distance from source')
+    for p in parent.keys():
+        print(p,'has parent',parent[p])
+
+    print('Dijkstra\'s algorithm using adj matrix graph, slower implementation:', end='\n')
+    dist = graph4.dijkstra_algorithm('a')
+    for d in dist.keys():
+        print(d,'is',dist[d],'distance from source')
+
+    print('Bellman Ford algorithm using adj matrix graph:', graph4.bellman_ford_algorithm('a'))
+
+    print('Prim\'s algorithm using adj matrix graph:', graph4.prims_algorithm())
+
+    print('All paths from source to destination using adj matrix graph:', graph4.print_all_paths_src_to_dst('a', 'e'))
