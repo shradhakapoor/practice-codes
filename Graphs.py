@@ -189,7 +189,7 @@ class Graph_adj_matrix(object):
         path = []
 
         src, dst = self.vertex_id_to_num_map[src], self.vertex_id_to_num_map[dst]
-        return self._print_all_paths_src_to_dst(src, dst, visited, path)
+        self._print_all_paths_src_to_dst(src, dst, visited, path)
 
     # prints all paths from u to dst
     def _print_all_paths_src_to_dst( self, u, dst, visited, path ):
@@ -198,7 +198,7 @@ class Graph_adj_matrix(object):
         path.append(u)
 
         if u == dst:
-            return path
+            print(path)
         else:
             # recur for all vertices adjacent to current vertex
             for i in range(self.no_of_vertices):
@@ -208,6 +208,21 @@ class Graph_adj_matrix(object):
         # Remove current vertex from path[] and mark it as unvisited
         path.pop()
         visited[u] = False
+
+    # find shortest path between every pair of vertices in graph. Assume graph has negative edges but not -ve cycle
+    # Floyd-Warshall algorithm , time O(n^3)
+    def floyd_warshall_algorithm( self ):
+        tmp = [float('inf')* self.no_of_vertices for x in range(self.no_of_vertices)]
+        # create tmp array according to the given graph
+        # d[v][u] = inf for each pair (v,u)
+        # d[v][v] = 0 for each vertex v
+
+        for k in range( self.no_of_vertices ):
+            for i in range( self.no_of_vertices ):
+                for j in range( self.no_of_vertices ):
+                    tmp[i][j] = min( tmp[i][j], tmp[i][k] + tmp[k][j] )
+
+        return tmp
 
 
 class adj_list_vertex(object):
@@ -398,12 +413,10 @@ class Graph_adj_list(object):
         return parent, distance
 
     # find minimum spanning tree in undirected weighted graph - Kruskal's algorithm
+    # def kruskal_algorithm( self ):
 
     # find shortest path between every pair of vertices in graph. Assume graph doesn't have negative edges
     # can be solved using n applications of Dijkstra
-
-    # find shortest path between every pair of vertices in graph. Assume graph has negative edges
-    # Floyd-Warshall algorithm
 
     # find the cut-vertex in an undirected graph (DFS application)
     # Cut-Vertex is a vertex if removed then graph splits into two disconnected components
@@ -533,4 +546,7 @@ if __name__ == '__main__':
 
     print('Prim\'s algorithm using adj matrix graph:', graph4.prims_algorithm())
 
-    print('All paths from source to destination using adj matrix graph:', graph4.print_all_paths_src_to_dst('a', 'e'))
+    print('All paths from source to destination using adj matrix graph:', end = '\n')
+    graph4.print_all_paths_src_to_dst( 'a', 'e' )
+
+    print('All pairs shortest path problem- Floyd Warshall using adj matrix graph:', graph4.floyd_warshall_algorithm())
