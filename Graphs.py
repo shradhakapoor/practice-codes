@@ -2,6 +2,7 @@ from collections import defaultdict
 import os
 __path__=[os.path.dirname(os.path.abspath(__file__))]
 from . import binary_heaps
+from . import disjoint_sets
 
 
 class Queue(object):
@@ -214,7 +215,7 @@ class Graph_adj_matrix(object):
     def floyd_warshall_algorithm( self ):
         tmp = [float('inf')* self.no_of_vertices for x in range(self.no_of_vertices)]
         # create tmp array according to the given graph
-        # d[v][u] = inf for each pair (v,u)
+        # d[v][u] = infinity for each pair (v,u)
         # d[v][v] = 0 for each vertex v
 
         for k in range( self.no_of_vertices ):
@@ -413,13 +414,82 @@ class Graph_adj_list(object):
         return parent, distance
 
     # find minimum spanning tree in undirected weighted graph - Kruskal's algorithm
-    # def kruskal_algorithm( self ):
+        # solution: uses makeSet, findSet, union operations of Disjoint sets.
 
     # find shortest path between every pair of vertices in graph. Assume graph doesn't have negative edges
-    # can be solved using n applications of Dijkstra
+    # can be solved using n applications of Dijkstra, time O(V.(V.logV + E))
 
-    # find the cut-vertex in an undirected graph (DFS application)
-    # Cut-Vertex is a vertex if removed then graph splits into two disconnected components
+    # find the cut-vertex/ articulation point in an undirected graph (DFS application)
+    # Articulation point is a vertex if removed then graph splits into two disconnected components
+    def find_articulation_points( self ):
+        # mark all vertices as not visited
+        def defaultvalue():
+            return False
+        visited = defaultdict(defaultvalue)
+
+        # store articulation points
+        articulation_points = defaultdict( defaultvalue )
+
+        # key = vertex id, value = parent to this vertex
+        def defaultval():
+            return None
+        parnt = defaultdict( defaultval )
+
+        # discovery time of visited vertices
+        def dvalue():
+            return float('inf')
+        discovery_time = defaultdict(dvalue)
+
+        # low time
+        low_time = defaultdict( dvalue )
+
+        # find articulation points in DFS tree rooted at vertex i
+        for id in self.vertices_list:
+            if not visited[id]:
+                self._articulation_points(self.vertices_list[id], visited, articulation_points, parnt, low_time, discovery_time)
+
+        for index, value in enumerate( articulation_points):
+            if value: print( index, end=', ' )
+
+    time = 0
+    def _articulation_points( self, curr, visited, articulation_points, parnt, low_time, discovery_time ):
+        # count of children in current node
+        children = 0
+
+        # Mark the current node as visited and print it
+        visited[curr.id]= True
+
+        # Initialize discovery time and low value
+        discovery_time[curr.id] = self.time
+        low_time[curr.id] = self.time
+        self.time += 1
+
+        # Recur for all the vertices adjacent to curr
+        for v in curr.connectedTo.keys():
+            v = v.getId()
+            # If v is not visited yet, then make it a child of curr in DFS tree and recur for it
+            if not visited[v]:
+                parnt[v] = curr
+                children += 1
+                self._articulation_points( self.vertices_list[v], visited, articulation_points,
+                                           parnt, low_time, discovery_time )
+
+                # if the subtree rooted with v has a connection to one of the ancestors of curr
+                low_time[curr] = min( low_time[curr], low_time[v] )
+
+                # curr is an articulation point in following cases:
+
+                # (1) curr is root of DFS tree and has two or more children
+                if parnt[curr] == -1 and children > 1:
+                    articulation_points[curr] = True
+
+                # (2) If curr is not root and low_time of one of its child is more than discovery_time of curr.
+                if parnt[curr] != -1 and low_time[v] >= discovery_time[curr]:
+                    articulation_points[curr] = True
+
+                # Update low_time of curr for parent function calls
+                elif v != parnt[curr]:
+                    low_time[curr] = min( low_time[curr], discovery_time[v] )
 
     # find cut-edge in an undirected graph (DFS application)
     # cut-edge is an edge if removed then graph splits into two disconnected components
@@ -549,4 +619,7 @@ if __name__ == '__main__':
     print('All paths from source to destination using adj matrix graph:', end = '\n')
     graph4.print_all_paths_src_to_dst( 'a', 'e' )
 
-    print('All pairs shortest path problem- Floyd Warshall using adj matrix graph:', graph4.floyd_warshall_algorithm())
+    # print('All pairs shortest path problem- Floyd Warshall using adj matrix graph:', graph4.floyd_warshall_algorithm())
+
+    print('Finding articulation points in undirected graph adj list:', graph2.find_articulation_points())
+
