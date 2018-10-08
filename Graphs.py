@@ -493,8 +493,14 @@ class Graph_adj_list(object):
 
     # find cut-edge in an undirected graph (DFS application)
     # cut-edge is an edge if removed then graph splits into two disconnected components
+        # solution: time O(V+E)
+        # For every edge( u, v ), do following
+        # a) Remove( u, v ) from graph
+        # b) See if the graph remains connected( We can either use BFS or DFS)
+        # c) Add( u, v ) back to the graph
 
     # find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem)
+
 
     # find strongly connected components (DFS application)
 
