@@ -234,15 +234,19 @@ class Graph_adj_matrix(object):
         path[0] = 0
 
         if not self._detect_hamiltonian_cycle_undirected_graph(path, 1):
-            return None
+            return False
 
-        return path
+        for vertex in path:
+            print(self.vertices_list[vertex], end=', ')
+        print(self.vertices_list[path[0]], end='\n')
+
+        return True
 
     def _detect_hamiltonian_cycle_undirected_graph( self, path, position ):
         # base case: if all vertices are included in path
         if position == self.no_of_vertices:
             # Last vertex must be adjacent to the first vertex in path to make a cycle
-            if self.adjacency_matrix[path[position-1]][path[0]] != 0:
+            if self.adjacency_matrix[path[position-1]][path[0]] == 1:
                 return True
             else:
                 return False
@@ -254,14 +258,14 @@ class Graph_adj_matrix(object):
                 if self._detect_hamiltonian_cycle_undirected_graph(path, position+1):
                     return True
                 # remove current vertex if it doesn't lead to a solution
-                path[position] = 0
+                path[position] = -1
 
         return False
 
     # Check if vertex v is an adjacent vertex of previously added vertex and is not already included in the path
     def is_safe( self, v, position, path ):
         # Check if current vertex and last vertex in path are adjacent
-        if self.adjacency_matrix[path[position - 1]][v] != 0:
+        if self.adjacency_matrix[path[position - 1]][v] == 0:
             return False
 
         # Check if current vertex is already in path then return False
@@ -345,7 +349,7 @@ class Graph_adj_list(object):
 
         # this loop is to handle the disconnected vertices of graph
         for id in self.vertices_list.keys():
-            if visited[id] == False:
+            if not visited[id]:
                 self._depth_first_search(id, visited)
 
     # recursive function for DFS or use stack for DFS
@@ -749,5 +753,34 @@ if __name__ == '__main__':
 
     print('Detect cycle in an undirected graph using adj list:', graph2.detect_cycle_undirected_graph())
 
-    print('Detect Hamiltonian cycle in undirected adj matrix graph:',graph1.detect_hamiltonian_cycle_undirected_graph())
+    graph_y = Graph_adj_matrix( 5 )
+    graph_y.add_vertex( 0, 'a' )
+    graph_y.add_vertex( 1, 'b' )
+    graph_y.add_vertex( 2, 'c' )
+    graph_y.add_vertex( 3, 'd' )
+    graph_y.add_vertex( 4, 'e' )
+    #       (a)--(b)--(c)
+    #        |   / \   |
+    #        |  /   \  |
+    #        | /     \ |
+    #       (e)-------(d)
+    # Has Hamiltonian Cycle
+    graph_y.adjacency_matrix = [[0, 1, 0, 1, 0],
+                                [1, 0, 1, 1, 1],
+                                [0, 1, 0, 0, 1],
+                                [1, 1, 0, 0, 1],
+                                [0, 1, 1, 1, 0]]
+    #       (a)--(b)--(c)
+    #        |   / \   |
+    #        |  /   \  |
+    #        | /     \ |
+    #       (e)       (d)
+    # Doesn't have Hamiltonian cycle
+    # graph_y.adjacency_matrix = [[0, 1, 0, 1, 0],
+    #                             [1, 0, 1, 1, 1],
+    #                             [0, 1, 0, 0, 1],
+    #                             [1, 1, 0, 0, 0],
+    #                             [0, 1, 1, 0, 0]]
+    print('Detect Hamiltonian cycle in undirected adj matrix graph:',end = ' ')
+    graph_y.detect_hamiltonian_cycle_undirected_graph()
 
