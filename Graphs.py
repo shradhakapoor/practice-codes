@@ -225,6 +225,51 @@ class Graph_adj_matrix(object):
 
         return tmp
 
+    # find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem) using backtracking
+    def detect_hamiltonian_cycle_undirected_graph( self ):
+        path = [-1] * self.no_of_vertices
+
+        # put vertex 0 as first vertex in path.
+        # If there is a Hamiltonian Cycle, then path can be started from any point of cycle as the graph is undirected
+        path[0] = 0
+
+        if not self._detect_hamiltonian_cycle_undirected_graph(path, 1):
+            return None
+
+        return path
+
+    def _detect_hamiltonian_cycle_undirected_graph( self, path, position ):
+        # base case: if all vertices are included in path
+        if position == self.no_of_vertices:
+            # Last vertex must be adjacent to the first vertex in path to make a cycle
+            if self.adjacency_matrix[path[position-1]][path[0]] != 0:
+                return True
+            else:
+                return False
+
+        # try different vertices as a next candidate in Hamiltonian cycle, except 0 because we took 0 as starting point
+        for v in range(1, self.no_of_vertices):
+            if self.is_safe(v, position, path):
+                path[position] = v
+                if self._detect_hamiltonian_cycle_undirected_graph(path, position+1):
+                    return True
+                # remove current vertex if it doesn't lead to a solution
+                path[position] = 0
+
+        return False
+
+    # Check if vertex v is an adjacent vertex of previously added vertex and is not already included in the path
+    def is_safe( self, v, position, path ):
+        # Check if current vertex and last vertex in path are adjacent
+        if self.adjacency_matrix[path[position - 1]][v] != 0:
+            return False
+
+        # Check if current vertex is already in path then return False
+        if v in path:
+            return False
+
+        return True
+
 
 class adj_list_vertex(object):
     def __init__(self, id):
@@ -419,6 +464,77 @@ class Graph_adj_list(object):
     # find shortest path between every pair of vertices in graph. Assume graph doesn't have negative edges
     # can be solved using n applications of Dijkstra, time O(V.(V.logV + E))
 
+    # detect a cycle in directed graph
+    def detect_cycle_directed_graph( self ):
+        # mark all vertices as not visited
+        def defaultvalue():
+            return False
+        # key= id, value= True/False
+        visited = defaultdict( defaultvalue )
+
+        stack = Stack()
+
+        # this loop is to handle the disconnected vertices of graph
+        for id in self.vertices_list.keys():
+            if not visited[id]:
+                if self._detect_cycle_directed_graph(id, visited, stack):
+                    return True
+        return False
+
+    # returns true if graph contains a cycle
+    def _detect_cycle_directed_graph( self, curr_id, visited, stack ):
+        # mark curr_id as visited
+        visited[curr_id] = True
+        # add curr_id to stack
+        stack.push(curr_id)
+
+        # recur for all adjacent/ neighbor vertices
+        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+
+        for node in neighbor_nodes:
+            # if any neighbor is visited or it is in stack then graph is cyclic
+            if not visited[node.id]:
+                if self._detect_cycle_directed_graph( node.id, visited, stack ):
+                    return True
+            elif node.id in stack.items:
+                    return True
+        # pop out the node from stack before this function call ends
+        stack.items.remove(curr_id)
+        return False
+
+    # detect a cycle in undirected graph , time O(V+E)
+    def detect_cycle_undirected_graph( self ):
+        # mark all vertices as not visited
+        def defaultvalue():
+            return False
+        # key= id, value= True/False
+        visited = defaultdict( defaultvalue )
+
+        # this loop is to handle the disconnected vertices of graph
+        for id in self.vertices_list.keys():
+            if not visited[id]:
+                if self._detect_cycle_undirected_graph( id, visited, -1 ):
+                    return True
+        return False
+
+    def _detect_cycle_undirected_graph( self, curr_id, visited, parent_id ):
+        # mark curr_id as visited
+        visited[curr_id] = True
+
+        # recur for all adjacent/ neighbor vertices
+        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+
+        for node in neighbor_nodes:
+            # if a neighbor node is not visited then recurse on it
+            if not visited[node.id]:
+                if self._detect_cycle_undirected_graph( node.id, visited, curr_id ):
+                    return True
+            # if parent is not visited but neighbor is visited then there is a cycle
+            elif parent_id != node.id:
+                return True
+
+        return False
+
     # find the cut-vertex/ articulation point in an undirected graph (DFS application)
     # Articulation point is a vertex if removed then graph splits into two disconnected components
     def find_articulation_points( self ):
@@ -499,18 +615,11 @@ class Graph_adj_list(object):
         # b) See if the graph remains connected( We can either use BFS or DFS)
         # c) Add( u, v ) back to the graph
 
-    # find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem)
-
-
     # find strongly connected components (DFS application)
 
     # count number of connected components of graph given as adjacent matrix (using DFS)
 
     # count number of connected components of graph given as adjacent matrix (using BFS)
-
-    # detect a cycle in undirected graph in constant time, not necessarily a minimum spanning tree
-
-    # detect cycle in directed graph
 
     # find depth of directed acyclic graph
     # for undirected graph, use simple unweighted shortest path algorithm and return highest no. among all distances
@@ -574,7 +683,6 @@ if __name__ == '__main__':
     graph2.add_edge('a', 'd', 30)
     graph2.add_edge('b', 'c', 40)
     graph2.add_edge('c', 'd', 50)
-    graph2.add_edge('d', 'e', 60)
     print('Undirected Graph representation in adjacency list:', end = '\n')
     for v in graph2:
         for key,value in v.connectedTo.items():
@@ -628,4 +736,18 @@ if __name__ == '__main__':
     # print('All pairs shortest path problem- Floyd Warshall using adj matrix graph:', graph4.floyd_warshall_algorithm())
 
     print('Finding articulation points in undirected graph adj list:', graph2.find_articulation_points())
+
+    # create another directed acyclic graph - adj list
+    graph_x = Graph_adj_list()
+    graph_x.add_vertex( 'a' )
+    graph_x.add_vertex( 'b' )
+    graph_x.add_vertex( 'c' )
+    graph_x.add_edge_directed_graph( 'a', 'b', 20 )
+    graph_x.add_edge_directed_graph( 'b', 'c', 30 )
+    graph_x.add_edge_directed_graph( 'c', 'a', 50 )
+    print('Detect cycle in a directed graph using adj list:', graph_x.detect_cycle_directed_graph())
+
+    print('Detect cycle in an undirected graph using adj list:', graph2.detect_cycle_undirected_graph())
+
+    print('Detect Hamiltonian cycle in undirected adj matrix graph:',graph1.detect_hamiltonian_cycle_undirected_graph())
 
