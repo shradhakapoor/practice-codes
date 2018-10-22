@@ -620,13 +620,84 @@ class Graph_adj_list(object):
         # c) Add( u, v ) back to the graph
 
     # find strongly connected components (DFS application)
+    # strongly connected means every pair of vertices is mutually reachable
+    def find_strongly_connected_components( self ):
+        stack = Stack()
 
-    # count number of connected components of graph given as adjacent matrix (using DFS)
+        # mark all vertices as not visited, for first DFS
+        def defaultvalue():
+            return False
+        visited = defaultdict( defaultvalue )
+
+        # push vertices in stack according to their finishing time
+        for id in self.vertices_list:
+            if not visited[id]:
+                self._push_vertices_in_order(id, visited, stack)
+
+        # Create a reversed graph
+        transposed_graph = self.getTranspose()
+
+        # Mark all the vertices as not visited, for second DFS
+        def defaultvalue():
+            return False
+        visited = defaultdict( defaultvalue )
+
+        # Now process all vertices in order defined by Stack
+        while not stack.is_empty():
+            i = stack.items.pop()
+            if not visited[i]:
+                transposed_graph._depth_first_search( i, visited)
+                print(end=' ')
+
+    def _push_vertices_in_order(self, curr_id, visited, stack):
+        # Mark the current node as visited
+        visited[curr_id] = True
+
+        # recur for all adjacent/ neighbor vertices
+        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+
+        for node in neighbor_nodes:
+            # if a neighbor node is not visited then recurse on it
+            if not visited[node.id]:
+                self._push_vertices_in_order( node.id, visited, stack )
+        stack.push( curr_id )
+
+    # returns the transpose of this graph
+    def getTranspose( self ):
+        g = Graph_adj_list()
+
+        # recur for all adjacent/ neighbor vertices
+        for id in self.vertices_list:
+            neighbor_nodes = self.vertices_list[id].connectedTo
+            for node in neighbor_nodes:
+                g.add_edge_directed_graph(node.id, id)
+
+        return g
+
+    # count number of connected components of undirected graph given as adjacent matrix (using DFS)
+    def number_of_connected_components( self ):
+        # mark all vertices as not visited
+        def defaultvalue():
+            return False
+        visited = defaultdict( defaultvalue )
+        count = 0
+        for id in self.vertices_list:
+            if not visited[id]:
+                # print all reachable vertices from id
+                self._depth_first_search(id, visited)
+                count += 1
+                print('and')
+        return count
 
     # count number of connected components of graph given as adjacent matrix (using BFS)
 
-    # find depth of directed acyclic graph
+    # find depth/ longest path of directed acyclic graph
     # for undirected graph, use simple unweighted shortest path algorithm and return highest no. among all distances
+        # solution:
+        # 1. initialize distance as float('-inf') for all vertices and distance[source_vertex] as 0
+        # 2. create topological order of all vertices
+        # 3. For every vertex u in topological order do: For every adjacent vertex v of u do:
+        #       if distance[v] < distance[u] + cost[u][v] then distance[v] = distance[u] + cost[u][v]
 
     # determine whether a directed graph has a unique topological ordering
 
@@ -696,8 +767,8 @@ if __name__ == '__main__':
     graph3 = Graph_adj_list()
     graph3.add_vertex( 'a' )
     graph3.add_vertex( 'b' )
-    graph3.add_vertex( 'e' )
     graph3.add_vertex( 'c' )
+    graph3.add_vertex( 'e' )
     graph3.add_vertex( 'd' )
     graph3.add_edge_directed_graph( 'a', 'b', 10 )
     graph3.add_edge_directed_graph( 'b', 'e', 20 )
@@ -753,6 +824,7 @@ if __name__ == '__main__':
 
     print('Detect cycle in an undirected graph using adj list:', graph2.detect_cycle_undirected_graph())
 
+    # create another undirected graph- adj matrix
     graph_y = Graph_adj_matrix( 5 )
     graph_y.add_vertex( 0, 'a' )
     graph_y.add_vertex( 1, 'b' )
@@ -784,3 +856,20 @@ if __name__ == '__main__':
     print('Detect Hamiltonian cycle in undirected adj matrix graph:',end = ' ')
     graph_y.detect_hamiltonian_cycle_undirected_graph()
 
+    print('All strongly connected components in adj list directed graph:', end=' ')
+    graph3.find_strongly_connected_components()
+
+    # create another undirected graph using adjacency list
+    graph5 = Graph_adj_list()
+    graph5.add_vertex( 'a' )
+    graph5.add_vertex( 'b' )
+    graph5.add_vertex( 'c' )
+    graph5.add_vertex( 'd' )
+    graph5.add_vertex( 'e' )
+    graph5.add_edge( 'a', 'b', 10 )
+    graph5.add_edge( 'a', 'c', 20 )
+    graph5.add_edge( 'd', 'e', 30 )
+    print('\nConnected components in undirected adj list graph:', end='')
+    print('count of connected components is:',graph5.number_of_connected_components())
+
+    print('\nDepth / longest path in DAG adj list:', graph3.depth_DAG('a').items())
