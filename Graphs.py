@@ -871,5 +871,3 @@ if __name__ == '__main__':
     graph5.add_edge( 'd', 'e', 30 )
     print('\nConnected components in undirected adj list graph:', end='')
     print('count of connected components is:',graph5.number_of_connected_components())
-
-    print('\nDepth / longest path in DAG adj list:', graph3.depth_DAG('a').items())
