@@ -1,4 +1,6 @@
-
+import os
+__path__=[os.path.dirname(os.path.abspath(__file__))]
+from . import binary_heaps
 
 # Bubble sort (ascending order)
 # best: O(n), worst: O(n^2), average: O(n^2), worst space: O(1) auxillary
@@ -39,6 +41,7 @@ def selection_sort(inp):
 
 
 selection_sort( [64, 34, 25, 12, 22, 11, 90] )
+
 
 # Insertion Sort (ascending order)
 # best: O(n^2), worst: O(n^2), average: O(n^2), worst space: O(1) auxillary, O(n^2) total
@@ -103,16 +106,109 @@ shell_sort( [64, 34, 25, 12, 22, 11, 90] )
 
 # Merge Sort
 # best: theta(n.logn), worst: theta(n.logn), average: theta(n.logn), worst space: theta(n) auxillary
-def merge_sort(inp):
-    n = len(inp)
 
-    #
+def merge_sort(inp, n):
+    # splitting
+    if len(inp)>1:
+        mid = len(inp)//2
+        lefthalf = inp[:mid]
+        righthalf = inp[mid:]
+
+        merge_sort(lefthalf, n)
+        merge_sort(righthalf, n)
+
+        # merging
+        i=j=k=0
+        while i < len(lefthalf) and j < len(righthalf):
+            if lefthalf[i] < righthalf[j]:
+                inp[k]=lefthalf[i]
+                i += 1
+            else:
+                inp[k]=righthalf[j]
+                j += 1
+            k += 1
+
+        while i < len(lefthalf):
+            inp[k]=lefthalf[i]
+            i += 1
+            k += 1
+
+        while j < len(righthalf):
+            inp[k]=righthalf[j]
+            j += 1
+            k += 1
+
+    # n is length of initial input, this is passed just to print the final sorted array.
+    if len(inp) == n:
+        print( 'Merge Sort in ascending order:', inp )
+
+
+merge_sort( [64, 34, 25, 12, 22, 11, 90], 7)
 
 # Heap Sort -- implemented in file binary_heaps.py
 # best: theta(n.logn), worst: theta(n.logn), average: theta(n.logn), worst space: theta(1) auxillary, theta(n) total
+minH = binary_heaps.Binary_Heap()
+# minHeap formed by insertion
+#       10
+#     /    \
+#    20    100
+#   /  \
+# 200  500
+minH.insert_minheap(100)
+minH.insert_minheap(200)
+minH.insert_minheap(10)
+minH.insert_minheap(20)
+minH.insert_minheap(500)
+print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 
 # Quick Sort
 # best: O(n.logn), worst: O(n^2), average: O(n.logn), worst space: O(1)
+def quick_sort(inp, low, high):
+    if low < high:
+        pivot = _median_of_input(inp, low, high)
+        quick_sort(inp, low, pivot-1)
+        quick_sort(inp, pivot+1, high)
+
+    print( 'Quick Sort in ascending order:', inp )
+
+
+def _median_of_input(inp, low, high):
+    mid = (low+high) // 2
+    if inp[low] > inp[mid]:
+        inp[low], inp[mid] = inp[mid], inp[low]
+
+    if inp[low] > inp[high]:
+        inp[low], inp[high] = inp[high], inp[low]
+
+    if inp[mid] > inp[high]:
+        inp[mid], inp[high] = inp[high], inp[mid]
+
+    inp[mid], inp[low] = inp[low], inp[mid]
+
+    return _partition(inp, low, high)
+
+
+def _partition(inp, low, high):
+    pivot = inp[low]
+    left, right = low, high
+
+    while left < right:
+        while inp[right] > pivot:
+            right -= 1
+        while left < right and inp[left] < pivot:
+            left += 1
+        # if still left < right, swap inp[left] and inp[right]
+        if left < right:
+            inp[left], inp[right] = inp[right], inp[left]
+
+    inp[low] = inp[right]
+    inp[right] = pivot
+
+    return right
+
+
+quick_sort( [64, 34, 25, 12, 22, 11, 90], 0, 6)
+
 
 # Tree Sort
 # worst: O(n^2), average: O(n.logn), worst space: O(n) auxillary
