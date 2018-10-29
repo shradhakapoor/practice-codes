@@ -161,57 +161,43 @@ minH.insert_minheap(20)
 minH.insert_minheap(500)
 print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 
-# Quick Sort
+
+# Quick Sort, pivot as last element
 # best: O(n.logn), worst: O(n^2), average: O(n.logn), worst space: O(1)
-def quick_sort(inp, low, high):
-    if low < high:
-        pivot = _median_of_input(inp, low, high)
-        quick_sort(inp, low, pivot-1)
-        quick_sort(inp, pivot+1, high)
+def quick_sort(inp, start, end):
+    if start < end:
+        # inp[partioning_index] will now be at it's right place
+        partioning_index = _partition(inp, start, end)
 
-    print( 'Quick Sort in ascending order:', inp )
+        quick_sort(inp, start, partioning_index-1)
+        quick_sort(inp, partioning_index+1, end)
 
-
-def _median_of_input(inp, low, high):
-    mid = (low+high) // 2
-    if inp[low] > inp[mid]:
-        inp[low], inp[mid] = inp[mid], inp[low]
-
-    if inp[low] > inp[high]:
-        inp[low], inp[high] = inp[high], inp[low]
-
-    if inp[mid] > inp[high]:
-        inp[mid], inp[high] = inp[high], inp[mid]
-
-    inp[mid], inp[low] = inp[low], inp[mid]
-
-    return _partition(inp, low, high)
+    return inp
 
 
-def _partition(inp, low, high):
-    pivot = inp[low]
-    left, right = low, high
+def _partition(inp, start, end):
+    pivot = inp[end]
+    # index of smaller element
+    i = start - 1
 
-    while left < right:
-        while inp[right] > pivot:
-            right -= 1
-        while left < right and inp[left] < pivot:
-            left += 1
-        # if still left < right, swap inp[left] and inp[right]
-        if left < right:
-            inp[left], inp[right] = inp[right], inp[left]
+    for j in range(start, end+1):
+        # if current element is <= pivot
+        if inp[j] <= pivot:
+            # increment index of smaller element
+            i += 1
+            if i < j:
+                inp[i], inp[j] = inp[j], inp[i]
 
-    inp[low] = inp[right]
-    inp[right] = pivot
-
-    return right
+    return i
 
 
-quick_sort( [64, 34, 25, 12, 22, 11, 90], 0, 6)
+print('Quick sort in ascending order:', quick_sort([64, 34, 25, 12, 22, 11, 90], 0, 6))
 
 
 # Tree Sort
 # worst: O(n^2), average: O(n.logn), worst space: O(n) auxillary
+def tree_sort(inp):
+
 
 # Counting Sort
 
