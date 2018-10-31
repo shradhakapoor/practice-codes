@@ -1,5 +1,5 @@
 import os
-__path__=[os.path.dirname(os.path.abspath(__file__))]
+__path__ = [os.path.dirname(os.path.abspath(__file__))]
 from . import binary_tree
 
 
@@ -65,7 +65,7 @@ class Binary_Search_Tree(object):
         else:
             print('Value already in tree')
 
-    # print tree-- preorder traversal
+    # print tree-- Inorder traversal
     def print( self ):
         if self.root is None:
             return
@@ -79,6 +79,32 @@ class Binary_Search_Tree(object):
         print(node.value, end=' ')
         if node.right:
             self._print(node.right)
+
+    # Tree sorting
+    def tree_sort(self, root):
+        # Using recursion
+        # print elements in inorder traversal
+
+        # using iteration
+        stack = Stack()
+        done = 0
+        curr = root
+
+        while not done:
+            # reach the leftmost node of current node
+            if curr:
+                stack.push(curr)
+                curr = curr.left
+            else:
+                # backtrack from empty subtree up towards the top of stack
+                if not stack.is_empty():
+                    curr = stack.items.pop()
+                    print(curr.value, end=', ')
+                    # we have visited the node , its left subtree. Now we visit its right subtree
+                    curr = curr.right
+
+                else:
+                    done = 1
 
     # find an element, with recursion
     def search_with_recursion( self, item ):
@@ -502,8 +528,6 @@ class Binary_Search_Tree(object):
         self.bst_to_circular_doubly_linkedlist( root.right, head )
 
 
-
-
 # BST
 #           500
 #          /   \
@@ -519,8 +543,11 @@ bst.insert(450)
 bst.insert(700)
 bst.insert(900)
 
-print('Pre-order tree traversal:', end=' ')
+print('In-order tree traversal:', end=' ')
 bst.print()
+
+print('\nTree sort in ascending order:', end=' ')
+bst.tree_sort(bst.root)
 
 print('\nSearch an item recursively: ', str(bst.search_with_recursion(700)))
 print('Search an item iteratively: ', str(bst.search_with_iteration(700)))

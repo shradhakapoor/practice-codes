@@ -1,7 +1,10 @@
 import os
 __path__=[os.path.dirname(os.path.abspath(__file__))]
-from . import binary_heaps
+from . import binary_heaps, binary_search_tree
+from collections import defaultdict
 
+
+print('.................................................................................')
 # Bubble sort (ascending order)
 # best: O(n), worst: O(n^2), average: O(n^2), worst space: O(1) auxillary
 def bubble_sort(inp):
@@ -164,6 +167,7 @@ print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 
 # Quick Sort, pivot as last element
 # best: O(n.logn), worst: O(n^2), average: O(n.logn), worst space: O(1)
+# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (quick sort)
 def quick_sort(inp, start, end):
     if start < end:
         # inp[partioning_index] will now be at it's right place
@@ -196,16 +200,62 @@ print('Quick sort in ascending order:', quick_sort([64, 34, 25, 12, 22, 11, 90],
 
 # Tree Sort
 # worst: O(n^2), average: O(n.logn), worst space: O(n) auxillary
-def tree_sort(inp):
+
+# BST
+#           500
+#          /   \
+#        400   800
+#       /  \   /  \
+#     200 450 700 900
+bst = binary_search_tree.Binary_Search_Tree(500)
+bst.insert(400)
+bst.insert(800)
+bst.insert(200)
+bst.insert(450)
+bst.insert(700)
+bst.insert(900)
+
+print('Tree sort in ascending order:', end=' ')
+bst.tree_sort(bst.root)
 
 
-# Counting Sort
+# Counting Sort, sorting in linear time in certain situations
+# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (counting sort)
+def counting_sort(inp):
+    min_value = min(inp)
+    max_value = max(inp)
+    length = len(inp)
+    def defaultvalue():
+        return 0
+    temp = defaultdict(defaultvalue)
 
-# Topological Sort -- implemented in Graphs.py
+    for i in range(length):
+        # count the occurence of each integer in input
+        temp[inp[i]] += 1
+
+    temp_sum = 0
+    for i in range(min_value, max_value + 1):
+        temp_sum += temp[i]
+        # compute sum_count
+        temp[i] = temp_sum
+
+    output = [0] * len(inp)
+    for i in range(length):
+        output[(temp[inp[i]]-1)] = inp[i]
+        temp[inp[i]] -= 1
+
+    print('\nCounting Sort in ascending order:', output)
+
+
+counting_sort([6, 3, 5, 11, 2, 11, 9, 6, 3])
+
 
 # Radix sort
 # sorts n^2 elements in linear time
+def radix_sort(inp):
 
+
+# Topological Sort -- implemented in Graphs.py
 # given array of n numbers containing repetition of some numbers. check whether there are repeated elements or not.
 # time O(n^2), space O(1) -- brute force technique
 
@@ -229,10 +279,6 @@ def tree_sort(inp):
 # given arrays A and B, a number K, determine whether there exists a∈A, b∈B such that a+b = K, time O{n.logn)
 
 # given arrays A and B, a number K, determine whether there exists a∈A, b∈B, c∈C such that a+b+c = K, time O{n.logn)
-
-# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (counting sort)
-
-# sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (quick sort)
 
 # better sorting method for linked list - Merge sort
 
