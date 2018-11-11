@@ -1,6 +1,6 @@
 import os
 __path__=[os.path.dirname(os.path.abspath(__file__))]
-from . import binary_heaps, binary_search_tree
+from . import binary_heaps, binary_search_tree, Graphs
 from collections import defaultdict
 
 
@@ -252,18 +252,65 @@ counting_sort([6, 3, 5, 11, 2, 11, 9, 6, 3])
 
 # Radix sort
 # sorts n^2 elements in linear time
-def radix_sort(inp):
-
 
 # Topological Sort -- implemented in Graphs.py
+# create a directed acyclic graph - adj list
+graph3 = Graphs.Graph_adj_list()
+graph3.add_vertex( 'a' )
+graph3.add_vertex( 'b' )
+graph3.add_vertex( 'c' )
+graph3.add_vertex( 'e' )
+graph3.add_vertex( 'd' )
+graph3.add_edge_directed_graph( 'a', 'b', 10 )
+graph3.add_edge_directed_graph( 'b', 'e', 20 )
+graph3.add_edge_directed_graph( 'a', 'd', 30 )
+graph3.add_edge_directed_graph( 'b', 'c', 40 )
+graph3.add_edge_directed_graph( 'd', 'c', 60 )
+graph3.add_edge_directed_graph( 'e', 'd', 50 )
+print('Topological Sort in ascending order:', graph3.topological_sort_DAG().items)
+
+
 # given array of n numbers containing repetition of some numbers. check whether there are repeated elements or not.
 # time O(n^2), space O(1) -- brute force technique
+def find_repeated_number(inp):
+    size = len(inp)
+    for i in range(size):
+        for j in range(i+1, size):
+            if inp[i] == inp[j]:
+                return True
+
+
+if find_repeated_number([6, 3, 5, 11, 2, 11, 9, 6, 3]):
+    print('There are repeated elements, using Brute Force Technique.')
 
 # given array of n numbers containing repetition of some numbers. check whether there are repeated elements or not.
 # time O(n.logn), space O(1) -- sorting technique
 
+
 # given array where each element represents a vote in election. Each vote integer represents ID of chosen candidate.
 # Determine who wins the election , time O(n^2), space O(1)
+    # solution: counting the frequency of each integer ID.
+def find_winner(inp):
+    # count_dict - key = ID, value = frequency of ID
+    def defValue():
+        return 0
+    count_dict = defaultdict(defValue)
+    for id in inp:
+        if count_dict[id] is None:
+            count_dict[id] = 1
+        else:
+            count_dict[id] += 1
+
+    # find the winner
+    mx_id, mx = 0, 0
+    for id, freq in count_dict.items():
+        if freq > mx:
+            mx = freq
+            mx_id = id
+    print('Winner is the candidate ID %s with %s votes'% (str(mx_id), str(mx)))
+
+
+find_winner([12, 13, 11, 12, 12, 45, 45, 45, 45, 45, 12, 13, 11])
 
 # given array where each element represents a vote in election. Each vote integer represents ID of chosen candidate.
 # Determine who wins the election , time O(n.logn), space O(1) heap sort
@@ -276,13 +323,71 @@ def radix_sort(inp):
 
 # given an array of n elements, each integer in range [1, n^3]. sort array in O(n) time
 
-# given arrays A and B, a number K, determine whether there exists a∈A, b∈B such that a+b = K, time O{n.logn)
 
-# given arrays A and B, a number K, determine whether there exists a∈A, b∈B, c∈C such that a+b+c = K, time O{n.logn)
+# given arrays A and B, a number K, determine whether there exists a∈A, b∈B such that a+b = K, time O{n.logn) space O(n)
+def find_sum_pairs(A, B, K):
+    m, n = len(A), len(B)
+    # store all elements of array A in a set
+    s = set(A)
+    # subtract each element of B from K and check if the result is present in s
+    for elem in B:
+        diff = K - elem
+        if diff in s:
+            print(diff,', ', elem)
+
+
+print('pairs of a and b where a + b = k are:', end = '\n')
+find_sum_pairs([1, 0, -4, 7, 6, 4], [0, 2, 4, -3, 2, 1], 8)
+
+
+# given arrays A and B, a number K, determine whether there exists a∈A, b∈B, c∈C such that a+b+c = K
+def find_sum_triplets(A, B, C, K):
+    m, n, o = len(A), len(B), len(C)
+
+    # dictionary, key = sum of A and B, value = pair of a and b
+    def defValue():
+        return []
+    temp_dict = defaultdict(defValue)
+
+    for i in range(m):
+        for j in range(n):
+            sm = A[i] + B[j]
+            temp_dict[sm].append((A[i], B[j]))
+
+    for t in temp_dict.keys():
+        diff = K - t
+        if diff in C:
+            result = temp_dict[t]
+            result.append(diff)
+            print(result)
+
+
+print('Triplets of a, b and c where a + b + c = k are:', end = '\n')
+find_sum_triplets([1, 2, 3, 4, 5, 6], [10, 20, 30, 40, 50, 60], [39, 28, 23, 45, 1], 50)
 
 # better sorting method for linked list - Merge sort
 
+
 # merge two sorted arrays. first array of size m+n with m elements, second array with n elements
+def merge_sorted_arrays(A, B, m, n):
+    # iterate through B starting from last element
+    for i in range((n-1), -1, -1):
+        j = m-1
+        while B[i] < A[j]:
+            A[j+1] = A[j]
+            j -= 1
+        if j >= 0:
+            # insert the element from B into right position in A and increment the size of A.
+            A[j+1] = B[i]
+            m += 1
+
+    print('Merged Sorted Array is:', A)
+
+
+merge_sorted_arrays([1, 5, 9, 10, 15, 20, 0, 0, 0, 0], [2, 3, 8, 13], 6, 4)
+
+
+
 
 
 
