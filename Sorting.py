@@ -340,6 +340,7 @@ print('pairs of a and b where a + b = k are:', end = '\n')
 find_sum_pairs([1, 0, -4, 7, 6, 4], [0, 2, 4, -3, 2, 1], 8)
 
 
+# given array A of n elements, find i j k such that A[i]^2 + A[j]^2 = A[k]^2
 # given arrays A and B, a number K, determine whether there exists a∈A, b∈B, c∈C such that a+b+c = K
 def find_sum_triplets(A, B, C, K):
     m, n, o = len(A), len(B), len(C)

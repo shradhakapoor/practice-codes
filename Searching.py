@@ -1,4 +1,5 @@
 from collections import defaultdict
+from math import sqrt
 
 # binary search
 def binary_search(inp, x):
@@ -117,24 +118,53 @@ print('whether duplicates are there? using negation technique:',
 # find the missing number - given a list of n-1 integers in range of 1 to n, no duplicates in the list.
 # hashing technique, time O(n) space O(n)
 
-# find the missing number - given a list of n-1 integers in range of 1 to n, no duplicates in the list.
-# summation formula with XOR- get sum of numbers. time O(n) space O(1)
+# Given an array of positive integers. All numbers occur even number of times except one number which occurs
+# odd number of times - O(n) time & constant space
+def odd_times_occurence(inp):
+    result = 0
+    # do bitwise XOR of all the elements
+    for elem in inp:
+        result = result ^ elem
 
-# find the number occuring odd number of times - do a bitwise XOR
+    return result
+
+
+print('The only number occuring odd times:', odd_times_occurence([2, 3, 5, 4, 5, 2, 4, 3, 5, 2, 4, 4, 2]))
 
 # find two repeating elements in array, all elements are in range 1 to n. time O(n^2) space O(1)
-
 # find two repeating elements in array, all elements are in range 1 to n. time O(n.logn) space O(1) comparison sorting
-
 # find two repeating elements in array, all elements are in range 1 to n. time O(n) space O(n) hashing
-
 # find two repeating elements in array, all elements are in range 1 to n. time O(n) space O(1) XOR operation
 
+
 # find two repeating elements in array, all elements are in range 1 to n. time O(n) space O(1) sum and product formula
+def two_rep_elem_sum_prod(inp, n):
+    sum_n_elements = (n * (n + 1)) // 2
+    sum_inp_elements = 0
+    for i in inp:
+        sum_inp_elements += i
 
-# given numbers in range 1to n, n-1 elements repeat thrice, 1 element repeat twice, find the element.time O(n)space O(1)
+    a_sum_b = sum_inp_elements - sum_n_elements
 
-# given array A of n elements, find i j k such that A[i]^2 + A[j]^2 = A[k]^2
+    product_n_elements = 1
+    for i in range(1, n+1):
+        product_n_elements *= i
+    product_inp_elements = 1
+    for i in range(len(inp)):
+        product_inp_elements *= inp[i]
+
+    a_product_b = product_inp_elements // product_n_elements
+
+    a_diff_b = sqrt((a_sum_b * a_sum_b) - (4 * a_product_b))
+
+    a = (a_sum_b + a_diff_b) // 2
+    b = a_sum_b - a
+
+    return a,b
+
+
+print('two repeating elements in a given array:', two_rep_elem_sum_prod([1,4,5,6,3,2,5,2], 6))
+
 
 # given array with both +ve and -ve nos. find 2 elements whose sum is closest to 0. brute force
 
@@ -197,26 +227,3 @@ print('whether duplicates are there? using negation technique:',
 # given array, check whether list is pairwise sorted or not
 
 # given array of n, print frequencies of elements without using extra space.all elements are +ve,editable, less than n
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
