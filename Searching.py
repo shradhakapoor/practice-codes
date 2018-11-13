@@ -167,26 +167,165 @@ print('two repeating elements in a given array:', two_rep_elem_sum_prod([1,4,5,6
 
 
 # given array with both +ve and -ve nos. find 2 elements whose sum is closest to 0. brute force
+def sum_closest_zero_bruteforce(inp):
+    min_l, min_r = 0, 1
+    n = len(inp)
+    min_sum = inp[0] + inp[1]
+    for i in range(n-1):
+        for j in range(i+1, n):
+            sm = inp[i] + inp[j]
+            if abs(min_sum) > abs(sm):
+                min_sum = sm
+                min_l = i
+                min_r = j
+
+    return inp[min_l],inp[min_r]
+
+
+print('Sum closest to zero, using brute force:', sum_closest_zero_bruteforce([1, 60, -10, 70, -80, 85]))
+
 
 # given array with both +ve and -ve nos. find 2 elements whose sum is closest to 0. sorting
+def sum_closest_zero_sorting(inp):
+    n = len(inp)
+    inp = merge_sort(inp, n)
+    l, r = 0, n-1
+    min_l, min_r = 0, n-1
+    min_sum = float('inf')
+    # there should be atleast 2 input values
+    if n < 2:
+        return
 
-# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K. brute force
+    while l < r:
+        sm = inp[l] + inp[r]
+        if abs(min_sum) > abs(sm):
+            min_sum = sm
+            min_l = l
+            min_r = r
+        if sm < 0:
+            l += 1
+        else:
+            r -= 1
 
-# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K. sorting
+    return inp[min_l], inp[min_r]
 
-# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K. hashing and searching
 
-# given array with both +ve and -ve nos. find 3 elements whose sum is closest to 0. binary search
+print('Sum closest to zero, using sorting:', sum_closest_zero_sorting([1, 60, -10, 70, -80, 85]))
+
+
+# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K.brute force, O(n^3)time
+def triplet_sum_closest_k(inp, K):
+    n = len(inp)
+    for i in range(n-2):
+        for j in range(i+1, n-1):
+            for h in range(j+1, n):
+                if inp[i]+inp[j]+inp[h] == K:
+                    print(inp[i],inp[j],inp[h])
+
+
+print('Triplet that sum to given K, brute force:', end = ' ')
+triplet_sum_closest_k([1, 4, 45, 6, 10, 8], 22)
+
+
+# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K.sorting, O(n^2)time
+def triplet_sum_closest_k_sorting(inp, K):
+    n = len(inp)
+    inp = merge_sort(inp, n)
+    for i in range(n-2):
+        r = n-1
+        l = i+1
+        while l < r:
+            sm = inp[i] + inp[l] + inp[r]
+            if sm == K:
+                print(inp[i],inp[l],inp[r])
+            elif sm < K:
+                l += 1
+            else:
+                r -= 1
+
+
+print('Triplet that sum to given K, sorting:', end = ' ')
+triplet_sum_closest_k([1, 4, 45, 6, 10, 8], 22)
+
+
+# given array with both +ve and -ve nos. find 3 elements whose sum is closest to given element K. using set
+def triplet_sum_closest_k_set(inp, K):
+    n = len(inp)
+    for i in range(n-1):
+        # find pair in remaining inp with sum = K - inp[i]
+        s = set()
+        curr_sum = K - inp[i]
+        for j in range(i+1, n):
+            rem_sum = curr_sum-inp[j]
+            if rem_sum in s:
+                print(inp[i],', ',inp[j],', ', rem_sum)
+            else:
+                s.add(inp[j])
+
+
+print('Triplet that sum to given K, using set:', end = ' ')
+triplet_sum_closest_k([1, 4, 45, 6, 10, 8], 22)
+
 
 # given array of unknown size with all 1s in beginning and 0s in end. find index in array from where 0 starts.
+def index_first_zero(inp, low, high):
+    mid = 0
+    while low <= high:
+        mid = (low + high) // 2
+        if inp[mid] == 0 and (inp[mid-1] == 1 or mid == 0):
+            break
+        # first 0 lies to left of mid
+        elif inp[mid] == 0:
+            high = mid-1
+        # first 0 lies to right of mid
+        else:
+            low = mid+1
+
+    # required index
+    return mid
+
+
+def find_first_zero_unknown_size(inp):
+    low, high = 0, 1
+    while inp[high] == 1:
+        # lower bound
+        low = high
+        # upper bound
+        high = 2*high
+
+    return index_first_zero(inp, low, high)
+
+
+print('Position of first zero in an infinite input:', find_first_zero_unknown_size([1,1,1,1,1,0,0,0,0]))
+
 
 # given sorted array of n integers that has been rotated unknown number of times, find an element in time O(logn)
 # example: find 5 in array (15 16 19 20 25 1 3 4 5 7 10 14), output index 8. solve using a variant of binary search
+def sorted_rotated_usingbinarySearch(inp, K, low, high):
+    if low > high:
+        return -1
+    mid = (low+high)// 2
+    # if key is present at mid point then return mid
+    if inp[mid] == K:
+        return mid
+    # else, if inp[low...mid] is sorted then
+    if inp[low] <= inp[mid]:
+        # if inp[low...mid] is sorted, determine which half can contain the key
+        if inp[low] <= K <= inp[mid]:
+            return sorted_rotated_usingbinarySearch(inp, K, low, mid-1)
+        else:
+            return sorted_rotated_usingbinarySearch(inp, K, mid+1, high)
+    # if inp[low...mid] is not sorted then inp[mid+1...high] must be sorted
+    if inp[mid+1] <= K <= inp[high]:
+        return sorted_rotated_usingbinarySearch(inp, K, mid+1, high)
+    else:
+        return sorted_rotated_usingbinarySearch(inp, K, low, mid-1)
 
-# given sorted array of n integers that has been rotated unknown number of times, find an element in time O(logn)
-# example: find 5 in array (15 16 19 20 25 1 3 4 5 7 10 14), output index 8. Solve using recursion
+
+print('Find K in a sorted rotated array:', sorted_rotated_usingbinarySearch([4, 5, 6, 7, 8, 9, 1, 2, 3], 6, 0, 8))
 
 # given a bitonic array, find the index of maximum element in time O(logn)
+
 
 # given a sorted array A of n elements with duplicates, find index of first occurence of number p in time O(logn)
 
