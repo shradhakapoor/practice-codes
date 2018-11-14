@@ -477,25 +477,226 @@ def n_appeartwice_1_appearonce(inp):
 
 print('n elements appear twice and 1 integer appears once:', n_appeartwice_1_appearonce([3, 8, 3, 2, 2, 1, 1]))
 
-
 # given n story building and m eggs, assume an egg breaks if its thrown from floor F or higher, otherwise not break.
-# Determine floor F while breaking O(logn) eggs
+# Determine floor F while breaking O(mn^2) eggs
+INT_MAX = 32767
 
-# given array of n distinct integers, find local minimum: an index i such that A[i-1]<A[i]<A[i+1] in O(logn)
+
+def egg_drop_floor(eggs, floors):
+    # 2D array egg_floor will represent minimum number of trials needed for e eggs and f floors
+    egg_floor = [[0 for x in range(floors+1)] for x in range(eggs+1)]
+
+    # we require 0 trial for 0 floor and 1 trial for 1 floor
+    for e in range(1, eggs+1):
+        egg_floor[e][0] = 0
+        egg_floor[e][1] = 1
+
+    # we require f trials for 1 egg and f floors
+    for f in range(1, floors+1):
+        egg_floor[1][f] = f
+
+    # fill rest table using optimal substructure property
+    for e in range(2, eggs+1):
+        for f in range(2, floors+1):
+            egg_floor[e][f] = INT_MAX
+            for x in range(1, f+1):
+                # If egg breaks after dropping from xth floor, then we only need to check for floors lower than x
+                # with remaining eggs; so the problem reduces to x-1 floors and e-1 eggs
+                # If egg doesn’t break after dropping from xth floor, then we only need to check for floors
+                # higher than x; so the problem reduces to f-x floors and e eggs.
+                result = 1 + max(egg_floor[e-1][x-1], egg_floor[e][f-x])
+                if result < egg_floor[e][f]:
+                    egg_floor[e][f] = result
+
+    # egg_floor[eggs][floors] contains the final result
+    return egg_floor[eggs][floors]
+
+
+print('Floor number when the given eggs and floors:', egg_drop_floor(2, 36))
+
+
+# given array of n distinct integers, find local minimum: an index i such that A[i-1]>=A[i]<=A[i+1] in O(logn)
+def local_minima(inp, low, high):
+    n = len(inp)
+    mid= (low+high) //2
+    # compare mid element with its neighbors, if neighbors exist
+    if (mid == 0 or inp[mid-1] >= inp[mid]) and (mid == n-1 or inp[mid] <= inp[mid+1]):
+        return inp[mid]
+    # if left neighbor is lesser than mid element then local minima must be in left half
+    elif inp[mid-1] < inp[mid] and mid > 0:
+        high = mid-1
+        return local_minima(inp, low, high)
+    # if right neighbor is lesser than mid element then local minima must be in right half
+    else:
+        low = mid+1
+        return local_minima(inp, low, high)
+
+
+print('Finding local minima:', local_minima([4, 3, 1, 14, 16, 40], 0, 5))
+
 
 # given a number n , find number of trailing zeros in n!
+# Trailing 0s in n! = Count of 5s in prime factors of n!
+#                   = floor(n/5) + floor(n/25) + floor(n/125) + ...
+def count_trailing_zeros_nfactorial(n):
+    count = 0
+    # keep dividing n by power of 5 and update count
+    i = 5
+    while n/i > 1:
+        count += (n//i)
+        i *= 5
+
+    return count
+
+
+print('Count trailing zeros in n!:', count_trailing_zeros_nfactorial(100))
+
 
 # given array of 2n integers in format a1a2a3...anb1b2b3...bn shuffle array to a1b1a2b2a3b3...anbn without extra memory
 # using brute force
+def shuffle_array_bruteforce(inp):
+    n = len(inp)
+    step = 1
+    start = n//2 # second half
+    # rotate the elements to left
+    for i in range(n):
+        # start index of second loop determines the element(in second half) that we are rotating
+        j = start
+        # i+step determine end index depending on how many positions we want to move left
+        while j > i+step:
+            inp[j], inp[j-1] = inp[j-1], inp[j]
+            j -= 1
+        start += 1
+        step += 1
+
+    return inp
+
+
+print('Shuffle array in format a1b1a2b2a3b3...anbn, bruteforce: ', shuffle_array_bruteforce([1, 3, 5, 7, 2, 4, 6, 8]))
+
 
 # given array of 2n integers in format a1a2a3...anb1b2b3...bn shuffle array to a1b1a2b2a3b3...anbn without extra memory
-# using divide and conquer
+# using divide and conquer, time O(nlogn)
+def shuffle_array_divideconquer(inp, start, end):
+    # if only 2 elements, return
+    if end - start == 1:
+        return
+    # find mid to split array into two halves
+    mid = (start+end) // 2
+    # exchange the elements around the centre, swap first half of second array with second half of first array
+    sec_first_array = (start+mid) // 2
+    first_sec_array = mid+1
+    for i in range(sec_first_array+1,first_sec_array):
+        # swap
+        inp[i], inp[first_sec_array] = inp[first_sec_array], inp[i]
+        first_sec_array += 1
+
+    # recursively do this for both the halves
+    shuffle_array_divideconquer(inp, start, mid)
+    shuffle_array_divideconquer(inp, mid+1, end)
+
+
+inp = [1, 3, 5, 7, 2, 4, 6, 8]
+shuffle_array_divideconquer(inp, 0, 7)
+print('Shuffle array in format a1b1a2b2a3b3...anbn, divideconquer: ', inp)
+
 
 # given array, find maximum j-i such that A[j]>A[i]. ex: {34,8,10,3,2,80,30,33,1} output: 6 (j=7 i=1)- brute force
+def maximum_jminusi_bruteforce(inp):
+    n = len(inp)
+    max_diff = -1
+    for i in range(n):
+        j = n-1
+        while j > i:
+            if inp[j] > inp[i] and max_diff < j-i:
+                max_diff = j-i
+            j -= 1
+
+    return max_diff
+
+
+print('find maximum j-i such that A[j]>A[i], bruteforce:', maximum_jminusi_bruteforce([9, 2, 3, 4, 5, 6, 7, 8, 18, 0]))
+
 
 # given array, find maximum j-i such that A[j]>A[i]. ex: {34,8,10,3,2,80,30,33,1} output: 6 (j=7 i=1)
 # time O(n) space O(n)
+def maximum_jminusi_effecient(inp):
+    n = len(inp)
+    maxDiff = 0
+    LMin = [0] * n
+    RMax = [0] * n
+
+    # LMin[i] stores the minimum value from (arr[0], arr[1], ... arr[i])
+    for i in range(1, n):
+        LMin[i] = min(inp[i], LMin[i - 1])
+
+    # RMax[j] stores the maximum value from (arr[j], arr[j+1], ...arr[n-1])
+    RMax[n - 1] = inp[n - 1]
+    for j in range(n - 2, -1, -1):
+        RMax[j] = max(inp[j], RMax[j + 1])
+
+    # Traverse both arrays from left to right to find optimum j - i
+    # This process is similar to merge() of MergeSort
+    i, j = 0, 0
+    maxDiff = -1
+    while j < n and i < n:
+        if LMin[i] < RMax[j]:
+            maxDiff = max(maxDiff, j - i)
+            j = j + 1
+        else:
+            i = i + 1
+
+    return maxDiff
+
+
+print('find maximum j-i such that A[j]>A[i], effecient:', maximum_jminusi_effecient([9, 2, 3, 4, 5, 6, 7, 8, 18, 0]))
 
 # given array, check whether list is pairwise sorted or not
+def pairwise_sorted(inp):
+    n = len(inp)
+    if n == 0 or n == 1:
+        return True
+
+    for i in range(0, n, 2):
+        if inp[i] > inp[i + 1]:
+            return False
+
+    return True
+
+
+print('whether list is pairwise sorted or not:', pairwise_sorted([2, 5, 3, 7, 9, 11]))
+
 
 # given array of n, print frequencies of elements without using extra space.all elements are +ve,editable, less than n
+def find_frquencies(inp):
+    n = len(inp)
+    # Traverse all array elements
+    i = 0
+    while i < n:
+        # If this element is already processed, then nothing to do
+        if inp[i] <= 0:
+            i += 1
+            continue
+
+        # Find index corresponding to this element.For example, index for 5 is 4
+        elementIndex = inp[i] - 1
+
+        # If the elementIndex has an element that is not processed yet, then first store that element to inp[i]
+        # so that we don't loose anything.
+        if inp[elementIndex] > 0:
+            inp[i] = inp[elementIndex]
+            # After storing arr[elementIndex], change it to store initial count of 'inp[i]'
+            inp[elementIndex] = -1
+        else:
+            # If this is NOT first occurrence of inp[i], then increment its count.
+            inp[elementIndex] -= 1
+            # And initialize inp[i] as 0 means the element 'i+1' is not seen so far
+            inp[i] = 0
+            i += 1
+
+    for i in range(0, n):
+        print("%d -> %d" % (i + 1, abs(inp[i])))
+
+
+print('print frequencies of elements without using extra space:', end='\n')
+find_frquencies([2, 3, 3, 2, 5])
