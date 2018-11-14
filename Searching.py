@@ -324,26 +324,159 @@ def sorted_rotated_usingbinarySearch(inp, K, low, high):
 
 print('Find K in a sorted rotated array:', sorted_rotated_usingbinarySearch([4, 5, 6, 7, 8, 9, 1, 2, 3], 6, 0, 8))
 
-# given a bitonic array, find the index of maximum element in time O(logn)
+
+# given a bitonic array, find the index of maximum element in time O(logn), modified binary search
+def max_elem_bitonic_array(inp, low, high):
+    # Base case: only one element is present
+    if low == high:
+        return inp[low]
+
+    # if only two elements are present and first is greater
+    if high == low+1 and inp[high] <= inp[low]:
+        return inp[low]
+    # if only two elements are present and second is greater
+    if low == high -1 and inp[high] > inp[low]:
+        return inp[high]
+
+    mid = (low+high)// 2
+    # if inp[mid] is greater than both mid-1 and mid+1
+    if inp[mid-1] <= inp[mid] > inp[mid+1]:
+        return inp[mid]
+    # if inp[mid] is greater than next elem but smaller than previous elem then max lies on left side of inp
+    if inp[mid-1] > inp[mid] > inp[mid+1]:
+        return max_elem_bitonic_array(inp, low, mid-1)
+    else:
+        return max_elem_bitonic_array(inp, mid+1, high)
+
+
+print('Maximum element in bitonic array:', max_elem_bitonic_array([1, 3, 50, 10, 9, 7, 6], 0, 6))
 
 
 # given a sorted array A of n elements with duplicates, find index of first occurence of number p in time O(logn)
+def first_occurence_p(inp, low, high, p):
+    result = -1
+    while low <= high:
+        mid = (low+high) // 2
+        # if p is found then update result and search in left inp
+        if inp[mid] == p:
+            result = mid
+            high = mid -1
+        elif p < inp[mid]:
+            high = mid-1
+        else:
+            low = mid+1
+
+    return result
+
+
+print('Sorted array with duplicates, first occurence of p:', first_occurence_p([2, 5, 5, 5, 6, 6, 8, 9, 9, 9], 0, 9, 5))
+
 
 # given a sorted array A of n elements with duplicates, find index of last occurence of number p in time O(logn)
+def last_occurence_p(inp, low, high, p):
+    result = -1
+    while low <= high:
+        mid = (low+high) // 2
+        # if p is found then update result and search in right inp
+        if inp[mid] == p:
+            result = mid
+            low = mid +1
+        elif p < inp[mid]:
+            high = mid-1
+        else:
+            low = mid+1
+
+    return result
+
+
+print('Sorted array with duplicates, first occurence of p:', last_occurence_p([2, 5, 5, 5, 6, 6, 8, 9, 9, 9], 0, 9, 5))
+
 
 # given a sorted array A of n elements with duplicates, find number of occurences of number p in time O(n) linear search
+def number_occurences_linearsearch(inp, p):
+    result = 0
+    for i in range(len(inp)):
+        if p == inp[i]:
+            result += 1
+    return result
+
+
+print('Sorted array, number of occurences of p, linear search:',
+    number_occurences_linearsearch([1, 2, 2, 2, 2, 3, 4, 7 ,8 ,8], 2))
+
 
 # given a sorted array A of n elements with duplicates, find number of occurences of number p . binary search
+def number_occurences_p_binarysearch(inp, low, high, p):
+    # find index of p in inp
+    indx = binary_search(inp, p)
+
+    # if p not found
+    if not indx:
+        return 0
+    # count p's on left side
+    count = 1
+    left = indx -1
+    while left >= 0 and inp[left] == p:
+        count += 1
+        left -= 1
+    # count p's on right side
+    right = indx+1
+    while right < len(inp) and inp[right] == p:
+        count += 1
+        right += 1
+
+    return count
+
+
+print('Sorted array, number of occurences of p, binary search:',
+    number_occurences_p_binarysearch([1, 2, 2, 2, 2, 3, 4, 7, 8, 8 ], 0 , 9, 2))
+
+# if a number repeats more than or equal to n/2 times then we can find that element at inp[n/2] time O(1) space O(1)
 
 # given an array of n elements, identify the element that appears more than n/2 times, time O(n^2) space O(1)
+def element_frequency_halflength(inp):
+    n = len(inp)
+    max_count = 0
+    indx = -1
+
+    for i in range(n):
+        count = 0
+        for j in range(n):
+            if inp[i] == inp[j]:
+                count += 1
+        if max_count < count:
+            max_count = count
+            indx = i
+
+    if max_count >= n//2:
+        return inp[indx]
+
+
+print('element that appears more than n/2 times:', element_frequency_halflength([1, 1, 2, 1, 3, 5, 1]))
 
 # given an array of n elements, identify the element that appears more than n/2 times, time O(n.logn) space O(n)
+# Solution -- Binary Search Tree: insert elements in BST one by one
+# if an element is already present then increment the count of the node.
+# At any stage, if count of a node becomes more than n/2 then return.
 
-# given an array of n elements, identify the element that appears more than n/2 times, time O(n.logn) space O(1)
-
-# given an array of n elements, identify the element that appears more than n/2 times, time O(n) space O(1)
+# given an array of n elements, identify the element that appears more than n/2 times, time O(n) space O(n)
+# hashing
 
 # given array of 2n+1 elements, n elements appear twice and 1 integer appears once.find the integer in O(n) operations
+def n_appeartwice_1_appearonce(inp):
+    n = len(inp)
+    xor = 0
+    # find xor of all numbers.
+    # XOR of a number with itself is 0.
+    # XOR of a number with 0 is the number.
+    for i in range(n):
+        xor ^= inp[i]
+
+    return xor
+
+
+print('n elements appear twice and 1 integer appears once:', n_appeartwice_1_appearonce([3, 8, 3, 2, 2, 1, 1]))
+
 
 # given n story building and m eggs, assume an egg breaks if its thrown from floor F or higher, otherwise not break.
 # Determine floor F while breaking O(logn) eggs
