@@ -75,4 +75,21 @@
 
 # given a sequence of length n, output length of longest palindrome subsequence. using DP time O(n^2)
 
-#
+# Given 2 strings S and T, find the number of times S appears in T. Need not all characters of S should appear
+# contiguous to T. ex: S=ab T=abadcb solution is 4.
+
+# given a matrix with n rows and m columns, each cell has number of apples.start from upper-left corner of matrix, go
+# down or right one cell.Finally arrive to bottom-right corner.Find max no. of apples that we can collect. when we pass
+# through a cell- we collect all apples left there. time O(nm)
+
+# given a matrix with 0s and 1s, find max size square sub-matrix with all 1s. time O(nm)
+
+# given nXn matrix of +ve and -ve integers, find the sub-matrix with largest possible sum.
+
+# kadane's algorithm. time O(n^3)
+
+# find optimal number of jumps to start from first element to last element, jump length at a time can be atmost the
+# value at current position in array. optimum result is reaching in minimum number of jumps.
+
+
+
