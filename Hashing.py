@@ -109,11 +109,15 @@ def first_non_repeated_char(mainstring):
         else:
             charcountmap[mainstring[i]] = (charcountmap[mainstring[i]][0]+1, charcountmap[mainstring[i]][1])
 
+    position = len(mainstring)
+    character = None
     for key,value in charcountmap.items():
         if value[0] == 1:
-            return key
+            if value[1] <= position:
+                position = value[1]
+                character = key
 
-    return None
+    return character
 
 
-print('First non-repeated character in  string:', first_non_repeated_char('Shradha is a good girl'))
+print('First non-repeated character in  string:', first_non_repeated_char('Shradha is a good girlzy'))
