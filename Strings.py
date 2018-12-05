@@ -13,8 +13,10 @@ class TrieNode(object):
         self.children = defaultdict(defvalue)
 
     def add_child(self, key, data=None):
+        # if the key is not a TrieNode
         if not isinstance(key, TrieNode):
             self.children[key] = TrieNode(key, data)
+        # else if key is a Trienode
         else:
             self.children[key.label] = key
 
@@ -48,16 +50,70 @@ class Trie(object):
         # store full word at end node to avoid travel back to get whole word
         curr_node.data = word
 
+    def search_string(self, inp):
+        if inp == '' or inp is None:
+            return False
 
-    # def search_string(self, inp):
-    #     inp = list(inp.lower())
-    #     curr_node = self.head
+        inp = list(inp.lower())
+        curr_node = self.head
+        word_found = True
+        i = 0
+        while i < len(inp):
+            if inp[i] in curr_node.children:
+                curr_node = curr_node.children[inp[i]]
+                i += 1
+            else:
+                word_found = False
+                break
+
+        # check further if we found single letter word which is actually not a word in our Trie
+        if word_found:
+            if curr_node.data is None:
+                word_found = False
+
+        return word_found
+
+    # returns all words in Trie that start with prefix
+    def words_with_prefix(self, prefx):
+        result = []
+        if not prefx:
+            raise ValueError('Provide not-null prefix')
+
+        prefx = list(prefx.lower())
+        curr_node = self.head
+        word_found = True
+        i = 0
+        while i < len(prefx):
+            if prefx[i] in curr_node.children:
+                curr_node = curr_node.children[prefx[i]]
+                i += 1
+            else:
+                # prefix not in Trie, go no further
+                return result
+
+        # get words under prefix, perform BFS (it will return words ordered in increasing length)
+        if curr_node == self.head:
+            queue = [node for key, node in curr_node.children.items()]
+        else:
+            queue = [curr_node]
+
+        while queue:
+            curr_node = queue.pop()
+            if curr_node.data is not None:
+                result.append(curr_node.data)
+
+            queue += [node for key, node in curr_node.children.items()]
+
+        return result
 
 
 trie = Trie()
-words = 'hello goodbye help gerald gold tea ted team to too tom stan standard money'
+words = 'Shradha is good girl and not as an ass'
 for word in words.split():
     trie.insert_string(word)
+
+print('Search for string in Trie:', trie.search_string('ass'))
+print('Print all words with prefix:', trie.words_with_prefix('a'))
 
 
 # Implement Ternary Search Tree to insert, search, delete a string, Displaying all words of Tree
