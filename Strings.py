@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-# Implement Trie to insert, search, delete a string
+# Implement Trie to insert, search a string
 class TrieNode(object):
     def __init__(self, label = None, data = None):
         self.label = label
@@ -108,7 +108,7 @@ class Trie(object):
 
 
 trie = Trie()
-words = 'Shradha is good girl and not as an ass'
+words = 'She is not as an ass'
 for word in words.split():
     trie.insert_string(word)
 
@@ -117,6 +117,84 @@ print('Print all words with prefix:', trie.words_with_prefix('a'))
 
 
 # Implement Ternary Search Tree to insert, search, delete a string, Displaying all words of Tree
+class TSTNode(object):
+    def __init__(self, data=None):
+        self.data = data
+        self.leftNode = None
+        self.midNode = None # same as equal node
+        self.rightNode = None
+        self.end_of_word = False
+
+
+class TST(object):
+    def __init__(self, data):
+        self.head = TSTNode(data)
+
+    def insert_string(self, curr_node, inp):
+        if len(inp) == 0:
+            return curr_node
+
+        frst = inp[0]
+        rem = inp[1:]
+        if curr_node is None:
+            curr_node = TSTNode(frst)
+
+        if frst < curr_node.data:
+            curr_node.leftNode = self.insert_string(curr_node.leftNode, inp)
+        elif frst > curr_node.data:
+            curr_node.rightNode = self.insert_string(curr_node.rightNode, inp)
+        else:
+            if len(rem) == 0:
+                curr_node.end_of_word = True
+            else:
+                curr_node.midNode = self.insert_string(curr_node.midNode, rem)
+
+        return curr_node
+
+    def search_string(self, curr_node, inp):
+        if curr_node is None or len(inp) == 0:
+            return False
+
+        frst = inp[0]
+        rem = inp[1:]
+
+        if frst < curr_node.data:
+            return self.search_string(curr_node.leftNode, inp)
+        elif frst > curr_node.data:
+            return self.search_string(curr_node.rightNode, inp)
+        else:
+            if len(rem) == 0 and curr_node.end_of_word:
+                return True
+            else:
+                return self.search_string(curr_node.midNode, rem)
+
+    def display_all_words(self, curr_node, result):
+        if curr_node:
+            # traverse left subtree
+            self.display_all_words(curr_node.leftNode, result)
+
+            # store data of this node
+            result.append(curr_node.data)
+            if curr_node.end_of_word:
+                result.append(';')
+
+            # traverse equal/mid subtree
+            self.display_all_words(curr_node.midNode, result)
+
+            # traverse right subtree
+            self.display_all_words(curr_node.rightNode, result)
+
+
+ternary_st = TST('c')
+ternary_st.insert_string(ternary_st.head, 'cat')
+ternary_st.insert_string(ternary_st.head, 'cats')
+ternary_st.insert_string(ternary_st.head, 'rat')
+ternary_st.insert_string(ternary_st.head, 'at')
+print('Search string in Ternary Search Tree:',ternary_st.search_string(ternary_st.head, 'at'))
+res = []
+ternary_st.display_all_words(ternary_st.head, res)
+print('Display all words in Ternary Search Tree:', res )
+
 
 # Implement Suffix Tree to insert, search, delete a string
 
