@@ -1,3 +1,6 @@
+from math import sqrt, pow
+
+
 # Given an array with stock prices on n consecutive days. Find the day on which to buy stock and on which to sell stock
 # to make maximum profit.allowed to buy and sell only once.
 # Concept used: Maximum difference between two elements such that larger element appears after the smaller number
@@ -103,7 +106,40 @@ print('contiguous subsequence where sum of elements is maximum: %d, start positi
 # assume all points are in 1D. time O(n(logn)^2)
 
 # Given set of n points S = p1,p2,...pn where pi= (xi,yi). Find pair of points having smallest distance among all pairs.
-# assume all points are in 2D. time O(n(logn)^2)
-
-# Given set of n points S = p1,p2,...pn where pi= (xi,yi). Find pair of points having smallest distance among all pairs.
 # assume all points are in 2D. time O(nlogn) using divide and conquer
+def distance(a, b):
+    return sqrt(pow(a[0] - b[0],2) + pow(a[1] - b[1],2))
+
+# Recursively, find the smallest distance among the given subarray points
+def bruteMin(points, current=float("inf")):
+    if len(points) < 2: return current
+    else:
+        head = points[0]
+        del points[0]
+        newMin = min([distance(head, x) for x in points])
+        newCurrent = min([newMin, current])
+        return bruteMin(points, newCurrent)
+
+def divideMin(points):
+    # pre-processing step: input points are sorted according to x coordinates
+    # then find middle point in sorted array
+    mid_point = len(sorted(points))//2
+
+    # Divide given points into two halves, first from point 0 to midpoint and second from midpoint to end
+    # recursively find smallest distances in both subarrays.Let distances be dl and dr.
+    # Find minimum of dl and dr. let the minimum distance be minimum_d, this is upper bound of minimum distance.
+    minimum_d = min([bruteMin(points[:mid_point]), bruteMin(points[mid_point:])])
+
+    # Now we need to consider the pairs such that one point in pair is in left subarray and other in right subarray.
+    # find all points whose x coordinate is between minimum_d and middle vertical line(assumed at midpoint)
+    # build a strip[] of all such points
+    strip = list(filter(lambda x: x[0] > mid_point - minimum_d and x[0] < mid_point + minimum_d, points))
+
+    # find smallest distance in strip
+    minimum_strip_d = bruteMin(strip)
+
+    # finally return minimum of minimum_d and minimum_strip_d
+    return min([minimum_strip_d, minimum_d])
+
+list1 = [(12,30), (40, 50), (5, 1), (12, 10), (3,4)]
+print('smallest distance between given pair of points:', divideMin(list1))
