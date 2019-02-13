@@ -185,7 +185,33 @@ class Singly_Linked_List(object):
             curr = curr.nxt.nxt
 
     # find if a list is palindrome or not
+    def palindrome_list(self):
+        if self.head is None:
+            return False
+        if self.head.nxt is None:
+            return True
+        curr = self.head
+        lst = []
+        count = 0
+        while curr:
+            lst.append(curr.data)
+            count += 1
+            curr = curr.nxt
 
+        curr = self.head
+        for i in range(count):
+            if lst[i] == curr.data:
+                curr = curr.nxt
+            else:
+                return False
+
+        return True
+
+    # given list {a1, a2, . . ., an}, return {a1, an, a2, an-1, . . .} without using extra space
+    def interchange_from_last(self):
+        # find midpoint
+        # reverse the list from midpoint to end and attach to midpoint-1
+        # point nxt pointers from starting from head to elements starting from midpoint
 
 class Doubly_List_Node(object):
     def __init__(self, data = None):
