@@ -91,6 +91,102 @@ class Singly_Linked_List(object):
             prev = curr
             curr = curr.getNext()
 
+    # find nth node from the end of a linked list, length of list is not known
+    def nth_from_end(self, nth):
+        if not self.head:
+            return None
+        else:
+            pointer1 = pointer2 = self.head
+            moves = 0
+            # move nth elements from the head to skip them
+            while moves < nth:
+                moves += 1
+                pointer1 = pointer1.nxt
+            # move pointer2 till pointer1 reaches the end
+            if moves == nth and pointer1.nxt is not None:
+                while pointer1.nxt:
+                    pointer2 = pointer2.nxt
+            return pointer2
+
+    # find if there is a cycle in the list, if yes then find start node of the loop
+    def detect_cycle_in_list(self):
+        if not self.head or not self.head.nxt:
+            return None
+        slowptr = self.head.nxt
+        fastptr = slowptr.nxt
+        while slowptr != fastptr:
+            if not slowptr or not fastptr:
+                return False
+            slowptr = slowptr.nxt
+            fastptr = fastptr.nxt.nxt
+        # there is a cycle at slowptr and fastptr location
+        return slowptr
+
+    # reverse a singly linked list
+    def reverse_list(self):
+        if self.head is None:
+            return None
+        last = None
+        curr = self.head
+        while curr:
+            aftr = curr.nxt
+            curr.nxt = last
+            last = curr
+            curr = aftr
+        self.head = last
+
+    # find the merging point of two lists
+    def merging_point(self, list1, list2):
+        if not list1 or list2:
+            return None
+        list_hash = dict()
+        curr = list1.head
+        while curr:
+            if list_hash.get(curr)  is None:
+                list_hash[curr] = True
+                curr = curr.nxt
+
+        # check the addresses of list2 in keys of dict()
+        list1_keys = list_hash.keys()
+        curr = list2.head
+        while curr:
+            if curr in list1_keys:
+                return curr
+            else:
+                curr = curr.nxt
+
+        return None
+
+    # find the middle of the list, if we know it has no loop
+    # method1: find length of list and compute midpoint, then traverse to the midpoint
+    # method2: use slow  and fast pointers
+    def middle_point(self)
+        fastptr = slowptr = self.head
+        while fastptr.nxt:
+            slowptr = slowptr.nxt
+            fastptr = fastptr.nxt.nxt
+
+        return slowptr
+
+    def swap_elements(self, node1, node2):
+        tmp = node2.data
+        node2.data = node1.data
+        node1.data = tmp
+
+    # reverse linked list in pairs
+    def reverse_in_pairs(self):
+        if self.head is None:
+            return None
+        if self.head and self.head.nxt is None:
+            return self.head
+        curr = self.head
+        while curr and curr.nxt:
+            self.swap_elements(curr, curr.nxt)
+            curr = curr.nxt.nxt
+
+    # find if a list is palindrome or not
+
+
 class Doubly_List_Node(object):
     def __init__(self, data = None):
         self.data = data
@@ -167,6 +263,7 @@ class Circular_Linked_List(object):
                 curr = curr.nxt
 
             self.length = count
+
 
 
 
