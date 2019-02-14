@@ -32,6 +32,14 @@ class Singly_Linked_List(object):
 
         self.length = count
 
+    def printList(self):
+        if self.length == 0:
+            print('List is empty')
+        curr = self.head
+        for i in range(self.length):
+            print(curr.data, end= ', ')
+            curr = curr.nxt
+
     def insert_at_beginning(self, data = None):
         newNode = Singly_List_Node(data)
         if self.listLength() == 0:
@@ -45,13 +53,13 @@ class Singly_Linked_List(object):
     def insert_at_end(self, data = None):
         newNode = Singly_List_Node(data)
         curr = self.head
-        while curr:
+        while curr.getNext():
             curr = curr.getNext()
 
         curr.setNext(newNode)
         self.length += 1
 
-    def insert_at_position(self, data = None, pos):
+    def insert_at_position(self, pos, data = None):
         newNode = Singly_List_Node(data)
         if pos > self.length or pos < 0:
             return None
@@ -93,20 +101,22 @@ class Singly_Linked_List(object):
 
     # find nth node from the end of a linked list, length of list is not known
     def nth_from_end(self, nth):
-        if not self.head:
+        if not self.head or nth > self.length or nth < 0:
             return None
         else:
             pointer1 = pointer2 = self.head
             moves = 0
             # move nth elements from the head to skip them
-            while moves < nth:
+            while moves < nth-1:
                 moves += 1
                 pointer1 = pointer1.nxt
+
             # move pointer2 till pointer1 reaches the end
-            if moves == nth and pointer1.nxt is not None:
+            if moves < nth and pointer1.nxt:
                 while pointer1.nxt:
+                    pointer1 = pointer1.nxt
                     pointer2 = pointer2.nxt
-            return pointer2
+            return pointer2.data
 
     # find if there is a cycle in the list, if yes then find start node of the loop
     def detect_cycle_in_list(self):
@@ -137,21 +147,19 @@ class Singly_Linked_List(object):
 
     # find the merging point of two lists
     def merging_point(self, list1, list2):
-        if not list1 or list2:
-            return None
         list_hash = dict()
         curr = list1.head
         while curr:
-            if list_hash.get(curr)  is None:
-                list_hash[curr] = True
+            if list_hash.get(curr.data)  is None:
+                list_hash[curr.data] = True
                 curr = curr.nxt
 
         # check the addresses of list2 in keys of dict()
         list1_keys = list_hash.keys()
         curr = list2.head
         while curr:
-            if curr in list1_keys:
-                return curr
+            if curr.data in list1_keys:
+                return curr.data
             else:
                 curr = curr.nxt
 
@@ -160,7 +168,7 @@ class Singly_Linked_List(object):
     # find the middle of the list, if we know it has no loop
     # method1: find length of list and compute midpoint, then traverse to the midpoint
     # method2: use slow  and fast pointers
-    def middle_point(self)
+    def middle_point(self):
         fastptr = slowptr = self.head
         while fastptr.nxt:
             slowptr = slowptr.nxt
@@ -199,19 +207,62 @@ class Singly_Linked_List(object):
             curr = curr.nxt
 
         curr = self.head
-        for i in range(count):
-            if lst[i] == curr.data:
+        i = count-1
+        flag = False
+        while curr and i >= 0:
+            if curr.data == lst[i]:
+                i -= 1
+                flag = True
                 curr = curr.nxt
             else:
-                return False
+                flag = False
+                break
+        return flag
 
-        return True
 
     # given list {a1, a2, . . ., an}, return {a1, an, a2, an-1, . . .} without using extra space
-    def interchange_from_last(self):
+        # SOLUTION:
         # find midpoint
         # reverse the list from midpoint to end and attach to midpoint-1
         # point nxt pointers from starting from head to elements starting from midpoint
+
+sll = Singly_Linked_List()
+sll.insert_at_beginning(10)
+sll.insert_at_position(1, 30)
+sll.insert_at_position(2, 50)
+sll.insert_at_position(3, 20)
+sll.insert_at_position(4, 5)
+sll.insert_at_position(5, 70)
+
+sll2 = Singly_Linked_List()
+sll2.insert_at_beginning(60)
+sll2.insert_at_position(1, 100)
+sll2.insert_at_position(2, 40)
+sll2.insert_at_position(3, 50)
+sll2.insert_at_position(4, 20)
+sll2.insert_at_position(5, 5)
+sll2.insert_at_position(6, 70)
+
+sll3 = Singly_Linked_List()
+sll3.insert_at_position(0, 5)
+sll3.insert_at_position(1, 5)
+sll3.insert_at_position(2, 5)
+print('Palindrome? :', sll3.palindrome_list())
+
+print('merging point of two lists:', sll.merging_point(sll, sll2))
+
+print('Singly linked list is:', end = ' ')
+sll.printList()
+print('\nlength of singly linked list:', sll.length)
+print('palindrome? :', sll.palindrome_list())
+sll.reverse_in_pairs()
+print('reverse in pairs:', end = '' )
+sll.printList()
+sll.reverse_list()
+print('\nReverse list:', end = '')
+sll.printList()
+print('\nprint nth node from end:', sll.nth_from_end(4))
+print('Detect cycle in list:', sll.detect_cycle_in_list())
 
 class Doubly_List_Node(object):
     def __init__(self, data = None):
