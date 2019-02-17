@@ -112,15 +112,22 @@ class BinaryTree(object):
     #     if self.root is None or element is None:
     #         return('Sorry, not found in this tree')
     #     else:
-    #         return('Found'+ str(self._search_element_with_recursion(self.root, element)))
+    #         self._search_element_with_recursion(self.root, element)
     #
+    # count = flag = 0
     # def _search_element_with_recursion( self, node, element ):
     #     if node:
+    #         self.count += 1
     #         if element == node.value:
-    #             return node.value
-    #         else:
+    #             self.flag = 1
+    #             print(self.count)
+    #             return self.count, self.flag
+    #         if node.left:
     #             self._search_element_with_recursion(node.left, element)
+    #         if node.right:
     #             self._search_element_with_recursion(node.right, element)
+    #
+    #     return self.count, self.flag
 
     # search an element(without recursion)
     def search_element_without_recursion( self, element ):
@@ -625,7 +632,7 @@ if __name__ == "__main__":
     tree.maximum_element_with_recursion()
 
     print(tree.search_element_without_recursion(140))
-    #print(tree.search_element_with_recursion(140))
+    print(tree.search_element_with_recursion(30))
 
     print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
     print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))

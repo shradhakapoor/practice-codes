@@ -165,22 +165,12 @@ class Binary_Search_Tree(object):
     def minimum_element_with_iteration( self, node ):
         if node is None:
             return
-        min_elem = float('inf')
-        queue = Queue()
 
-        queue.enqueue(node)
-        while not queue.is_empty():
-            node = queue.dequeue()
+        curr = node
+        while curr.left:
+            curr = curr.left
 
-            if node.value < min_elem:
-                min_elem = node.value
-
-            if node.left:
-                queue.enqueue(node.left)
-            if node.right:
-                queue.enqueue(node.right)
-
-        return min_elem
+        return curr.value
 
     # check if binary tree is BST or not, complexity O(n^2)
     def check_binarytree_is_bst( self, node ):
