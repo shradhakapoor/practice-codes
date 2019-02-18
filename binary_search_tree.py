@@ -152,7 +152,7 @@ class Binary_Search_Tree(object):
             print('Maximum element recursively is: '+str(self._max_element_with_recursion(self.root)))
 
     max_elem = float( '-inf' )
-    def _max_element_with_recursion( self, node ):
+    def _max_element_with_recursion( self, node):
         if node:
             if node.value > self.max_elem:
                 self.max_elem = node.value
@@ -160,6 +160,7 @@ class Binary_Search_Tree(object):
             self._max_element_with_recursion(node.right)
 
         return self.max_elem
+
 
     # find minimum element in tree(without recursion)
     def minimum_element_with_iteration( self, node ):

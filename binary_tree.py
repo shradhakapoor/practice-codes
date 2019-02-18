@@ -1,3 +1,5 @@
+import collections
+
 class Queue(object):
     def __init__(self):
         self.items = []
@@ -605,6 +607,48 @@ class BinaryTree(object):
             if arr[i] == value:
                 return i
 
+    # Vertical order traversal, space O(n), time O(n.logn)
+    def vertical_order_traversal(self, nde):
+        if nde is None:
+            return
+        # map, key= node, value= horizontal distance from root node
+        horizontal_distance = dict()
+        horizontal_distance[nde] = 0
+
+        # map, key= horizontal distance, value= list of nodes with this distance
+        m = dict()
+        m[0] = [nde.value]
+
+        q = Queue()
+        q.enqueue(nde)
+        while not q.is_empty():
+            tmp = q.dequeue()
+            if tmp.left:
+                q.enqueue(tmp.left)
+                horizontal_distance[tmp.left] = horizontal_distance[tmp] - 1
+                if m.get(horizontal_distance[tmp.left]) is None:
+                    m[horizontal_distance[tmp.left]] = []
+                m[horizontal_distance[tmp.left]].append(tmp.left.value)
+
+            if tmp.right:
+                q.enqueue(tmp.right)
+                horizontal_distance[tmp.right] = horizontal_distance[tmp] + 1
+                if m.get(horizontal_distance[tmp.right]) is None:
+                    m[horizontal_distance[tmp.right]] = []
+                m[horizontal_distance[tmp.right]].append(tmp.right.value)
+
+        # Sort the map according to horizontal distance
+        sorted_m = collections.OrderedDict(sorted(m.items()))
+        print('Vertical Order Traversal:')
+        # Traverse the sorted map and print nodes at each horizontal distance
+        for i in sorted_m.values():
+            for j in i:
+                print(j, end=' ')
+            print()
+
+    # Print Nodes in Top View of Binary Tree, time O(n)
+    def topView(self, node):
+
 
 
 
@@ -627,12 +671,12 @@ if __name__ == "__main__":
     print('')
 
     tree.level_order_traversal(tree.root)
-
+    tree.vertical_order_traversal(tree.root)
     tree.maximum_element_without_recursion()
     tree.maximum_element_with_recursion()
 
     print(tree.search_element_without_recursion(140))
-    print(tree.search_element_with_recursion(30))
+    # print(tree.search_element_with_recursion(30))
 
     print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
     print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
