@@ -647,10 +647,109 @@ class BinaryTree(object):
             print()
 
     # Print Nodes in Top View of Binary Tree, time O(n)
-    def topView(self, node):
+    def topView(self, nde):
+        if nde is None:
+            return
+        # map, key= node, value= horizontal distance from root node
+        horizontal_distance = dict()
+        horizontal_distance[nde] = 0
 
+        # map, key= horizontal distance, value= list of nodes with this distance
+        m = dict()
+        m[0] = [nde.value]
 
+        q = Queue()
+        q.enqueue(nde)
+        while not q.is_empty():
+            tmp = q.dequeue()
+            if tmp.left:
+                q.enqueue(tmp.left)
+                horizontal_distance[tmp.left] = horizontal_distance[tmp] - 1
+                if m.get(horizontal_distance[tmp.left]) is None:
+                    m[horizontal_distance[tmp.left]] = []
+                m[horizontal_distance[tmp.left]].append(tmp.left.value)
 
+            if tmp.right:
+                q.enqueue(tmp.right)
+                horizontal_distance[tmp.right] = horizontal_distance[tmp] + 1
+                if m.get(horizontal_distance[tmp.right]) is None:
+                    m[horizontal_distance[tmp.right]] = []
+                m[horizontal_distance[tmp.right]].append(tmp.right.value)
+
+        # Sort the map according to horizontal distance
+        sorted_m = collections.OrderedDict(sorted(m.items()))
+        print('Top view of tree:', end = ' ')
+        # Traverse the sorted map and print nodes at each horizontal distance
+        for i in sorted_m.keys():
+            print(m[i][0], end=' ')
+
+    # Print Nodes in left View of Binary Tree
+    # The left view contains all nodes that are first nodes in their levels
+    def leftView(self, nde):
+        if nde is None:
+             return
+        # acts like double ended queue
+        q = Queue()
+        q.items.append(nde)
+        # push a delimiter None after end of each level
+        q.items.append(None)
+        print('Left view of tree:', end=' ')
+        while not q.is_empty():
+            # check the front of queue
+            tmp = q.items[0]
+
+            # Prints first node of each level
+            if tmp:
+                print(tmp.value,end = ' ')
+                # append children of all nodes at current level
+                while q.items[0]:
+                    tmp = q.items[0]
+                    if tmp.left:
+                        q.items.append(tmp.left)
+                    if tmp.right:
+                        q.items.append(tmp.right)
+                    # pop the tmp from queue
+                    q.items.pop(0)
+                # append the delimiter for next level
+                q.items.append(None)
+
+            # pop delimiter of previous level
+            q.items.pop(0)
+
+    # Print Nodes in Bottom View of Binary Tree
+    # Bottom View is the bottommost node at its horizontal distance,
+    # If there are multiple bottom-most nodes for a horizontal distance from root, then print the later one in level traversal
+    def bottomView(self, nde):
+        if nde is None:
+            return
+        # map, key= node, value= horizontal distance from root node
+        horizontal_distance = dict()
+        horizontal_distance[nde] = 0
+
+        # map, key= horizontal distance, value= bottom most node of this horizontal distance
+        # For the first time node data will add to the map, next time it will replace the value.
+        m = dict()
+
+        q = Queue()
+        q.enqueue(nde)
+        while not q.is_empty():
+            tmp = q.dequeue()
+            if tmp.left:
+                q.enqueue(tmp.left)
+                horizontal_distance[tmp.left] = horizontal_distance[tmp] - 1
+                m[horizontal_distance[tmp.left]] = tmp.left.value
+
+            if tmp.right:
+                q.enqueue(tmp.right)
+                horizontal_distance[tmp.right] = horizontal_distance[tmp] + 1
+                m[horizontal_distance[tmp.right]] = tmp.right.value
+
+        # Sort the map according to horizontal distance
+        sorted_m = collections.OrderedDict(sorted(m.items()))
+        print('Bottom view of tree:', end = ' ')
+        # Traverse the sorted map and print nodes at each horizontal distance
+        for i in sorted_m.values():
+            print(i, end = ' ')
 
 
 #       110
@@ -672,6 +771,12 @@ if __name__ == "__main__":
 
     tree.level_order_traversal(tree.root)
     tree.vertical_order_traversal(tree.root)
+    tree.topView(tree.root)
+    print()
+    tree.leftView(tree.root)
+    print()
+    tree.bottomView(tree.root)
+    print()
     tree.maximum_element_without_recursion()
     tree.maximum_element_with_recursion()
 
