@@ -168,32 +168,57 @@ print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 # Quick Sort, pivot as last element
 # best: O(n.logn), worst: O(n^2), average: O(n.logn), worst space: O(1)
 # sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (quick sort)
+
+# def quick_sort(inp, start, end):
+#     if start < end:
+#         # inp[partioning_index] will now be at it's right place
+#         partioning_index = _partition(inp, start, end)
+#
+#         quick_sort(inp, start, partioning_index-1)
+#         quick_sort(inp, partioning_index+1, end)
+#
+#     return inp
+#
+#
+# def _partition(inp, start, end):
+#     pivot = inp[end]
+#     # index of smaller element
+#     i = start - 1
+#
+#     for j in range(start, end+1):
+#         # if current element is <= pivot
+#         if inp[j] <= pivot:
+#             # increment index of smaller element
+#             i += 1
+#             if i < j:
+#                 inp[i], inp[j] = inp[j], inp[i]
+#
+#     return i
+
 def quick_sort(inp, start, end):
     if start < end:
-        # inp[partioning_index] will now be at it's right place
-        partioning_index = _partition(inp, start, end)
+            # making inp[start] as pivot
+            mid = start+end // 2
+            if mid <= end:
+                inp[start], inp[mid] = inp[mid], inp[start]
 
-        quick_sort(inp, start, partioning_index-1)
-        quick_sort(inp, partioning_index+1, end)
+            lo = start
+            hi = end
+            while lo < hi:
+                if inp[lo+1] > inp[start] and inp[hi] < inp[start]:
+                    inp[lo+1], inp[hi] = inp[hi], inp[lo+1]
+                if inp[lo+1] <= inp[start]:
+                    lo += 1
+                if inp[hi] >= inp[start] and lo < hi:
+                    hi -= 1
+
+
+            inp[lo], inp[start] = inp[start], inp[lo]
+
+            quick_sort(inp, start, lo-1)
+            quick_sort(inp, lo+1, end)
 
     return inp
-
-
-def _partition(inp, start, end):
-    pivot = inp[end]
-    # index of smaller element
-    i = start - 1
-
-    for j in range(start, end+1):
-        # if current element is <= pivot
-        if inp[j] <= pivot:
-            # increment index of smaller element
-            i += 1
-            if i < j:
-                inp[i], inp[j] = inp[j], inp[i]
-
-    return i
-
 
 print('Quick sort in ascending order:', quick_sort([64, 34, 25, 12, 22, 11, 90], 0, 6))
 
