@@ -53,7 +53,7 @@ def find_frequent_number_in_sets(sets):
             if number_set_map[item] is None:
                 number_set_map[item] = []
                 number_set_map[item].append(setcount)
-            else:
+            elif setcount not in number_set_map[item]:
                 number_set_map[item].append(setcount)
 
     max_count = float('-inf')
@@ -66,8 +66,8 @@ def find_frequent_number_in_sets(sets):
     return max_num
 
 
-print('Element that appeared in maximum sets:', find_frequent_number_in_sets([[1,1,1,2,3], [1,1,2,2,2,2,3], [1,1,1]]))
-
+# print('Element that appeared in maximum sets:', find_frequent_number_in_sets([[1,1,1,2,3], [1,1,2,2,2,3], [1,1,1]]))
+print('Element that appeared in maximum sets:', find_frequent_number_in_sets([[], [1,2,2], [3,3,3,3,3,3], [1], [1]]))
 
 # remove the specified characters from a given string which are present in another string
 def remove_specified_chars(mainstring, markstr):
