@@ -379,7 +379,7 @@ class BinaryTree(object):
 
         return False
 
-    # print all root-to-leaf paths
+    # print all root-to-leaf paths, recursively
     def paths_root_to_leaf( self ):
         if self.root is None:
             return
@@ -408,6 +408,39 @@ class BinaryTree(object):
             path.push(node)
             self._paths_root_to_leaf(node.right, path, result)
             path.pop()
+
+    # print all root-to-leaf paths, iteratively
+    def all_paths_root_to_leaf_iteratively(self, root):
+        if root is None:
+            return
+        s = Stack()
+        parent = dict()
+        parent[root] = None
+        s.push(root)
+        while not s.is_empty():
+            tmp = s.pop()
+            if tmp.left is tmp.right is None:
+                # print the path from root to this tmp(leaf)
+                self.print_path(tmp, parent)
+
+            if tmp.right:
+                parent[tmp.right] = tmp
+                s.push(tmp.right)
+            if tmp.left:
+                parent[tmp.left] = tmp
+                s.push(tmp.left)
+
+    def print_path(self, node, parent):
+        result = Stack()
+        while node:
+            result.push(node)
+            node = parent[node]
+
+        while not result.is_empty():
+            tmp = result.pop()
+            print(tmp.value, end='-')
+
+        print(end=', ')
 
     # convert tree to its mirror
     def tree_mirror( self, node ):
@@ -803,7 +836,11 @@ if __name__ == "__main__":
 
     print('Number of Half nodes: '+ str(tree.number_of_halfnodes()))
 
-    print('Paths from root to leaf:' + str(tree.paths_root_to_leaf()))
+    print('Paths from root to leaf, recursively:' + str(tree.paths_root_to_leaf()))
+
+    print('Paths from root to leaf, iteratively:', end =' ')
+    tree.all_paths_root_to_leaf_iteratively(tree.root)
+    print()
 
     tree2 = BinaryTree(110)
     tree2.insert_node(200)
