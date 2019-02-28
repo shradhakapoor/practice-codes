@@ -196,6 +196,49 @@ ternary_st.display_all_words(ternary_st.head, res)
 print('Display all words in Ternary Search Tree:', res )
 
 
+def compare(inpp, inpt):
+    eq = 0
+    k = 0
+
+    while k < len(inpp):
+        if inpt[k] in inpp:
+            eq = 1
+        else:
+            eq = 0
+            break
+        k += 1
+    return eq
+
+
+# Print all permutations of a string(anagrams)
+def anagrams(txt, pattern):
+    txt = list(txt.lower())
+    pattern = list(pattern.lower())
+    m = len(pattern)
+    n = len(txt)
+    if m is None or n is None:
+        return
+
+    # current txt window
+    i = 0
+    j = m-1
+    windw = txt[i:j+1]
+
+    while j < n:
+        # if pattern is same as current txt window then print current txt window
+        if compare(pattern, windw):
+            for c in range(i, j+1):
+                print(txt[c], end=' ')
+            print()
+        i += 1
+        j += 1
+        if j < n-1:
+            windw.pop(0)
+            windw.append(txt[j])
+
+
+print('All Anagrams of given string:', anagrams('BACDGABCDA', 'ABCD'))
+
 # Implement Suffix Tree to insert, search, delete a string
 
 # Given a paragraph of words, find the word which appears maximum times. (use heap amd tries combination)
@@ -207,12 +250,26 @@ print('Display all words in Ternary Search Tree:', res )
 # Reverse a string, time O(n), space O(n)
 
 # Reverse a string without using any temporary variable, time O(n), space O(1)
+# def reverse_string_without_temp(inp):
+#     inp = list(inp.lower())
+#     # idea: to use XOR
+#     # XOR properties:  x^0 = x, x^1 = -x, x^x = 0
+#     start = 0
+#     end = len(inp) -1
+#     while start < end:
+#         inp[start] ^= int(inp[end])
+#         inp[end] ^= int(inp[start])
+#         inp[start] ^= int(inp[end])
+#         start += 1
+#         end -= 1
+#
+#     return inp
+#
+# print('Reverse string without using temporary variable:', reverse_string_without_temp('shradha'))
 
 # give an algorithm for matching pattern in text. Assume ? and * are wildcard chars.Brute Force. time O(mn) space O(1)
 
 # Reverse words in a sentence. time O(mn) space O(1)
-
-# Print all permutations of a string(anagrams)
 
 # Print all combinations of a string
 
