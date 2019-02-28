@@ -100,6 +100,23 @@ def tour(inp):
 arr = [Petrol_Pump(6,4), Petrol_Pump(3,6), Petrol_Pump(7,3)]
 print('starting petrol pump possible:', tour(arr))
 
+# Length of Longest Palindromic Subsequence
+def lps(inp, start, end):
+    # base case 1: if there is only 1 char in inp
+    if start == end:
+        return 1
+    # base case 2: if there are only 2 chars in inp and both are same
+    if start+1 == end and inp[start] == inp[end]:
+        return 2
+    # if first and last chars of inp are same
+    if inp[start] == inp[end]:
+        return lps(inp, start+1, end-1 ) + 2
+    # else if first and last chars of inp are not same
+    return max(lps(inp, start+1, end), lps(inp, start, end-1))
+
+seq = 'GEEKSFORGEEKS'
+print('Length of Longest Palindromic subsequence:',lps(seq, 0, len(seq)-1))
+
 # Box Stacking: given a set of n rectangular 3D boxes. Dimensions of ith box are height hi, width wi, depth di.
 # Create a stack of boxes as tall as possible, but only stack a box on another box if dimensions of 2D base of lower box
 # are each strictly larger than those of 2D base of higher box. We can rotate a box so that any side functions as its
