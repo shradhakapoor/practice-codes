@@ -210,6 +210,35 @@ print('Number of islands:', numberOfIslands(
         [0, 0, 0, 0, 0],
         [1, 0, 1, 0, 1]]))
 
+# add two positive numbers without using '+'
+def base2(inp):
+    res = 0
+    i = 1
+    while inp > 1:
+        inp = inp//2
+        rem = inp % 2
+        res = int(pow(10,i)* rem) + res
+        i += 1
+
+    return res
+
+def add_bitwise(a, b):
+    a = bin(a)
+    b = bin(b)
+    carry = (a & b) << 1
+    sum = 0
+    while carry != 0:
+        sum = a ^ b
+        carry = (a & b) << 1
+        a = sum
+        b = carry
+
+    return base2(sum)
+
+# print('add two numbers without using +:', add_bitwise(10, 20))
+
+
+
 # given an integer list of which both first half and second half are sorted independently. Sort the two parts to create
 # one single sorted linked list in place [do not use extra memory]
 
