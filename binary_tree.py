@@ -595,7 +595,7 @@ class BinaryTree(object):
 
         return result
 
-    # diameter/width of tree (maximum number of nodes between 2 leaf nodes in a tree)
+    # diameter/width of tree (# of nodes in the longest path in binary tree)
     def diameter_of_tree( self , node):
         if node is None:
             return 0
