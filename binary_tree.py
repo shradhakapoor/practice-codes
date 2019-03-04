@@ -730,19 +730,18 @@ class BinaryTree(object):
         while not q.is_empty():
             # check the front of queue
             tmp = q.items[0]
-
-            # Prints first node of each level
+            # Print first node of this level
+            # append to q, children of nodes at this level
             if tmp:
                 print(tmp.value,end = ' ')
-                # append children of all nodes at current level
                 while q.items[0]:
-                    tmp = q.items[0]
+                    # pop the tmp from queue
+                    tmp = q.items.pop(0)
                     if tmp.left:
                         q.items.append(tmp.left)
                     if tmp.right:
                         q.items.append(tmp.right)
-                    # pop the tmp from queue
-                    q.items.pop(0)
+
                 # append the delimiter for next level
                 q.items.append(None)
 
