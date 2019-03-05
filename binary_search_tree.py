@@ -302,10 +302,16 @@ class Binary_Search_Tree(object):
             return -1
         if root.value == value: return root.value
 
-        if root.value > value: return self.floor_of_given_value(root.left, value)
+        # if root.value > value, then floor would be in left subtree
+        if root.left:
+            if root.value > value: return self.floor_of_given_value(root.left, value)
 
-        right_value = self.floor_of_given_value(root.right, value)
-        return right_value if right_value >= value else root.value
+        # if root.value < value then floor is either the root or in right subtree
+        if root.right:
+            right_value = self.floor_of_given_value(root.right, value)
+            return right_value if right_value <= value else root.value
+
+        return root.value
 
     # find ceiling of given data (smallest data > given data)
     def ceil_of_given_value( self, root, value ):
@@ -316,11 +322,15 @@ class Binary_Search_Tree(object):
         if value == root.value: return root.value
 
         # if root.value < value, ceil must be in right subtree
-        if root.value < value: return  self.ceil_of_given_value(root.right, value)
+        if root.right:
+            if root.value < value: return  self.ceil_of_given_value(root.right, value)
 
-        # if value < root.value, ceil is either root.value or in left subtree
-        left_value = self.ceil_of_given_value(root.left, value)
-        return left_value if left_value >= value else root.value
+        # if root.value > value, ceil is either root.value or in left subtree
+        if root.left:
+            left_value = self.ceil_of_given_value(root.left, value)
+            return left_value if left_value >= value else root.value
+
+        return root.value
 
     # print all elements in increasing order in range r1 to r2
     def print_all_in_range( self, root, r1, r2 ):
@@ -575,7 +585,7 @@ print('count of number of BSTs possible with n nodes:', str(bst.count_of_BST_pos
 print('\nConvert sorted array to BST:', end=' ')
 bst._print(bst.sorted_array_to_bst([70,60,50,40,30,20,10]))
 
-print('\nFloor of given value:', bst.floor_of_given_value(bst.root, 410))
+print('\nFloor of given value:', bst.floor_of_given_value(bst.root, 810))
 print('ceiling of given value:', bst.ceil_of_given_value(bst.root, 720))
 
 print('Inorder successor of node:', str(bst.inorder_successor(bst.root).value))
