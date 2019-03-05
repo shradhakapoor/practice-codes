@@ -424,14 +424,14 @@ class Binary_Search_Tree(object):
 
         # case 2: if node doesn't have right subtree
         # then search that node starting from root and the node from where we take the last left is the answer
-        root = self.root
-        store = None
-        while root.value != node.value:
-            if node.value < root.value:
-                store = root
-                root = root.left
-            else: root = root.right
-        return store
+        tmp = self.root
+        parent = None
+        while tmp.value != node.value:
+            if tmp.value > node.value:
+                parent = tmp
+                tmp = tmp.left
+            else: tmp = tmp.right
+        return parent
 
     # tell the predecessor of a node in BST
     def inorder_predecessor( self, node ):
@@ -592,7 +592,7 @@ print('Inorder successor of node:', str(bst.inorder_successor(bst.root).value))
 print('Inorder predecessor of node:', str(bst.inorder_predecessor(bst.root).value))
 
 print('Print all elements in the range r1 to r2 in increasing order:')
-bst.print_all_in_range(bst.root, 100, 750)
+bst.print_all_in_range(bst.root, 100, 400)
 
 print('\nRemove all elements outside the range:', end=' ')
 bst._print(bst.remove_elements_outside_range(bst.root, 100, 750))
