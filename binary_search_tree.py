@@ -303,8 +303,8 @@ class Binary_Search_Tree(object):
         if root.value == value: return root.value
 
         # if root.value > value, then floor would be in left subtree
-        if root.left:
-            if root.value > value: return self.floor_of_given_value(root.left, value)
+        if root.value > value:
+            if root.left: return self.floor_of_given_value(root.left, value)
 
         # if root.value < value then floor is either the root or in right subtree
         if root.right:
@@ -322,8 +322,8 @@ class Binary_Search_Tree(object):
         if value == root.value: return root.value
 
         # if root.value < value, ceil must be in right subtree
-        if root.right:
-            if root.value < value: return  self.ceil_of_given_value(root.right, value)
+        if root.value < value:
+            if root.right: return  self.ceil_of_given_value(root.right, value)
 
         # if root.value > value, ceil is either root.value or in left subtree
         if root.left:
