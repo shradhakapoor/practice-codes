@@ -267,6 +267,37 @@ print('All Anagrams of given string:', anagrams('BACDGABCDA', 'ABCD'))
 #
 # print('Reverse string without using temporary variable:', reverse_string_without_temp('shradha'))
 
+
+# Find the longest common prefix in given list of strings
+def longestCommonPrefix(strs):
+    res = ''
+    n = len(strs)
+    flag = 0
+    if n == 0:
+        return res
+    elif n == 1:
+        return strs[0]
+    else:
+        smallest = len(min(strs, key=len))
+        for i in range(smallest):
+            ch = ''
+            for j in range(n):
+                if j == 0:
+                    ch = strs[j][i]
+                else:
+                    if ch != strs[j][i]:
+                        flag = 0
+                        break
+                    elif j == n - 1 and ch == strs[j][i]:
+                        flag = 1
+                        res += ch
+            if flag == 0:
+                return res
+
+    return res
+
+print('Longest common prefix:', longestCommonPrefix(['flowers','flow','flight']))
+
 # give an algorithm for matching pattern in text. Assume ? and * are wildcard chars.Brute Force. time O(mn) space O(1)
 
 # Reverse words in a sentence. time O(mn) space O(1)
