@@ -298,9 +298,9 @@ def longestCommonPrefix(strs):
 
 print('Longest common prefix:', longestCommonPrefix(['flowers','flow','flight']))
 
-# give an algorithm for matching pattern in text. Assume ? and * are wildcard chars.Brute Force. time O(mn) space O(1)
-
 # Reverse words in a sentence. time O(mn) space O(1)
+
+# give an algorithm for matching pattern in text. Assume ? and * are wildcard chars.Brute Force. time O(mn) space O(1)
 
 # Print all combinations of a string
 

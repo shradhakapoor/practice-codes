@@ -237,7 +237,26 @@ def add_bitwise(a, b):
 
 # print('add two numbers without using +:', add_bitwise(10, 20))
 
+# Given n non-negative integers a1, a2, ..., an , where each represents a point at coordinate (i, ai).
+# n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0).
+# Find two lines, which together with x-axis forms a container, such that the container contains the most water.
+# Note: You may not slant the container and n is at least 2.
+def maxArea(height):
+    n = len(height)
+    s = 0
+    e = n - 1
+    mxarea = min(height[s], height[e]) * (n - 1)
 
+    while s < e:
+        mxarea = max(mxarea, (min(height[s], height[e]) * (e - s)))
+        if height[s] <= height[e]:
+            s += 1
+        else:
+            e -= 1
+
+    return mxarea
+
+print('Max area is:', maxArea([3,2,1,3]))
 
 # given an integer list of which both first half and second half are sorted independently. Sort the two parts to create
 # one single sorted linked list in place [do not use extra memory]
