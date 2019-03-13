@@ -258,12 +258,46 @@ def maxArea(height):
 
 print('Max area is:', maxArea([3,2,1,3]))
 
+# Given a list of numbers, return all possible permutations.
+#
+# Input: [1, 2, 3]
+# Output:
+# [
+#     [1, 2, 3],
+#     [1, 3, 2],
+#     [2, 1, 3],
+#     [2, 3, 1],
+#     [3, 1, 2],
+#     [3, 2, 1]
+# ]
+#
+
+def permutations(inp):
+    n = len(inp)
+    if n == 0:
+        return None
+    if n == 1:
+        return inp
+
+    result = []
+
+    for i in range(n):
+        ans = inp[i]
+        newList = inp[:i] + inp[i + 1:]
+        for j in permutations(newList):
+            result.append([ans] + [j])
+
+    return result
+
+print('permutations of all numbers:', permutations([1, 2, 3]))
+
+# Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
+# a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
+
 # given an integer list of which both first half and second half are sorted independently. Sort the two parts to create
 # one single sorted linked list in place [do not use extra memory]
 
 # given array S[1...n], reverse(s,i,j) which reverses order of elements between positions i and j
-
-# find anagrams in dictionary
 
 # given a matrix, calculate number of ways for reaching from A to B.
 
@@ -273,4 +307,281 @@ print('Max area is:', maxArea([3,2,1,3]))
 # given a string that has set of words and spaces, write program to move spaces to end of string. you need to traverse
 # the array only once and need to adjust the string in place.
 
+# Save all leaf nodes of a Binary tree in a Doubly Linked List by using
+#  Right node as Next node and Left Node as Previous Node.
 
+# Given an array,find the maximum j – i such that arr[j] > arr[i]
+
+# Remove Alternate Duplicate characters from a char array you have to do it in Place.
+# Like keeping only the odd occurences of each character.
+# Example: Input: “you got beautiful eyes”
+# Output: ”you gtbeaiful es”
+
+# Find all nodes at k-distance from a given node in a binary tree
+
+# Clone a linked list with next and random pointer
+
+# Return a tree such that each internal node stores sum of all its child nodes. Each leaf node stores zero.
+
+# Reversal of Linked List in groups of K.
+
+# Check whether given binary tree is balanced or not.
+# Definition is no two leaves should have height difference of greater than one.
+
+# Remove duplicates from string in place in O(n).
+
+# Given two sorted arrays (with repetitive elements) find the kth minimum number from both arrays.
+
+# Find an element in a rotated array
+
+# The cost of a stock on each day is given in an array, find the max profit that you can make by buying and
+# selling in those days.For example, if the given array is {100, 180, 260, 310, 40, 535, 695}
+# the maximum profit can earned by buying on day 0, selling on day 3. Again buy on day 4 and sell on day 6.
+# If the given array of prices is sorted in decreasing order, then profit cannot be earned at all
+
+# Given a binary search tree , print the path which has the sum equal to k and has minimum hops.
+# i.e if there are multiple paths with the sum equal to k then print the path with minimum number of nodes.
+
+# Given an array, arrange the elements such that the number formed by concatenating the elements is highest.
+# E.g.: input = [9, 93, 24, 6], the output should be: [9,93,6,24]. This is because if you concatenate all the numbers,
+# 993624 is the highest number that can be formed. Given a string, find the longest substring which is palindrome.
+
+# Write an efficient program for printing k largest elements in an array. Elements in array can be in any order.
+
+# Given string s and string t find whether all permutation of t is present as substring in s.
+
+# Given an array which is first strictly increasing and then strictly decreasing. Find an element in this array.
+
+# Given a string example : shoppingwithamazoniseasy,
+# we are given this string and a dictionary containing valid words , now we need to break
+# the sentence into words separated by space. Output : shopping with amazon is easy
+
+# You are given a mapping like a -> 1, b-> 2… z-> 26.
+# You have to print all possible combinations of a given number using the above information.
+# eg : input : 121 output : aba,la,au
+
+# Get the next bigger number using the same digits of a number.
+# Eg, For 123456, next number would be 123465
+
+# Given a string with repeated characters, rearrange characters in a string so that no two adjacent characters are same.
+# Note : It may be assumed that the string has only lowercase English alphabets.
+# Examples: Input: aaabc Output: abaca; Input: aaabb Output: ababa; Input: aa Output: Not Possible;
+# Input: aaaabc Output: Not Possible
+
+# This problem is known as Clock angle problem. we need to find angle between hands of an analog clock at a given time.
+# Examples:Input:  h = 12:00, m = 30.00 Output: 165 degree; Input:  h = 3.00, m = 30.00 Output: 75 degree
+
+# Fresh is a grocery delivery service that offers consumers the option of purchasing their groceries online and
+# schedule future deliveries of purchased groceries. Fresh's backend system dynamically tracks each Fresh delivery truck
+# and automatically assigns the next deliveries in a truck's plan. To accomplish this, the system generates an optimized
+# delivery plan with X destinations. The most optimized plan would deliver to the closest X destinations from the start
+# among all of the possible destinations in the plan.Given an array of N possible delivery destinations,
+# implement an algorithm to create the delivery plan for the closest X destinations.
+# Input
+# The input to the function/method consists of three arguments:
+# numDestinations, an integer representing the total number of possible delivery destinations for the truck (N);
+# allLocations, a list where each element consists of a pair of integers representing the x and y coordinates of the delivery locations;
+# numDeliveries, an integer representing the number of deliveries that will be delivered in the plan (X).
+# Output
+# Return a list of elements where each element of the list represents the x and y integer coordinates of the delivery destinations.
+#
+# Constraints
+# numDeliveries ≤ numDestinations
+#
+# Note
+# The plan starts from the truck’s location [0, 0]. The distance of the truck from a delivery destination (x, y) is the
+# square root of x2 + y2. If there are ties then return any of the locations as long as you satisfy returning X deliveries.
+#
+# Example
+# Input:
+# numDestinations = 3
+# allLocations = [[1, 2], [3, 4], [1, -1]]
+# numDeliveries = 2
+#
+# Output:
+# [[1, -1], [1, 2]]
+#
+# Explanation:
+# The distance of the truck from location [1, 2] is square root(5) = 2.236
+# The distance of the truck from location [3, 4] is square root(25) = 5
+# The distance of the truck from location [1, -1] is square root(2) = 1.414
+# numDeliveries is 2, hence the output is [1, -1] and [1, 2].
+
+# You are in charge of preparing a recently purchased lot for a new building. The lot is covered with trenches and has
+# a single obstacle that needs to be taken down before the foundation can be prepared for the building. The demolition
+# robot must remove the obstacle before progress can be made on the building. Write an algorithm to determine the
+# minimum distance required for the demolition robot to remove the obstacle.
+# Assumptions:
+# The lot is flat, except for trenches, and can be represented as a two-dimensional grid.
+# The demolition robot must start from the top-left corner of the lot, which is always flat, and can move one block up,
+# down, left, or right at a time.
+# The demolition robot cannot enter trenches and cannot leave the lot.
+# The flat areas are represented as 1, areas with trenches are represented by 0 and the obstacle is represented by 9.
+# Input
+# The input to the function/method consists of three arguments:
+# numRows, an integer representing the number of rows;
+# numColumns, an integer representing the number of columns;
+# lot, representing the two-dimensional grid of integers.
+# Output
+# Return an integer representing the minimum distance traversed to remove the obstacle else return -1.
+#
+# Constraints
+# 1 ≤ numRows, numColumns ≤ 1000
+#
+# Example
+# Input:
+# numRows = 3
+# numColumns = 3
+# lot =
+# [[1, 0, 0],
+# [1, 0, 0],
+# [1, 9, 1]]
+#
+# Output:
+# 3
+#
+# Explanation:
+# Starting from the top-left corner, the demolition robot traversed the cells (0,0) -> (1,0) -> (2,0) -> (2,1).
+# The robot traversed the total distance 3 to remove the obstacle.
+# So, the output is 3.
+
+# ABC is partnering with the linguistics department at a local university to analyze important works of English
+# literature and identify patterns in word usage across different eras. To ensure a cleaner output, the linguistics
+# department has provided a list of commonly used words (e.g., "an", "the", etc.) to exclude from the analysis. In the
+# context of this search, a word is an alphabetic sequence of characters having no whitespace or punctuation.
+# Write an algorithm to find the most frequently used word in the text excluding the commonly used words.
+# Input
+# The input to the function/method consists of two arguments -
+# literatureText, a string representing the block of text;
+# wordsToExclude, a list of strings representing the commonly used words to be excluded while analyzing the word frequency.
+# Output
+# Return a list of strings representing the most frequently used word in the text or in case of a tie, all of the most
+# frequently used words in the text.
+# Note
+# Words that have a different case are counted as the same word.
+# The order of words does not matter in the output list.
+# All words in the wordsToExclude list are unique.
+# Any character other than letters from the English alphabet should be treated as white space.
+# Example
+# Input:
+# literatureText =“Jack and Jill went to the market to buy bread and cheese. Cheese is Jack's and Jill’s favorite food.”
+# wordsToExclude = ["and", "he", "the", "to", "is", "Jack", "Jill"]
+# Output:
+# ["cheese", “s”]
+# Explanation:
+# The word “and” has a maximum of three frequency but this word should be excluded while analyzing the word frequency.
+# The words “Jack”, “Jill”, “s”, "to" and "cheese” have the next maximum frequency(two) in the given text but the words
+#  “Jack”, "to" and “Jill” should be excluded as these are commonly used words which you are not interested to include.
+# So the output is ["cheese", “s”] or [“s”, "cheese"] as the order of words does not matter.
+
+# You have been given a task of reordering some data from a log file. In the log file, every line is a space-delimited
+# list of strings; all lines begin with an alphanumeric identifier. There will be no lines consisting only of an
+# identifier.
+# After the alphanumeric identifier, a line will consist of either:
+# - a list of words using only lowercase English letters,
+# - or list of only integers.
+#
+# You have to reorder the data such that all of the lines with words are at the top of the log file. The lines with
+# words are ordered lexicographically, ignoring the identifier except in the case of ties. In the case of ties
+# (if there are two lines that are identical except for the identifier), the identifier is used to order
+# lexicographically. Alphanumeric should be sorted in ASCII order (numbers come before letters). The identifiers must
+# still be part of the lines in the output Strings. Lines with integers must be left in the original order they were in
+# the file. Write an algorithm to reorder the data in the log file, according to the rules above.
+# Input
+# The input to the function/method consists of two argument -
+# logFileSize, an integer representing the number of log lines;
+# logLines, a list of strings representing the log file.
+# Output
+# Return a list of strings representing the reordered log file data.
+# Note
+# Identifier consists of only lower case english character and numbers.
+# Example
+# Input:
+# logFileSize = 5
+# logLines =
+# [a1 9 2 3 1]
+# [g1 act car]
+# [zo4 4 7]
+# [ab1 off key dog]
+# [a8 act zoo]
+# Output:
+# [g1 act car]
+# [a8 act zoo]
+# [ab1 off key dog]
+# [a1 9 2 3 1]
+# [zo4 4 7]
+# Explanation:
+# Second, fourth, and fifth lines are the lines with words. According to the lexicographical order, the second line will
+# be reordered first in the log file, then fifth, and the fourth comes in the log file. Next, the lines with numbers
+# come in the order in which these lines were in the input.
+
+# Michelle has created a word game for her students. The word game begins with Michelle writing a string and a number,
+# K, on the board. The students must find a substring of size K such that there is exactly one character that is
+# repeated once; in other words, there should be K – 1 distinct characters in the substring.
+# Write an algorithm to help the students find the correct answer. If no such substring can be found, return an empty
+# list; if multiple such substrings exist, return all of them, without repetitions. The order in which the substrings
+# are returned does not matter.
+# Input
+# The input to the function/method consists of two arguments -
+# inputString, representing the string written by the teacher;
+# num, an integer representing the number, K, written by the teacher on the board.
+# Output
+# Return a list of all substrings of inputString with K characters, that have K-1 distinct character i.e. exactly one
+# character is repeated, or an empty list if no such substring exists in inputString. The order in which the substrings
+# are returned does not matter.
+# Constraints
+# The input integer can only be greater than or equal to 0 and less than or equal to 26 (0 ≤ num ≤ 26)
+# The input string consists of only lowercase alphabetic characters.
+# Examples
+# Input:
+# inputString = awaglk
+# num = 4
+#
+# Output:
+# [awag]
+#
+# Explanation:
+# The Substrings are {awag, wagl, aglk}
+# The answer is awag as it has 3 distinct characters in a string of size 4, and only one character is repeated twice.
+
+# You are working on developing a movie with Amazon Video that consists of a series of shots: short pieces of video
+# from a particular camera angle. You want to devise an application to easily group identical shots in a video into
+# scenes (a sequence of shots). Shots are identical when they are labeled with the same letter, and everything in
+# between identical shots is considered part of same scene. There is already an algorithm that breaks the video up
+# into shots and labels them.
+# Write a function which will partition a sequence of shot labels into minimal subsequences so that a shot label
+# only appears in a single subsequence. The output should be the length of each subsequence.
+# Input
+# The input to the function/method consists of an argument -
+# inputList, a list of characters representing the sequence of shots.
+#
+# Output
+# Return a list of integers representing the length of each scene, in the order in which it appears in the given
+# sequence of shots.
+#
+# Examples
+# Example 1:
+# Input
+# inputList = [a, b, c]
+#
+# Output
+# [1, 1, 1]
+#
+# Explanation:
+# Because there are no recurring shots, all shots can be in the minimal length 1 subsequence.
+#
+# Example 2:
+# Input
+# inputList = [a, b, c, a]
+#
+# Output
+# [4]
+#
+# Explanation:
+# Because ‘a’ appears more than once, everything between the first and last appearance of ‘a’ must be in the same list.
+# Example 3:
+# Input:
+# inputList = [a, b, a, b, c, b, a, c, a, d, e, f, e, g, d, e, h, i, j, h, k, l, i, j]
+#
+# Output:
+# [9, 7, 8]
