@@ -192,11 +192,7 @@ def dfs(mat, visited, i, j):
 def numberOfIslands(mat):
     m = len(mat[0])
     n = len(mat)
-    visited = [[False, False, False, False, False],
-               [False, False, False, False, False],
-               [False, False, False, False, False],
-               [False, False, False, False, False],
-               [False, False, False, False, False]]
+    visited = [[False for x in range(m)]for y in range(n)]
     islands = 0
     for i in range(n):
         for j in range(m):
