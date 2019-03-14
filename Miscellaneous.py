@@ -1,3 +1,6 @@
+import math
+
+
 # Given an array of jobs where every job has a deadline and associated profit if the job is finished before the deadline.
 # It is also given that every job takes single unit of time, so the minimum possible deadline for any job is 1.
 # How to maximize total profit if only one job can be scheduled at a time. Examples:
@@ -384,28 +387,47 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 # numDeliveries, an integer representing the number of deliveries that will be delivered in the plan (X).
 # Output
 # Return a list of elements where each element of the list represents the x and y integer coordinates of the delivery destinations.
-#
 # Constraints
 # numDeliveries ≤ numDestinations
-#
 # Note
 # The plan starts from the truck’s location [0, 0]. The distance of the truck from a delivery destination (x, y) is the
 # square root of x2 + y2. If there are ties then return any of the locations as long as you satisfy returning X deliveries.
-#
 # Example
 # Input:
 # numDestinations = 3
 # allLocations = [[1, 2], [3, 4], [1, -1]]
 # numDeliveries = 2
-#
-# Output:
-# [[1, -1], [1, 2]]
-#
+# Output: [[1, -1], [1, 2]]
 # Explanation:
 # The distance of the truck from location [1, 2] is square root(5) = 2.236
 # The distance of the truck from location [3, 4] is square root(25) = 5
 # The distance of the truck from location [1, -1] is square root(2) = 1.414
 # numDeliveries is 2, hence the output is [1, -1] and [1, 2].
+def computeDistance(x, y):
+    return math.sqrt((x*x) + (y*y))
+
+def deliveryPlan(numDestinations, allLocations, numDeliveries):
+    if numDestinations <  numDeliveries:
+        return None
+    # find distance of all locations from (0,0)
+    distMap= dict()
+    for p in allLocations:
+        dist = computeDistance(p[0], p[1])
+        if distMap.get(dist) is None:
+            distMap[dist] = [p]
+        else:
+            distMap[dist].append(p)
+
+    # sort the calculated distances in increasing order
+    sortedDist = sorted(distMap.keys())
+    # return the co-ordinates of the first #numDeliveries distances
+    res = []
+    for i in range(numDeliveries):
+        res.append(distMap[sortedDist[i]][0])
+
+    return res
+
+print('Delivery plan:', deliveryPlan(3, [[1, 2], [3, 4], [1, -1]], 2 ))
 
 # You are in charge of preparing a recently purchased lot for a new building. The lot is covered with trenches and has
 # a single obstacle that needs to be taken down before the foundation can be prepared for the building. The demolition
@@ -424,10 +446,8 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 # lot, representing the two-dimensional grid of integers.
 # Output
 # Return an integer representing the minimum distance traversed to remove the obstacle else return -1.
-#
 # Constraints
 # 1 ≤ numRows, numColumns ≤ 1000
-#
 # Example
 # Input:
 # numRows = 3
@@ -436,14 +456,61 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 # [[1, 0, 0],
 # [1, 0, 0],
 # [1, 9, 1]]
-#
 # Output:
 # 3
-#
 # Explanation:
 # Starting from the top-left corner, the demolition robot traversed the cells (0,0) -> (1,0) -> (2,0) -> (2,1).
 # The robot traversed the total distance 3 to remove the obstacle.
 # So, the output is 3.
+def obstacleDistance(numRows, numCols, lot):
+    # mark the cells with trench(0) as visited
+    visited = [[False for x in range(numCols)]for y in range(numRows)]
+    for i in range(numRows):
+        for j in range(numCols):
+            if lot[i][j] == 0:
+                visited[i][j] = True
+
+    # start from position (0,0) and BFS from start to destination(9)
+    q = [] # This list works as a Queue
+    # mark start as visited
+    start = (0, 0, 0)  # (distance from start, row, col coordinates)
+    visited[0][0] = True
+    q.insert(0, start) #enqueue
+
+    while len(q) != 0:
+        tmp = q.pop()
+
+        # if obstacle found, return the distance of this cell from start cell
+        if lot[tmp[1]][tmp[2]]== 9:
+            return tmp[0]
+
+        # moving down
+        if tmp[1] + 1< numRows and not visited[tmp[1]+1][tmp[2]]:
+            q.insert(0,(tmp[0]+1, tmp[1]+1, tmp[2]))
+            visited[tmp[1]+1][tmp[2]] = True
+
+        # moving up
+        if 0 <= tmp[1] - 1 < numRows and not visited[tmp[1]-1][tmp[2]]:
+            q.insert(0,(tmp[0]+1, tmp[1]-1, tmp[2]))
+            visited[tmp[1]-1][tmp[2]] = True
+
+        # moving right
+        if tmp[2] + 1 < numCols and not visited[tmp[1]][tmp[2]+1]:
+            q.insert(0,(tmp[0]+1, tmp[1], tmp[2]+1))
+            visited[tmp[1]][tmp[2]+1] = True
+
+        # moving left
+        if 0 <= tmp[2] - 1< numCols and not visited[tmp[1]][tmp[2]-1]:
+            q.insert(0,(tmp[0]+1, tmp[1], tmp[2]-1))
+            visited[tmp[1]][tmp[2]-1] = True
+
+    return -1
+
+
+print(' Minimum distance to obstacle:', obstacleDistance(3, 3,
+[[1, 1, 1],
+[0, 1, 1],
+[1, 9, 1]]))
 
 # ABC is partnering with the linguistics department at a local university to analyze important works of English
 # literature and identify patterns in word usage across different eras. To ensure a cleaner output, the linguistics
@@ -473,6 +540,33 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 # The words “Jack”, “Jill”, “s”, "to" and "cheese” have the next maximum frequency(two) in the given text but the words
 #  “Jack”, "to" and “Jill” should be excluded as these are commonly used words which you are not interested to include.
 # So the output is ["cheese", “s”] or [“s”, "cheese"] as the order of words does not matter.
+def mostFrequentWords(literatureText, wordsToExclude):
+    literatureText = literatureText.split()
+    for w in range(len(wordsToExclude)):
+        wordsToExclude[w] = wordsToExclude[w].lower()
+
+    frq = dict() # key: frequency, value: list of words
+    words = dict() # key: word, value: frequency
+    for word in literatureText:
+        word = word.lower()
+        if word not in wordsToExclude and word.isalnum():
+            if words.get(word) is None:
+                words[word] = 1
+            else:
+                words[word] += 1
+
+    for k, v in words.items():
+        if frq.get(v) is None:
+            frq[v] = [k]
+        else:
+            frq[v].append(k)
+
+    sortedF = sorted(frq.keys(), reverse = True)
+    return frq[sortedF[0]]
+
+print('Most frequent words:', mostFrequentWords(
+"Jack and Jill went to the market to buy bread and cheese . Cheese is Jack ' s and Jill ' s favorite food .",
+    ['and', 'he', 'the', 'to', 'is', 'Jack', 'Jill'] ))
 
 # You have been given a task of reordering some data from a log file. In the log file, every line is a space-delimited
 # list of strings; all lines begin with an alphanumeric identifier. There will be no lines consisting only of an
@@ -480,7 +574,6 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 # After the alphanumeric identifier, a line will consist of either:
 # - a list of words using only lowercase English letters,
 # - or list of only integers.
-#
 # You have to reorder the data such that all of the lines with words are at the top of the log file. The lines with
 # words are ordered lexicographically, ignoring the identifier except in the case of ties. In the case of ties
 # (if there are two lines that are identical except for the identifier), the identifier is used to order
