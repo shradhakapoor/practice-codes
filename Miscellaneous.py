@@ -470,6 +470,8 @@ def obstacleDistance(numRows, numCols, lot):
     q = [] # This list works as a Queue
     # mark start as visited
     start = (0, 0, 0)  # (distance from start, row, col coordinates)
+    if lot[0][0] == 0:
+        return -1
     visited[0][0] = True
     q.insert(0, start) #enqueue
 
@@ -505,8 +507,8 @@ def obstacleDistance(numRows, numCols, lot):
 
 print(' Minimum distance to obstacle:', obstacleDistance(3, 3,
 [[1, 1, 1],
-[0, 1, 1],
-[1, 9, 1]]))
+[0, 0, 1],
+[0, 0, 9]]))
 
 # ABC is partnering with the linguistics department at a local university to analyze important works of English
 # literature and identify patterns in word usage across different eras. To ensure a cleaner output, the linguistics
@@ -537,6 +539,18 @@ print(' Minimum distance to obstacle:', obstacleDistance(3, 3,
 #  “Jack”, "to" and “Jill” should be excluded as these are commonly used words which you are not interested to include.
 # So the output is ["cheese", “s”] or [“s”, "cheese"] as the order of words does not matter.
 def mostFrequentWords(literatureText, wordsToExclude):
+    n = len(literatureText)
+    if n == 0:
+        return []
+    # to convert any character other than alphabet to a whitespace
+    literatureText = list(literatureText)
+    for c in range(n):
+        if not literatureText[c].isalpha():
+            literatureText[c] = ' '
+
+    literatureText = ('').join(literatureText)
+
+    # splitting literatureText based on whitespace
     literatureText = literatureText.split()
     for w in range(len(wordsToExclude)):
         wordsToExclude[w] = wordsToExclude[w].lower()
@@ -545,7 +559,7 @@ def mostFrequentWords(literatureText, wordsToExclude):
     words = dict() # key: word, value: frequency
     for word in literatureText:
         word = word.lower()
-        if word not in wordsToExclude and word.isalnum():
+        if word not in wordsToExclude and word.isalpha():
             if words.get(word) is None:
                 words[word] = 1
             else:
@@ -561,8 +575,8 @@ def mostFrequentWords(literatureText, wordsToExclude):
     return frq[sortedF[0]]
 
 print('Most frequent words:', mostFrequentWords(
-"Jack and Jill went to the market to buy bread and cheese . Cheese is Jack ' s and Jill ' s favorite food .",
-    ['and', 'he', 'the', 'to', 'is', 'Jack', 'Jill'] ))
+    "Jack and Jill went to the market to buy bread and cheese. Cheese is Jack's  and Jill's favorite food. 1 1 1 1",
+    ['and', 'he', 'the', 'to', 'is', 'Jack', 'Jill']))
 
 # You have been given a task of reordering some data from a log file. In the log file, every line is a space-delimited
 # list of strings; all lines begin with an alphanumeric identifier. There will be no lines consisting only of an
