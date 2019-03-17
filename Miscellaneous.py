@@ -655,7 +655,7 @@ def reorderData(logFileSize, logLines):
 
         # case 1: push in result stack all the lines with only integers and get all alphabetic lines in a list
         if curr_line[1].isdigit():
-            result.append(curr_line) # means this line has only integers
+            result.append((' ').join(curr_line)) # means this line has only integers
         elif curr_line[1].isalpha():
             alpha_lines.append(curr_line) # means this line has only alphabets
 
@@ -682,7 +682,7 @@ def reorderData(logFileSize, logLines):
 
             tmp_res.append(sortFurther(furtherSorting))
         else:
-            tmp_res.append(alpha_lines[line_indices[0]])
+            tmp_res.append((' ').join(alpha_lines[line_indices[0]]))
 
     result.insert(0, tmp_res)
 
@@ -756,7 +756,7 @@ def substringWithOneRepeated(inp, num):
 
     return res
 
-print('Substring with one repeated character:', substringWithOneRepeated('abaakl', 2))
+print('Substring with one repeated character:', substringWithOneRepeated('abaakl', 4))
 
 # You are working on developing a movie with Amazon Video that consists of a series of shots: short pieces of video
 # from a particular camera angle. You want to devise an application to easily group identical shots in a video into
