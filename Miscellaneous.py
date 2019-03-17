@@ -1,4 +1,5 @@
 import math
+import re
 
 
 # Given an array of jobs where every job has a deadline and associated profit if the job is finished before the deadline.
@@ -162,7 +163,8 @@ print('The shuffled deck of cards:\n', deck)
 # solution2: rotate one by one, Time complexity : O(n * d), Auxiliary Space : O(1)
 
 # Find the number of islands
-# Given a boolean 2D matrix, find the number of islands. A group of connected 1s forms an island. For example, the below matrix contains 5 islands
+# Given a boolean 2D matrix, find the number of islands. A group of connected 1s forms an island.
+# For example, the below matrix contains 5 islands
 #
 # Example:
 #
@@ -617,6 +619,81 @@ print('Most frequent words:', mostFrequentWords(
 # Second, fourth, and fifth lines are the lines with words. According to the lexicographical order, the second line will
 # be reordered first in the log file, then fifth, and the fourth comes in the log file. Next, the lines with numbers
 # come in the order in which these lines were in the input.
+# def sortId(id1, id2):
+
+# ***********correct this sorting*********
+def sortFurther(lines):
+    idLine = [] # line# = index#, value = identifier of the line
+    for line in lines:
+        idLine.append(line[0])
+    res = []
+    for i in range(len(lines)-1):
+        # if lines are similar then sort based on indentifier
+        if lines[i] == lines[i+1]:
+            sorted_id = sortId(lines[i][0], lines[i+1][0])
+            res.append(lines[idLine.index(sorted_id[0])])
+            res.append(lines[idLine.index(sorted_id[1])])
+        else:
+            sortd = sorted([lines[i],lines[i+1]])
+            res.append(sortd[0])
+            res.append(sortd[1])
+
+def reorderData(logFileSize, logLines):
+    if logFileSize == 0 or logFileSize == 1:
+        return logLines
+
+    n = len(logLines)
+    if n == 0 or n != logFileSize:
+        return None
+
+    result = []
+
+    alpha_lines = []
+    for i in range(logFileSize):
+        curr_line = logLines[i]
+        curr_line = curr_line.split()
+
+        # case 1: push in result stack all the lines with only integers and get all alphabetic lines in a list
+        if curr_line[1].isdigit():
+            result.append(curr_line) # means this line has only integers
+        elif curr_line[1].isalpha():
+            alpha_lines.append(curr_line) # means this line has only alphabets
+
+    # dict(), key:first letter of index 1 of each line, value: line index
+    d = dict()
+    # now, sort the alpha_lines as per given rules
+    for i in range(len(alpha_lines)):
+        curr = list(alpha_lines[i][1])
+        if d.get(curr[0]) is None:
+            d[curr[0]] = [i]
+        else:
+            d[curr[0]].append(i)
+
+    # sort the dict() based on keys
+    sorted_keys = sorted(d.keys())
+    tmp_res = []
+    for c in sorted_keys:
+        line_indices = d[c]
+        if len(line_indices) > 1: #need further sorting rules
+            furtherSorting = []
+
+            for i in range(len(line_indices)):
+                furtherSorting.append(alpha_lines[line_indices[i]])
+
+            tmp_res.append(sortFurther(furtherSorting))
+        else:
+            tmp_res.append(alpha_lines[line_indices[0]])
+
+    result.insert(0, tmp_res)
+
+    return result
+
+print('Reorder data:',reorderData(5,
+    ['a1 9 2 3 1',
+'g1 act car',
+'zo4 4 7',
+'ab1 off key dog',
+'a8 act zoo']))
 
 # Michelle has created a word game for her students. The word game begins with Michelle writing a string and a number,
 # K, on the board. The students must find a substring of size K such that there is exactly one character that is
@@ -646,6 +723,40 @@ print('Most frequent words:', mostFrequentWords(
 # Explanation:
 # The Substrings are {awag, wagl, aglk}
 # The answer is awag as it has 3 distinct characters in a string of size 4, and only one character is repeated twice.
+def substringWithOneRepeated(inp, num):
+    n  =len(inp)
+    frequencyChars = [[], []] # index 0 : list of chars with frequency 1
+                        # index 1 : list of chars with frequency 2
+    res = []
+    i = num-1
+    wndw = list(inp[:num])
+    for c in wndw:
+        if c not in frequencyChars[0]:
+            frequencyChars[0].append(c)
+        else:
+            frequencyChars[1].append(c)
+
+    while i < n:
+
+        if len(frequencyChars[1]) == 1:
+            res.append(('').join(wndw))
+
+        rmchar = wndw.pop(0)
+        if rmchar in frequencyChars[1]:
+            frequencyChars[1].remove(rmchar)
+        else:
+            frequencyChars[0].remove(rmchar)
+        i += 1
+        if i < n:
+            wndw.append(inp[i])
+            if inp[i] not in frequencyChars[0]:
+                frequencyChars[0].append(inp[i])
+            else:
+                frequencyChars[1].append(inp[i])
+
+    return res
+
+print('Substring with one repeated character:', substringWithOneRepeated('abaakl', 2))
 
 # You are working on developing a movie with Amazon Video that consists of a series of shots: short pieces of video
 # from a particular camera angle. You want to devise an application to easily group identical shots in a video into
