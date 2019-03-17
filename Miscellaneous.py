@@ -724,7 +724,12 @@ print('Reorder data:',reorderData(5,
 # The Substrings are {awag, wagl, aglk}
 # The answer is awag as it has 3 distinct characters in a string of size 4, and only one character is repeated twice.
 def substringWithOneRepeated(inp, num):
-    n  =len(inp)
+    n = len(inp)
+    if num == 1:
+        return []
+    if num > n:
+        return []
+
     frequencyChars = [[], []] # index 0 : list of chars with frequency 1
                         # index 1 : list of chars with frequency 2
     res = []
@@ -796,6 +801,23 @@ print('Substring with one repeated character:', substringWithOneRepeated('abaakl
 # Example 3:
 # Input:
 # inputList = [a, b, a, b, c, b, a, c, a, d, e, f, e, g, d, e, h, i, j, h, k, l, i, j]
-#
-# Output:
-# [9, 7, 8]
+# Output: [9, 7, 8]
+def shotSequences(inp):
+    n = len(inp)
+    i = 0
+    res = []
+    while i < n:
+        curr = inp[i]
+        count = 1
+        for j in range(n-1, i+2, -1):
+            if inp[j] == curr:
+                count = j-i+1
+                i = j
+                break
+        res.append(count)
+        i += 1
+
+    return res
+
+print('length of shot sequences:', shotSequences(
+    ['a','b','a','b','c','b','a','c','a','d','e','f','e','g','d','e','h','i','j','h','k','l','i','j']))
