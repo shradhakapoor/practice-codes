@@ -615,14 +615,13 @@ def maximum_jminusi_bruteforce(inp):
     return max_diff
 
 
-print('find maximum j-i such that A[j]>A[i], bruteforce:', maximum_jminusi_bruteforce([9, 2, 3, 4, 5, 6, 7, 8, 18, 0]))
+print('find maximum j-i such that A[j]>A[i], bruteforce:', maximum_jminusi_bruteforce([18, 2, 3, 4, 5, 1, 17]))
 
 
 # given array, find maximum j-i such that A[j]>A[i]. ex: {34,8,10,3,2,80,30,33,1} output: 6 (j=7 i=1)
 # time O(n) space O(n)
 def maximum_jminusi_effecient(inp):
     n = len(inp)
-    maxDiff = 0
     LMin = [0] * n
     RMax = [0] * n
 
@@ -649,7 +648,7 @@ def maximum_jminusi_effecient(inp):
     return maxDiff
 
 
-print('find maximum j-i such that A[j]>A[i], effecient:', maximum_jminusi_effecient([9, 2, 3, 4, 5, 6, 7, 8, 18, 0]))
+# print('find maximum j-i such that A[j]>A[i], effecient:', maximum_jminusi_effecient([18, 2, 3, 4, 5, 1, 17]))
 
 # given array, check whether list is pairwise sorted or not
 def pairwise_sorted(inp):

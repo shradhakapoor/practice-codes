@@ -1,5 +1,8 @@
 import math
-import re
+import os
+__path__ = [os.path.dirname(os.path.abspath(__file__))]
+from .Searching import maximum_jminusi_bruteforce
+
 
 
 # Given an array of jobs where every job has a deadline and associated profit if the job is finished before the deadline.
@@ -292,6 +295,40 @@ def permutations(inp):
 
 print('permutations of all numbers:', permutations([1, 2, 3]))
 
+# Print the longest palindromic substring
+def longestPalindromicSubstring(inp):
+    n = len(inp)
+    mxlength = 1
+    s = 0 # start of longest palindrome
+    lo, hi = 0, 0
+
+    # consider every character of input as midpoint of longest palindrome
+    for i in range(1, n):
+
+        # find longest even length palindrome with midpoints as i-1 and i
+        lo = i-1
+        hi = i
+        while hi <n and lo>= 0 and inp[lo] == inp[hi]:
+            if hi-lo+1 > mxlength:
+                mxlength = hi-lo+1
+                s = lo
+            lo -= 1
+            hi += 1
+
+        # find longest odd length palindrome with midpoint as i
+        lo = i-1
+        hi = i+1
+        while hi <n and lo>= 0 and inp[lo] == inp[hi]:
+            if hi-lo+1 > mxlength:
+                mxlength = hi-lo+1
+                s = lo
+            lo -= 1
+            hi += 1
+
+    return inp[s:mxlength+s]
+
+print('Longest Palindromic Substring:', longestPalindromicSubstring(['a','g','b','d','b','a']))
+
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
 
@@ -312,6 +349,7 @@ print('permutations of all numbers:', permutations([1, 2, 3]))
 #  Right node as Next node and Left Node as Previous Node.
 
 # Given an array,find the maximum j – i such that arr[j] > arr[i]
+print('maximum j – i such that arr[j] > arr[i]:', maximum_jminusi_bruteforce([18, 2, 3, 4, 5, 1, 17]))
 
 # Remove Alternate Duplicate characters from a char array you have to do it in Place.
 # Like keeping only the odd occurences of each character.
@@ -801,23 +839,4 @@ print('Substring with one repeated character:', substringWithOneRepeated('abaakl
 # Example 3:
 # Input:
 # inputList = [a, b, a, b, c, b, a, c, a, d, e, f, e, g, d, e, h, i, j, h, k, l, i, j]
-# Output: [9, 7, 8]
-def shotSequences(inp):
-    n = len(inp)
-    i = 0
-    res = []
-    while i < n:
-        curr = inp[i]
-        count = 1
-        for j in range(n-1, i+2, -1):
-            if inp[j] == curr:
-                count = j-i+1
-                i = j
-                break
-        res.append(count)
-        i += 1
-
-    return res
-
-print('length of shot sequences:', shotSequences(
-    ['a','b','a','b','c','b','a','c','a','d','e','f','e','g','d','e','h','i','j','h','k','l','i','j']))
+# Output:[9, 7, 8]
