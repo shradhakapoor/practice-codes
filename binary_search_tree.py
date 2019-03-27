@@ -592,7 +592,7 @@ print('Inorder successor of node:', str(bst.inorder_successor(bst.root).value))
 print('Inorder predecessor of node:', str(bst.inorder_predecessor(bst.root).value))
 
 print('Print all elements in the range r1 to r2 in increasing order:')
-bst.print_all_in_range(bst.root, 100, 400)
+bst.print_all_in_range(bst.root, 100, 900)
 
 print('\nRemove all elements outside the range:', end=' ')
 bst._print(bst.remove_elements_outside_range(bst.root, 100, 750))
