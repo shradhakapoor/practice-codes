@@ -281,7 +281,7 @@ class Binary_Search_Tree(object):
         if len(arr) == 1:
             root = Node(arr[0])
             return root
-        mid = int(len(arr)/2)
+        mid = len(arr)//2
         root = Node(arr[mid])
 
         if arr[mid-1] < arr[mid+1]:
