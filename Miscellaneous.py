@@ -332,11 +332,6 @@ print('Longest Palindromic Substring:', longestPalindromicSubstring(['a','g','b'
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
 
-# given an integer list of which both first half and second half are sorted independently. Sort the two parts to create
-# one single sorted linked list in place [do not use extra memory]
-
-# given array S[1...n], reverse(s,i,j) which reverses order of elements between positions i and j
-
 # given a matrix, calculate number of ways for reaching from A to B.
 
 # given a string that has set of words and spaces, write program to move spaces to front of string. you need to traverse

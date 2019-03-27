@@ -201,7 +201,7 @@ class BinaryTree(object):
                 queue.enqueue(node.right)
         return size
 
-    # print tree in reverse-order( from leaves to root) using level-order
+    # print tree in inverted order, using level-order (same as mirroring the tree)
     def reverse_tree( self, n):
         if n is None:
             return
@@ -881,6 +881,7 @@ if __name__ == "__main__":
     tree.print_tree()
     print('')
 
+    tree.tree_mirror(tree.root) # going back to the original tree
     print('Reversing the tree ...')
     tree.reverse_tree(tree.root)
     tree.print_tree()
