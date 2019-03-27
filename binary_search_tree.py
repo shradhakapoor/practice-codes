@@ -497,7 +497,7 @@ class Binary_Search_Tree(object):
         self._insert_to_set(root1, set1)
         self._insert_to_set(root2, set2)
 
-        return (set1 == set2)
+        return set1 == set2
 
     def _insert_to_set( self, root, s ):
         if not root: return
