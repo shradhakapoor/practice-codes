@@ -238,11 +238,11 @@ class Binary_Search_Tree(object):
     def shortest_distance_between_two_nodes( self,root, value1, value2 ):
         if root is None:
             return 0
-        if root.value > value1 and root.value > value2:
+        if root.value > max(value1, value2):
             return self.shortest_distance_between_two_nodes(root.left, value1, value2)
-        if root.value < value1 and root.value < value2:
+        if root.value < min(value1, value2):
             return self.shortest_distance_between_two_nodes(root.right, value1, value2)
-        if (root.value >= value1 and root.value <= value2) or (root.value <= value1 and root.value >= value2):
+        if value1 <= root.value <= value2 or value2 <= root.value <= value1:
             return self.distance_from_root(root, value1) + self.distance_from_root(root, value2)
 
     def distance_from_root( self, node, value ):
@@ -578,7 +578,7 @@ print('kth smallest element in tree:', str(bst.kth_smallest_element(2)))
 
 print('lowest common ancestor of two nodes:', str(bst.lowest_common_ancestor(bst.root, 700, 900).value))
 
-print('shortest distance between two nodes:', str(bst.shortest_distance_between_two_nodes(bst.root, 200, 450)))
+print('shortest distance between two nodes:', str(bst.shortest_distance_between_two_nodes(bst.root, 200, 800)))
 
 print('count of number of BSTs possible with n nodes:', str(bst.count_of_BST_possible(7)))
 
