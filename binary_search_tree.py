@@ -466,11 +466,11 @@ class Binary_Search_Tree(object):
     def _sorted_ll_to_bst( self, list_size ):
         if list_size <= 0: return
 
-        left = self._sorted_ll_to_bst(int(list_size/2))
+        left = self._sorted_ll_to_bst(list_size//2)
 
         root = Node(self.cur.value)
 
-        self.cur = self.cur.right
+        self.cur = self.cur.right # traversing the linked list, cur = cur.next
 
         right = self._sorted_ll_to_bst(list_size - int(list_size/2) -1)
 
