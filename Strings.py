@@ -279,13 +279,13 @@ def longestCommonPrefix(strs):
         return strs[0]
     else:
         smallest = len(min(strs, key=len))
-        for i in range(smallest):
+        for i in range(smallest): # columns, all characters till smallest in a string
             ch = ''
-            for j in range(n):
-                if j == 0:
+            for j in range(n): # rows, all strings in strs
+                if j == 0: # take the character from row 0 column i
                     ch = strs[j][i]
                 else:
-                    if ch != strs[j][i]:
+                    if ch != strs[j][i]: # character from row 0 column i should match all other rows' column i
                         flag = 0
                         break
                     elif j == n - 1 and ch == strs[j][i]:
