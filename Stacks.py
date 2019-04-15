@@ -32,17 +32,17 @@ stck.push(60)
 print('stack is :', stck.stack)
 print('reversed stack is :', stck.stack)
 
-# maximum sum in sliding window
+# maximum number in sliding window
 # solution 1: use 2 loops , time O(n^2)
 # solution 2: use double ended queue , time O(n)
-def max_sum_sliding_window(inp, k):
-    # store the current window elements in Q in increasing order, store the positions in q
+def max_num_sliding_window(inp, k):
+    # store the current window elements in q, store the positions in q
     q = deque()
     n = len(inp)
     # first window
-    for i in range(0, k):
+    for i in range(k):
         # remove all elements smaller than current ith element
-        while q and inp[i] >= inp[q[-1]]:
+        while q and inp[q[-1]] < inp[i]:
             q.pop()
 
         # then add current ith position to rear of q
@@ -50,14 +50,14 @@ def max_sum_sliding_window(inp, k):
 
     # windows from k to n-1
     for i in range(k, n):
-        # print the element at front of q because its the largest
+        # print the element at front of q because its the largest from previous window
         print(str(inp[q[0]]), end= ',')
         # remove the elements out of the current window
         while q and q[0] <= i-k:
             # remove from front of q
             q.popleft()
         # remove all elements smaller than current ith element
-        while q and inp[i] >= inp[q[-1]]:
+        while q and inp[q[-1]] < inp[i]:
             q.pop()
         # then add current ith position to rear of q
         q.append(i)
@@ -65,7 +65,8 @@ def max_sum_sliding_window(inp, k):
     # print max element of last window
     print(str(inp[q[0]]))
 
-max_sum_sliding_window([12, 1, 78, 90, 57, 89, 56], 3)
+print('sliding window maximum:', end =' ')
+max_num_sliding_window([12, 1, 78, 90, 57, 89, 56], 3)
 
 # replace every element with the nearest greater element on the right
 # solution 1: use 2 loops , time O(n^2)
