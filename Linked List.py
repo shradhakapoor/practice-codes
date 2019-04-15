@@ -145,25 +145,34 @@ class Singly_Linked_List(object):
             curr = aftr
         self.head = last
 
-    # find the merging point of two lists
+    # find the intersection point of two lists
     def merging_point(self, list1, list2):
-        list_hash = dict()
-        curr = list1.head
-        while curr:
-            if list_hash.get(curr.data)  is None:
-                list_hash[curr.data] = True
-                curr = curr.nxt
 
-        # check the addresses of list2 in keys of dict()
-        list1_keys = list_hash.keys()
-        curr = list2.head
-        while curr:
-            if curr.data in list1_keys:
-                return curr.data
-            else:
-                curr = curr.nxt
+        # difference in lengths of two lists
+        diff = abs(list1.length - list2.length)
 
-        return None
+        # skip diff number of nodes in longer list
+        if list1.length >= list2.length:
+            longerList = list1
+            shorterList = list2
+        else:
+            longerList = list2
+            shorterList = list1
+
+        curr1 = longerList.head
+
+        while diff != 0:
+            curr1 = curr1.nxt
+            diff -= 1
+
+        curr2 = shorterList.head
+        while curr1 and curr2:
+            if curr1.data == curr2.data:
+                return curr1.data
+            curr1 = curr1.nxt
+            curr2 = curr2.nxt
+
+        return False
 
     # find the middle of the list, if we know it has no loop
     # method1: find length of list and compute midpoint, then traverse to the midpoint
@@ -249,7 +258,7 @@ sll3.insert_at_position(1, 5)
 sll3.insert_at_position(2, 5)
 print('Palindrome? :', sll3.palindrome_list())
 
-print('merging point of two lists:', sll.merging_point(sll, sll2))
+print('intersection point of two lists:', sll.merging_point(sll, sll2))
 
 print('Singly linked list is:', end = ' ')
 sll.printList()
