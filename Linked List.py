@@ -208,26 +208,23 @@ class Singly_Linked_List(object):
         if self.head.nxt is None:
             return True
         curr = self.head
-        lst = []
+        lst = [] # requires O(n) extra space
         count = 0
         while curr:
             lst.append(curr.data)
             count += 1
             curr = curr.nxt
 
-        curr = self.head
-        i = count-1
-        flag = False
-        while curr and i >= 0:
-            if curr.data == lst[i]:
-                i -= 1
-                flag = True
-                curr = curr.nxt
+        i = 0
+        j = len(lst)-1
+        while i != j:
+            if lst[i] == lst[j]:
+                i += 1
+                j -= 1
             else:
-                flag = False
-                break
-        return flag
+                return False
 
+        return True
 
     # given list {a1, a2, . . ., an}, return {a1, an, a2, an-1, . . .} without using extra space
         # SOLUTION:
