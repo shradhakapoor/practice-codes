@@ -479,6 +479,40 @@ class BinaryTree(object):
             self._maximum_path_sum(node.right, path, result)
             path.pop()
 
+    def maxPathSumIteratively(self, node):
+        if node is None:
+            return None
+        parent = dict() # store parent node
+        parent[node] = None # parent of root is None
+        q = Queue()
+        q.items.insert(0, node) # enqueue
+        maxSum = float('-inf')
+
+        while not q.is_empty():
+            curr = q.items.pop() # dequeue
+            if curr.left is None and curr.right is None:
+                pathSum = self.findPathSum(curr, parent)
+                maxSum = max(maxSum, pathSum)
+
+            if curr.left:
+                q.items.insert(0, curr.left) # enqueue
+                parent[curr.left] = curr
+
+            if curr.right:
+                q.items.insert(0, curr.right) # enqueue
+                parent[curr.right] = curr
+
+        return maxSum
+
+    def findPathSum(self, node, parent):
+        curr = node
+        pathSum = 0
+        while curr:
+            pathSum += curr.value
+            curr = parent[curr]
+
+        return pathSum
+
     # check the existence of path with given sum
     def path_existence_with_sum(self, node, s):
 
@@ -856,7 +890,9 @@ if __name__ == "__main__":
     else:
         print('Trees are not structurally identical')
 
-    print('Maximum sum among all paths is: '+ str(tree.maximum_path_sum()))
+    print('Maximum sum among all paths(recursively) is: '+ str(tree.maximum_path_sum()))
+
+    print('Maximum sum among all paths(iteratively) is:', tree.maxPathSumIteratively(tree.root))
 
     print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.root, 451)))
 
