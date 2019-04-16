@@ -273,26 +273,29 @@ def longestCommonPrefix(strs):
     res = ''
     n = len(strs)
     flag = 0
+
     if n == 0:
-        return res
-    elif n == 1:
-        return strs[0]
-    else:
-        smallest = len(min(strs, key=len))
-        for i in range(smallest): # columns, all characters till smallest in a string
-            ch = ''
-            for j in range(n): # rows, all strings in strs
-                if j == 0: # take the character from row 0 column i
-                    ch = strs[j][i]
-                else:
-                    if ch != strs[j][i]: # character from row 0 column i should match all other rows' column i
-                        flag = 0
-                        break
-                    elif j == n - 1 and ch == strs[j][i]:
-                        flag = 1
-                        res += ch
-            if flag == 0:
-                return res
+        return None
+    if n == 1:
+        return strs
+
+    smallest = len(min(strs, key=len))
+    for i in range(smallest): # columns, all characters till smallest in a string
+        ch = ''
+        for j in range(n): # rows, all strings in strs
+            # take the character from row 0 column i
+            if j == 0:
+                ch = strs[0][i]
+            # character from row 0 column i should match all other rows' column i
+            elif ch != strs[j][i]:
+                flag = 0
+                break
+            elif j == n - 1 and ch == strs[j][i]:
+                flag = 1
+                res += ch
+
+        if flag == 0:
+            return res
 
     return res
 
