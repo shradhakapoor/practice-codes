@@ -708,12 +708,12 @@ class BinaryTree(object):
 
         # Sort the map according to horizontal distance
         sorted_m = collections.OrderedDict(sorted(m.items()))
-        print('Vertical Order Traversal:')
+        print('Vertical Order Traversal:', end = ' ')
         # Traverse the sorted map and print nodes at each horizontal distance
         for i in sorted_m.values():
             for j in i:
                 print(j, end=' ')
-            print()
+            print(end=';')
 
     # Print Nodes in Top View of Binary Tree, time O(n)
     def topView(self, nde):
@@ -747,42 +747,28 @@ class BinaryTree(object):
 
         # Sort the map according to horizontal distance
         sorted_m = collections.OrderedDict(sorted(m.items()))
-        print('Top view of tree:', end = ' ')
+        print('\nTop view of tree:', end = ' ')
         # Traverse the sorted map and print nodes at each horizontal distance
         for i in sorted_m.keys():
-            print(m[i][0], end=' ')
+            print(m[i][0], end=', ')
 
     # Print Nodes in left View of Binary Tree
     # The left view contains all nodes that are first nodes in their levels
     def leftView(self, nde):
         if nde is None:
              return
-        # acts like double ended queue
         q = Queue()
-        q.items.append(nde)
-        # push a delimiter None after end of each level
-        q.items.append(None)
-        print('Left view of tree:', end=' ')
-        while not q.is_empty():
-            # check the front of queue
-            tmp = q.items[0]
-            # Print first node of this level
-            # append to q, children of nodes at this level
-            if tmp:
-                print(tmp.value,end = ' ')
-                while q.items[0]:
-                    # pop the tmp from queue
-                    tmp = q.items.pop(0)
-                    if tmp.left:
-                        q.items.append(tmp.left)
-                    if tmp.right:
-                        q.items.append(tmp.right)
-
-                # append the delimiter for next level
-                q.items.append(None)
-
-            # pop delimiter of previous level
-            q.items.pop(0)
+        q.items.insert(0, nde)
+        while len(q.items) != 0:
+            count = len(q.items)
+            print(q.items[-1].value, end= ', ') # like dequeue
+            while count != 0:
+                curr = q.items.pop()
+                if curr.left:
+                    q.items.insert(0, curr.left)
+                if curr.right:
+                    q.items.insert(0, curr.right)
+                count -= 1
 
     # Print Nodes in Bottom View of Binary Tree
     # Bottom View is the bottommost node at its horizontal distance,
@@ -840,7 +826,7 @@ if __name__ == "__main__":
     tree.level_order_traversal(tree.root)
     tree.vertical_order_traversal(tree.root)
     tree.topView(tree.root)
-    print()
+    print('\nLeft view of the tree:', end=' ')
     tree.leftView(tree.root)
     print()
     tree.bottomView(tree.root)
