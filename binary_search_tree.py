@@ -415,7 +415,9 @@ class Binary_Search_Tree(object):
         # case 1: if node has right subtree then find least value node from that right subtree
         if node.right:
             temp = node.right
-            while temp.left: temp = temp.left
+            while temp.left:
+                temp = temp.left
+
             return temp
 
         # case 2: if node doesn't have right subtree
@@ -426,7 +428,8 @@ class Binary_Search_Tree(object):
             if tmp.value > node.value:
                 parent = tmp
                 tmp = tmp.left
-            else: tmp = tmp.right
+            else:
+                tmp = tmp.right
         return parent
 
     # tell the predecessor of a node in BST
@@ -436,19 +439,22 @@ class Binary_Search_Tree(object):
         # case 1: if node has left subtree then find the max value node from that left subtree
         if node.left:
             temp = node.left
-            while temp.right: temp = temp.right
+            while temp.right:
+                temp = temp.right
+
             return temp
 
         # case 2: if node doesn't have left subtree
         # then search that node starting from root and the node from where we take the last right is the answer
         root = self.root
-        store = None
+        parent = None
         while root.value != node.value:
             if node.value > root.value:
-                store = root
+                parent = root
                 root = root.right
-            else: root = root.left
-        return store
+            else:
+                root = root.left
+        return parent
 
     # convert sorted singly linked list to height balanced BST
     cur = None
