@@ -410,27 +410,29 @@ class BinaryTree(object):
             path.pop()
 
     # print all root-to-leaf paths, iteratively
-    def all_paths_root_to_leaf_iteratively(self, root):
-        if root is None:
-            return
-        s = Stack()
-        parent = dict()
-        parent[root] = None
-        s.push(root)
-        while not s.is_empty():
-            tmp = s.pop()
-            if tmp.left is tmp.right is None:
-                # print the path from root to this tmp(leaf)
-                self.print_path(tmp, parent)
+    def all_paths_root_to_leaf_iteratively(self, node):
+        if node is None:
+            return None
+        parent = dict() # store parent node
+        parent[node] = None # parent of root is None
+        q = Queue()
+        q.items.insert(0, node)
+        while not q.is_empty():
+            curr = q.items.pop()
+            if curr.left is None and curr.right is None:
+                self.printPath(curr, parent)
 
-            if tmp.right:
-                parent[tmp.right] = tmp
-                s.push(tmp.right)
-            if tmp.left:
-                parent[tmp.left] = tmp
-                s.push(tmp.left)
+            if curr.left:
+                q.items.insert(0, curr.left)
+                parent[curr.left] = curr
 
-    def print_path(self, node, parent):
+            if curr.right:
+                q.items.insert(0, curr.right)
+                parent[curr.right] = curr
+
+        return None
+
+    def printPath(self, node, parent):
         result = Stack()
         while node:
             result.push(node)
