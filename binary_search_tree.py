@@ -388,13 +388,9 @@ class Binary_Search_Tree(object):
         else:
             # case 1: node to be deleted has 1 child or no child
             if root.left is None:
-                temp = root.right
-                root = None
-                return temp
+                return root.right
             if root.right is None:
-                temp = root.left
-                root = None
-                return temp
+                return root.left
 
             # case 2: node to be deleted has 2 children
 
