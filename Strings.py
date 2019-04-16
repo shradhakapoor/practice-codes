@@ -298,6 +298,33 @@ def longestCommonPrefix(strs):
 
 print('Longest common prefix:', longestCommonPrefix(['flowers','flow','flight']))
 
+# Given a string, find its first non-repeating character
+def firstNonRepeatingChar(inp):
+    inp = list(inp)
+    n = len(inp)
+    if n == 0:
+        return None
+    if n == 1:
+        return inp
+
+    # dictionary, key = character, value = [count, first position its seen]
+    charCountDict = dict()
+    for i in range(n):
+        if charCountDict.get(inp[i]) is None:
+            charCountDict[inp[i]] = [1, i]
+        else:
+            charCountDict[inp[i]][0] += 1
+    positions_with_count_one = []
+    for key, value in charCountDict.items():
+        if value[0] == 1:
+            positions_with_count_one.append(value[1])
+
+    positions_with_count_one = sorted(positions_with_count_one)
+    return inp[positions_with_count_one[0]]
+
+print('first non-repeating character:', firstNonRepeatingChar('geeksforgeeks'))
+
+
 # Reverse words in a sentence. time O(mn) space O(1)
 
 # give an algorithm for matching pattern in text. Assume ? and * are wildcard chars.Brute Force. time O(mn) space O(1)
