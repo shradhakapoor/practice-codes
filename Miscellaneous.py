@@ -322,6 +322,62 @@ def longestPalindromicSubstring(inp):
 
 print('Longest Palindromic Substring:', longestPalindromicSubstring(['a','g','b','d','b','a']))
 
+# Given a task schedule with tasks as say A, B and C (all these are different tasks),
+# and a coldtime, which means that you need to wait for that much time to start a next [same] task.
+# Find the order in which these given tasks should be executed.
+# If no task can be executed at a given time you can print ‘_’ .
+#
+# Input: String, Coldtime
+# Output: The best task-finishing sequence
+#
+# Eg: Input: AAABBB. 2
+# BA_BA_BA
+# Output: AB_AB_AB
+#
+# AAAAABBBCC 3
+# A:5, B:3, C:2
+
+### too many variables! solution
+def scheduleTasks(inp, coldtime):
+    coldtimeCount = 0
+    taskCount  = 0
+    maxColdtimeCount = 0
+    task_timing = list()
+    prev = inp[0]
+    # assigns time to each task in the input, according to the coldtime
+    for c in inp:
+        if c != prev:
+            prev = c
+            maxColdtimeCount = max(coldtimeCount, maxColdtimeCount)
+            taskCount += 1
+            coldtimeCount = taskCount
+        task_timing.append((c, coldtimeCount))
+        coldtimeCount += coldtime + 1
+
+    maxColdtimeCount = maxColdtimeCount - coldtime - 1
+    # map, key= time of task, value= task
+    resultDict = dict()
+    for t in task_timing:
+        if resultDict.get(t[1]) is None:
+            resultDict[t[1]] = t[0]
+
+    result = list()
+    for i in range(maxColdtimeCount+1):
+        if resultDict.get(i) is None:
+            result.append('_')
+        else:
+            result.append(resultDict[i])
+
+    return ('').join(result)
+
+print('Task order will be:', scheduleTasks(['a','a','a','a','a','b','b','b','c','c'], 3))
+
+# print powerset P(s) of given set s. Powerset is the set of all subsets of s.
+# For example s = {a, b, c} then P(s) = {{}, {a}, {b}, {c}, {a,b}, {a, c}, {b, c}, {a, b, c}}.
+
+# LRU Cache implementation
+
+
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
 
