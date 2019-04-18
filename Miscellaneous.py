@@ -285,22 +285,6 @@ def permutations(inp, start, end):
             permutations(inp, start + 1, end)
             inp[start], inp[i] = inp[i], inp[start]  # backtrack
 
-    # n = len(inp)
-    # if n == 0:
-    #     return None
-    # if n == 1:
-    #     return inp
-    #
-    # result = []
-    #
-    # for i in range(n):
-    #     ans = inp[i]
-    #     newList = inp[:i] + inp[i + 1:]
-    #     for j in permutations(newList):
-    #         result.append([ans] + [j])
-    #
-    # return result
-
 print('permutations of all numbers:')
 permutations([1, 2, 3], 0, 2)
 
