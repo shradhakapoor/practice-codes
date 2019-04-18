@@ -276,24 +276,33 @@ print('Max area is:', maxArea([3,2,1,3]))
 # ]
 #
 
-def permutations(inp):
-    n = len(inp)
-    if n == 0:
-        return None
-    if n == 1:
-        return inp
+def permutations(inp, start, end):
+    if start == end:
+        print(str(inp))
+    else:
+        for i in range(start, end + 1):
+            inp[start], inp[i] = inp[i], inp[start]
+            permutations(inp, start + 1, end)
+            inp[start], inp[i] = inp[i], inp[start]  # backtrack
 
-    result = []
+    # n = len(inp)
+    # if n == 0:
+    #     return None
+    # if n == 1:
+    #     return inp
+    #
+    # result = []
+    #
+    # for i in range(n):
+    #     ans = inp[i]
+    #     newList = inp[:i] + inp[i + 1:]
+    #     for j in permutations(newList):
+    #         result.append([ans] + [j])
+    #
+    # return result
 
-    for i in range(n):
-        ans = inp[i]
-        newList = inp[:i] + inp[i + 1:]
-        for j in permutations(newList):
-            result.append([ans] + [j])
-
-    return result
-
-print('permutations of all numbers:', permutations([1, 2, 3]))
+print('permutations of all numbers:')
+permutations([1, 2, 3], 0, 2)
 
 # Print the longest palindromic substring
 def longestPalindromicSubstring(inp):
