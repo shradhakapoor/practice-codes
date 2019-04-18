@@ -326,7 +326,7 @@ class Binary_Heap(object):
 
     # find minimum window in inputString which will contain all chars in Pattern in complexity O(n).
     # if no such window, return empty string. If multiple such windows, return one unique minimum window
-    def find_min_window_for_substring( self, input_str, pattern ):
+    def find_min_window_for_substring(self, input_str, pattern):
 
         # count occurence of chars in pattern
         # defaultdict will return int 0 if key is not present
@@ -334,12 +334,12 @@ class Binary_Heap(object):
         for ch in pattern:
             pattern_count_dict[ch] += 1
 
-        remain_missing = len( pattern )
-        start_pos, end_pos = 0, float( 'inf' )
+        remain_missing = len(pattern)
+        start_pos, end_pos = 0, float('inf')
         current_start = 0
 
         # Enumerate function makes current_end indexes from 1
-        for current_end, ch in enumerate( input_str, 1 ):
+        for current_end, ch in enumerate(input_str, 1):
             # Whenever we encounter a character, no matter ch in pattern or not, we minus 1 in count dictionary
             # But, only when ch is in pattern, we minus the length of remain_missing
             # When the remain_missing is 0, we find a potential solution.
@@ -364,7 +364,8 @@ class Binary_Heap(object):
                 remain_missing += 1
                 current_start += 1
 
-        return input_str[start_pos:end_pos] if end_pos != float( 'inf' ) else ''
+        return input_str[start_pos:end_pos] if end_pos != float('inf') else ''
+
 
     # Given k lists of sorted integers, find smallest range that includes atleast one number from each of k lists
     # def shortest_range_in_k_sorted_lists( self, input, k ):

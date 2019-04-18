@@ -88,35 +88,35 @@ print('Maximized profit:', maximizeProfit(
 
 # print matrix elements in spiral order
 def matrix_in_spiral(mat):
-    m = len(mat[0]) # end index of col
-    n = len(mat) # end index of row
+    cols = len(mat[0]) # number of columns
+    rows = len(mat) # number of rows
     result = []
     row = 0 # start index of rows
     col = 0 # start index of cols
 
-    while row < n and col < m:
+    while row < rows and col < cols:
         # print first row from remaining rows
-        for i in range(col, m):
+        for i in range(col, cols):
             result.append(mat[row][i])
         # increment start index of row
         row += 1
 
         # print last column from remaining columns
-        for i in range(row, n):
-            result.append(mat[i][m-1])
+        for i in range(row, rows):
+            result.append(mat[i][cols-1])
         # decrement end index of cols
-        m -= 1
+        cols -= 1
 
         # print last row of remaining rows
-        if row < n:
-            for i in range(m-1, col-1, -1):
-                result.append(mat[n-1][i])
+        if row < rows:
+            for i in range(cols-1, col-1, -1):
+                result.append(mat[rows-1][i])
             # decrement end index of rows
-            n -= 1
+            rows -= 1
 
         # print first column from remaining columns
-        if col < m:
-            for i in range(n-1, row-1, -1):
+        if col < cols:
+            for i in range(rows-1, row-1, -1):
                 result.append(mat[i][col])
             # increment start index of cols
             col += 1
