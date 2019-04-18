@@ -275,7 +275,7 @@ print('Max area is:', maxArea([3,2,1,3]))
 #     [3, 2, 1]
 # ]
 #
-
+# time complexity O(n.n!)
 def permutations(inp, start, end):
     if start == end:
         print(str(inp))
