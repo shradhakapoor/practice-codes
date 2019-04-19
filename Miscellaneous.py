@@ -340,20 +340,20 @@ print('Longest Palindromic Substring:', longestPalindromicSubstring(['a','g','b'
 
 def scheduleTasks(tasks, coldtime):
     frequencies = dict()
-    a = []
+    heap = [] # should be maxheap
     for ch in tasks:
         if ch in frequencies:
             frequencies[ch] += 1
         else:
             frequencies[ch] = 1
     for key, val in frequencies.items():
-        heapq.heappush(a, [val, key])
+        heapq.heappush(heap, [val, key])
     result = ''
-    while len(a):
+    while len(heap):
         temp = []
         for i in range(coldtime + 1):
-            if len(a):
-                task = heapq.heappop(a)
+            if len(heap):
+                task = heapq.heappop(heap)
                 result += task[1]
                 temp.append(task)
             else:
@@ -363,12 +363,18 @@ def scheduleTasks(tasks, coldtime):
             task = temp.pop()
             task[0] -= 1
             if task[0] > 0:
-                heapq.heappush(a, task)
-        if len(a):
+                heapq.heappush(heap, task)
+        if len(heap):
             result += '_' * (coldtime + 1 - itemPushed)
     return result
 
 print('Task order will be:', scheduleTasks('bbaaac', 2))
+print('Task order will be:', scheduleTasks('aaabbb', 2))
+print('Task order will be:', scheduleTasks('ccccaaaaabbbbbb', 3))
+print('Task order will be:', scheduleTasks('aaabbbccc', 3))
+print('Task order will be:', scheduleTasks('aaabbbccc', 2))
+print('Task order will be:', scheduleTasks('aaabbbccc', 5))
+
 
 # print powerset P(s) of given set s. Powerset is the set of all subsets of s.
 # For example s = {a, b, c} then P(s) = {{}, {a}, {b}, {c}, {a,b}, {a, c}, {b, c}, {a, b, c}}.
