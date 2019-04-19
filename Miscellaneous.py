@@ -1,4 +1,5 @@
 import math
+import heapq
 import os
 __path__ = [os.path.dirname(os.path.abspath(__file__))]
 from .Searching import maximum_jminusi_bruteforce
@@ -337,40 +338,37 @@ print('Longest Palindromic Substring:', longestPalindromicSubstring(['a','g','b'
 # AAAAABBBCC 3
 # A:5, B:3, C:2
 
-### too many variables! solution
-def scheduleTasks(inp, coldtime):
-    coldtimeCount = 0
-    taskCount  = 0
-    maxColdtimeCount = 0
-    task_timing = list()
-    prev = inp[0]
-    # assigns time to each task in the input, according to the coldtime
-    for c in inp:
-        if c != prev:
-            prev = c
-            maxColdtimeCount = max(coldtimeCount, maxColdtimeCount)
-            taskCount += 1
-            coldtimeCount = taskCount
-        task_timing.append((c, coldtimeCount))
-        coldtimeCount += coldtime + 1
-
-    maxColdtimeCount = maxColdtimeCount - coldtime - 1
-    # map, key= time of task, value= task
-    resultDict = dict()
-    for t in task_timing:
-        if resultDict.get(t[1]) is None:
-            resultDict[t[1]] = t[0]
-
-    result = list()
-    for i in range(maxColdtimeCount+1):
-        if resultDict.get(i) is None:
-            result.append('_')
+def scheduleTasks(tasks, coldtime):
+    frequencies = dict()
+    a = []
+    for ch in tasks:
+        if ch in frequencies:
+            frequencies[ch] += 1
         else:
-            result.append(resultDict[i])
+            frequencies[ch] = 1
+    for key, val in frequencies.items():
+        heapq.heappush(a, [val, key])
+    result = ''
+    while len(a):
+        temp = []
+        for i in range(coldtime + 1):
+            if len(a):
+                task = heapq.heappop(a)
+                result += task[1]
+                temp.append(task)
+            else:
+                break
+        itemPushed = len(temp)
+        while len(temp):
+            task = temp.pop()
+            task[0] -= 1
+            if task[0] > 0:
+                heapq.heappush(a, task)
+        if len(a):
+            result += '_' * (coldtime + 1 - itemPushed)
+    return result
 
-    return ('').join(result)
-
-print('Task order will be:', scheduleTasks(['a','a','a','a','a','b','b','b','c','c'], 3))
+print('Task order will be:', scheduleTasks('bbaaac', 2))
 
 # print powerset P(s) of given set s. Powerset is the set of all subsets of s.
 # For example s = {a, b, c} then P(s) = {{}, {a}, {b}, {c}, {a,b}, {a, c}, {b, c}, {a, b, c}}.
