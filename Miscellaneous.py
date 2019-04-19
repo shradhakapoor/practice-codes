@@ -378,9 +378,26 @@ print('Task order will be:', scheduleTasks('aaabbbccc', 5))
 
 # print powerset P(s) of given set s. Powerset is the set of all subsets of s.
 # For example s = {a, b, c} then P(s) = {{}, {a}, {b}, {c}, {a,b}, {a, c}, {b, c}, {a, b, c}}.
+def powerSet(inp):
+    set_size = len(inp)
+    # set_size of power set of a set with set_size n is (2**n -1)
+    pow_set_size = (int)(math.pow(2, set_size))
 
-# LRU Cache implementation
+    # Run from counter 000..0 to 111..1
+    for binCounter in range(0, pow_set_size):
+        for place in range(0, set_size):
 
+            # Check if jth bit in the
+            # counter is set If set then
+            # print jth element from set
+            if ((binCounter & (1 << place)) > 0):
+                print(inp[place], end='')
+        print(end = ', ')
+
+
+print('Powerset of given set:', end=' ')
+powerSet(['a', 'b', 'c'])
+print()
 
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
