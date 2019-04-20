@@ -399,6 +399,14 @@ print('Powerset of given set:', end=' ')
 powerSet(['a', 'b', 'c'])
 print()
 
+# Given an array of items (itemId and price), we want to find all the items that
+# grouped together the price is less than $100.
+# Accessories = [item[1, $99], item[2, $200], item[3, $10], item[4, $50], item[5, $45]
+
+# [[1]
+# [3,4]
+# [4,5]]
+
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
 
