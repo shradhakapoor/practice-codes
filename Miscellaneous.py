@@ -396,7 +396,7 @@ def powerSet(inp):
 
 
 print('Powerset of given set:', end=' ')
-powerSet(['a', 'b', 'c'])
+powerSet(['a','a', 'b', 'c'])
 print()
 
 # Given an array of items (itemId and price), we want to find all the items that
@@ -405,7 +405,40 @@ print()
 
 # [[1]
 # [3,4]
-# [4,5]]
+# [4,5],
+# [5]]
+class item():
+    def __init__(self, id = None, price = 0):
+        self.id = id
+        self.price = price
+
+    def priceLessThan(self, accessories, target):
+        length = len(accessories)
+        if length == 0:
+            return []
+        result = []
+        for i in range(length):
+            curr_price = accessories[i].price
+            ans = []
+            if curr_price <= target:
+                ans.append(accessories[i].id)
+                for j in range(i+1, length):
+                    if curr_price + accessories[j].price <= target:
+                        curr_price += accessories[j].price
+                        ans.append(accessories[j].id)
+
+                result.append(ans)
+        return result
+
+item1 = item(1, 99)
+item2 = item(2, 200)
+item3 = item(3, 10)
+item4 = item(4, 50)
+item5 = item(5, 45)
+item6 = item(6, 2)
+it = item()
+print('grouped items:', it.priceLessThan([item1, item2, item3, item4, item5, item6], 100))
+
 
 # Given an array nums of n integers and an integer target, are there elements a, b, c, and d in nums such that
 # a + b + c + d = target? Find all unique quadruplets in the array which gives the sum of target.
