@@ -399,6 +399,40 @@ print('Powerset of given set:', end=' ')
 powerSet(['a','a', 'b', 'c'])
 print()
 
+# Find next greater number with same set of digits
+# Given a number n, find the smallest number that has same set of digits as n and is greater than n.
+# If x is the greatest possible number with its set of digits, then print “not possible”.
+#
+# Input: n = "218765"
+# Output: "251678"
+#
+# Input: n = "1234"
+# Output: "1243"
+#
+# Input: n = "4321"
+# Output: "Not Possible
+
+# 1) If all digits sorted in descending order, then output is always “Not Possible”. For example, 4321.
+# 2) If all digits are sorted in ascending order, then we need to swap last two digits. For example, 1234.
+# 3) For other cases, we need to process the number from rightmost side (why? because we need to find the smallest
+# of all greater numbers)
+#
+# Following is the algorithm for finding the next greater number.
+# I) Traverse the given number from rightmost digit, keep traversing till you find a digit which is smaller than
+# the previously traversed digit. For example, if the input number is “534976”, we stop at 4 because 4 is smaller than
+# next digit 9. If we do not find such a digit, then output is “Not Possible”.
+#
+#
+#
+# II) Now search the right side of above found digit ‘d’ for the smallest digit greater than ‘d’. For “534976″, the
+# right side of 4 contains “976”. The smallest digit greater than 4 is 6.
+#
+# III) Swap the above found two digits, we get 536974 in above example.
+#
+# IV) Now sort all digits from position next to ‘d’ to the end of number. The number that we get after sorting is the
+# output. For above example, we sort digits in bold 536974. We get “536479” which is the next greater number
+# for input 534976.
+
 # Given an array of items (itemId and price), we want to find all the items that
 # grouped together the price is less than $100.
 # Accessories = [item[1, $99], item[2, $200], item[3, $10], item[4, $50], item[5, $45]
