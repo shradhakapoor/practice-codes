@@ -410,6 +410,7 @@ def merge_sorted_arrays(A, B, m, n):
     print('Merged Sorted Array is:', A)
 
 
+print('bye, bye.......')
 merge_sorted_arrays([1, 5, 9, 10, 15, 20, 0, 0, 0, 0], [2, 3, 8, 13], 6, 4)
 
 
