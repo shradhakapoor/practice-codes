@@ -18,5 +18,4 @@ def isPalindrome(x):
 
 print('is palindrome:', isPalindrome(1234321))
 
-
-
+#Given two sorted lists, merge them so as to produce a combined sorted list
