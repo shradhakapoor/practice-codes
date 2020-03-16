@@ -18,7 +18,14 @@ class Stack(object):
         return len(self.stack) == 0
 
     # reverse elements of stack using only stack operations
-    #def reverseStack(self, stack):
+    def reverseStack(self, st):
+        s = Stack()
+        i = 0
+        length = len(st)
+        while i < length:
+            s.push(st.pop())
+            i += 1
+        return s.stack
 
     # implement producer consumer problem
 
@@ -30,7 +37,7 @@ stck.push(10)
 stck.push(50)
 stck.push(60)
 print('stack is :', stck.stack)
-print('reversed stack is :', stck.stack)
+print('reversed stack is :', stck.reverseStack(stck.stack))
 
 # maximum number in sliding window
 # solution 1: use 2 loops , time O(n^2)
