@@ -1,4 +1,5 @@
 from collections import deque
+from queue import Queue
 
 
 class Stack(object):
@@ -135,3 +136,107 @@ def largest_rectangle(hist):
     return max_area
 
 print('largest rectangle in histogram:', largest_rectangle([6, 2, 5, 4, 5, 1, 6]))
+
+# implement a stack using 2 queues
+# two ways to do this: way 1 : make push operation costly
+# make sure that newly entered element is always at the front of ‘q1’
+class MakeStack1(object):
+    def __init__(self):
+        # two inbuilt queues
+        self.q1 = Queue()
+        self.q2 = Queue()
+        # maintain current number of elements
+        self.curr_size = 0
+
+    def push(self, x):
+        self.curr_size += 1
+        # Push x first in empty q2
+        self.q2.put(x)
+        # transfer all remaining elements from q1 to q2
+        while not self.q1.empty():
+            # dequeue() from q1 and enqueue to q2()
+            self.q2.put(self.q1.queue[0])
+            self.q1.get()
+
+        # swap the names of two queues
+        q = self.q1
+        self.q1 = self.q2
+        self.q2 = q
+
+    def pop(self):
+        if self.q1.empty():
+            return
+        self.q1.get()
+        self.curr_size -= 1
+
+    def top(self):
+        if self.q1.empty():
+            return -1
+        return self.q1.queue[0]
+
+    def size(self):
+        return self.curr_size
+
+# implement a stack using 2 queues
+# way 2: make pop operation costly
+# In push operation, the new element is always enqueued to q1. In pop() operation, if q2 is empty then all the
+# elements except the last, are moved to q2. Finally the last element is dequeued from q1 and returned.
+class MakeStack2(object):
+    def __init__(self):
+        # two inbuilt queues
+        self.q1 = Queue()
+        self.q2 = Queue()
+        # maintain current number of elements
+        self.curr_size = 0
+
+    def push(self, x):
+        self.curr_size += 1
+        # enqueue() new element to q1
+        self.q1.put(x)
+
+    def pop(self):
+        if self.q1.empty():
+            return -1
+        if self.q2.empty():
+            while self.q1.qsize() != 1:
+                self.q2.put(self.q1.queue[0])
+                self.q1.get()
+
+        tmp = self.q1.queue[0]
+        self.q1.get()
+        self.curr_size -= 1
+        # swap the names of two queues
+        q = self.q1
+        self.q1 = self.q2
+        self.q2 = q
+        return tmp
+
+    def top(self):
+        return self.pop()
+
+    def size(self):
+        return self.curr_size
+
+
+# Driver Code
+if __name__ == '__main__':
+    s = MakeStack1()
+    s.push(1)
+    s.push(2)
+    s.push(3)
+    s.push(4)
+    s.push(5)
+    print('make stack using 2 queues with push operation heavy:',end=' ')
+    while s.size() != 0:
+        print(s.top(), end=', ')
+        s.pop()
+
+    s = MakeStack2()
+    s.push(1)
+    s.push(2)
+    s.push(3)
+    s.push(4)
+    s.push(5)
+    print('\nmake stack using 2 queues with pop operation heavy:', end =' ')
+    while s.size()!= 0:
+        print(s.top(), end=', ')
