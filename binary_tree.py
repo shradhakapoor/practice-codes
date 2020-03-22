@@ -140,9 +140,9 @@ class BinaryTree(object):
         queue.enqueue(node)
         node_counter = 1
 
-        while len(queue.items) > 0:
+        while queue.items:
             if element == queue.items[-1].value:
-                return('Found at node number ' + str(node_counter))
+                return 'Found at node number ' + str(node_counter)
             node = queue.dequeue()
             node_counter+=1
 
@@ -164,7 +164,7 @@ class BinaryTree(object):
         queue= Queue()
         queue.enqueue(self.root)
 
-        while len(queue.items) > 0:
+        while queue.items:
             node = queue.dequeue()
             if node.left is None:
                 node.left = newNode
@@ -192,7 +192,7 @@ class BinaryTree(object):
         queue.enqueue(node)
         size = 0
 
-        while len(queue.items) > 0:
+        while queue.items:
             node = queue.dequeue()
             size+=1
             if node.left:
@@ -208,7 +208,7 @@ class BinaryTree(object):
         stack = Stack()
         stack.push(n)
 
-        while len(stack.items) > 0:
+        while stack.items:
             node = stack.pop()
             node.left, node.right = node.right, node.left
 
