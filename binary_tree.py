@@ -61,7 +61,7 @@ class BinaryTree(object):
         queue = Queue()
         queue.enqueue(node)
         traversal = ''
-        while len(queue.items) > 0:
+        while queue.items:
             traversal += str(queue.items[-1].value) + '-'
             node = queue.dequeue()
 
