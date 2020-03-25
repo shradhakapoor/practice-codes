@@ -544,7 +544,7 @@ class BinaryTree(object):
         right = self.least_common_ancestors(root.right, value1, value2)
         if left is right is None:
             return
-        if left is not None and right is not None:
+        if left and right:
             return root
         if left:
             return left
