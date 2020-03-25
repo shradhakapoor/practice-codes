@@ -631,6 +631,38 @@ class BinaryTree(object):
 
         return result
 
+    # zigzag tree traversal / level-order traversal in spiral order
+    # 2nd way -- using a deque or linked list
+    def zigzag_using_deque(self):
+        if self.root is None:
+            return
+        tmp = []
+        tmp.append(self.root)
+        result = []
+        direction = 0
+        while len(tmp) != 0:
+            size = len(tmp)
+            while size:
+                size -= 1
+                if direction == 0:
+                    node = tmp.pop(0)
+                    result.append(node.value)
+                    if node.left:
+                        tmp.append(node.left)
+                    if node.right:
+                        tmp.append(node.right)
+                else:
+                    node = tmp.pop()
+                    result.append(node.value)
+                    if node.left:
+                        tmp.append(node.left)
+                    if node.right:
+                        tmp.append(node.right)
+
+            direction = 1- direction
+
+        return result
+
     # diameter/width of tree (# of nodes in the longest path in binary tree)
     def diameter_of_tree( self , node):
         if node is None:
@@ -891,6 +923,7 @@ if __name__ == "__main__":
     print('are the Ancestors of node (recursively) ')
 
     print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_traversal()))
+    print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_using_deque()))
 
     print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.root)))
 
