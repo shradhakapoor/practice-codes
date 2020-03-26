@@ -62,7 +62,7 @@ class Binary_Search_Tree(object):
                 node.right = Node(value)
             else:
                 self._insert(node.right, value)
-        else:
+        else: #if value == node.value: add the value as a list to this node.value
             print('Value already in tree')
 
     # print tree-- Inorder traversal
