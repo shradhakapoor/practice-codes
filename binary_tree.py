@@ -780,7 +780,7 @@ class BinaryTree(object):
         # Sort the map according to horizontal distance
         sorted_m = collections.OrderedDict(sorted(m.items()))
         print('\nTop view of tree:', end = ' ')
-        # Traverse the sorted map and print nodes at each horizontal distance
+        # Traverse the sorted map and print first node at each horizontal distance
         for i in sorted_m.keys():
             print(m[i][0], end=', ')
 
