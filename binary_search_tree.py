@@ -122,12 +122,12 @@ class Binary_Search_Tree(object):
         else:
             return self._search_with_recursion(node.right, item)
 
-    # find an element, without recursion
+    # find an element, iteratively
     def search_with_iteration( self, item ):
         if item is None or self.root is None:
             return False
         node = self.root
-        while node is not None:
+        while node:
             if item > node.value:
                 node = node.right
             elif item < node.value:
@@ -160,7 +160,6 @@ class Binary_Search_Tree(object):
             self._max_element_with_recursion(node.right)
 
         return self.max_elem
-
 
     # find minimum element in tree(without recursion)
     def minimum_element_with_iteration( self, node ):
