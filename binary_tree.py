@@ -676,7 +676,7 @@ class BinaryTree(object):
         # Return max of the following tree:
         # 1) Diameter of left subtree
         # 2) Diameter of right subtree
-        # 3) Height of left subtree + height of right subtree +1
+        # 3) Diameter of the node (Height of left subtree + height of right subtree +1)
         return max( max(left_diameter, right_diameter), 1+left_height+right_height )
 
 
