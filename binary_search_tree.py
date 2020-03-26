@@ -181,7 +181,7 @@ class Binary_Search_Tree(object):
         if node.left and self._max_element_with_recursion(node.left) > node.value:
             return False
         # return false if min of node.right is ≤ then node.value
-        if node.right and self.minimum_element_with_iteration(node.right) <= node.value:
+        if node.right and self.minimum_element_with_iteration(node.right) < node.value:
             return False
         # return false if recursively left subtree or right subtree is not BST
         if not self.check_binarytree_is_bst(node.left) or not self.check_binarytree_is_bst(node.right):
@@ -564,12 +564,12 @@ print('Minimum element in tree(iteratively):', str(bst.minimum_element_with_iter
 #   200      30
 #  /  \     /
 # 140  50   6
-tree = binary_tree.BinaryTree(110)
+tree = binary_tree.BinaryTree(310)
 tree.root.left = Node(200)
-tree.root.right = Node(30)
+tree.root.right = Node(400)
 tree.root.left.left = Node(140)
-tree.root.left.right = Node(50)
-tree.root.right.left = Node(6)
+tree.root.left.right = Node(250)
+tree.root.right.left = Node(350)
 print('Binary tree', end = ' ')
 tree.print_tree()
 print('\nIs this binary tree a bst?(non-effecient solution):', str(bst.check_binarytree_is_bst(tree.root)))
