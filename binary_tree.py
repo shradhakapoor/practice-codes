@@ -155,11 +155,11 @@ class BinaryTree(object):
 
     # insert an element
     def insert_node( self, value ):
-        newNode = None
+        newnode = None
         if value:
-            newNode = Node(value)
+            newnode = Node(value)
         if self.node is None:
-            self.node = newNode
+            self.node = newnode
             return
         queue= Queue()
         queue.enqueue(self.node)
@@ -167,12 +167,12 @@ class BinaryTree(object):
         while queue.items:
             node = queue.dequeue()
             if node.left is None:
-                node.left = newNode
+                node.left = newnode
                 break
             else:
                 queue.enqueue(node.left)
             if node.right is None:
-                node.right = newNode
+                node.right = newnode
                 break
             else:
                 queue.enqueue(node.right)
@@ -368,14 +368,14 @@ class BinaryTree(object):
         return halfnodes_count
 
     # structurally identical trees, return true
-    def structurally_identical( self, node1, node2 ):
-        if node1 is node2 is None:
+    def structurally_identical( self, node, node2 ):
+        if node is node2 is None:
             return True
 
-        if node1 and node2:
-            return(node1.value == node2.value
-                   and self.structurally_identical(node1.left, node2.left)
-                   and self.structurally_identical(node1.right, node2.right))
+        if node and node2:
+            return(node.value == node2.value
+                   and self.structurally_identical(node.left, node2.left)
+                   and self.structurally_identical(node.right, node2.right))
 
         return False
 
@@ -747,7 +747,7 @@ class BinaryTree(object):
                 print(j, end=' ')
             print(end=';')
 
-    # Print Nodes in Top View of Binary Tree, time O(n)
+    # Print nodes in Top View of Binary Tree, time O(n)
     def topView(self, nde):
         if nde is None:
             return
@@ -784,7 +784,7 @@ class BinaryTree(object):
         for i in sorted_m.keys():
             print(m[i][0], end=', ')
 
-    # Print Nodes in left View of Binary Tree
+    # Print nodes in left View of Binary Tree
     # The left view contains all nodes that are first nodes in their levels
     def leftView(self, nde):
         if nde is None:
@@ -802,7 +802,7 @@ class BinaryTree(object):
                     q.items.insert(0, curr.right)
                 count -= 1
 
-    # Print Nodes in Bottom View of Binary Tree
+    # Print nodes in Bottom View of Binary Tree
     # Bottom View is the bottommost node at its horizontal distance,
     # If there are multiple bottom-most nodes for a horizontal distance from node, then print the later one in level traversal
     def bottomView(self, nde):
