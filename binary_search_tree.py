@@ -488,14 +488,14 @@ class Binary_Search_Tree(object):
         return n
 
     # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
-    def check_elements_same_in_bsts( self, node1, node2 ):
+    def check_elements_same_in_bsts( self, node, node2 ):
         # base cases
-        if not node1 and not node2: return True
-        if (node2 and not node1) or (node1 and not node2): return False
+        if not node and not node2: return True
+        if (node2 and not node) or (node and not node2): return False
 
         # create 2 sets and store elements in both bsts to it
         set1, set2 = set(), set()
-        self._insert_to_set(node1, set1)
+        self._insert_to_set(node, set1)
         self._insert_to_set(node2, set2)
 
         return set1 == set2
