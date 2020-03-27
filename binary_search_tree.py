@@ -42,14 +42,14 @@ class Node(object):
 
 class Binary_Search_Tree(object):
     def __init__(self, value):
-        self.root = Node(value)
+        self.node = Node(value)
 
     # insert element
     def insert( self, value ):
-        if self.root is None:
-            self.root = Node(value)
+        if self.node is None:
+            self.node = Node(value)
         else:
-            self._insert(self.root, value)
+            self._insert(self.node, value)
 
     def _insert( self, node, value ):
         if value < node.value:
@@ -67,9 +67,9 @@ class Binary_Search_Tree(object):
 
     # print tree-- Inorder traversal
     def print( self ):
-        if self.root is None:
+        if self.node is None:
             return
-        return(self._print(self.root))
+        return(self._print(self.node))
 
     def _print( self, node ):
         if node is None:
@@ -81,14 +81,14 @@ class Binary_Search_Tree(object):
             self._print(node.right)
 
     # Tree sorting
-    def tree_sort(self, root):
+    def tree_sort(self, node):
         # Using recursion
         # print elements in inorder traversal
 
         # using iteration
         stack = Stack()
         done = 0
-        curr = root
+        curr = node
 
         while not done:
             # reach the leftmost node of current node
@@ -108,9 +108,9 @@ class Binary_Search_Tree(object):
 
     # find an element, with recursion
     def search_with_recursion( self, item ):
-        if item is None or self.root is None:
+        if item is None or self.node is None:
             return False
-        return self._search_with_recursion(self.root, item)
+        return self._search_with_recursion(self.node, item)
 
     def _search_with_recursion( self, node, item ):
         if node is None:
@@ -124,9 +124,9 @@ class Binary_Search_Tree(object):
 
     # find an element, iteratively
     def search_with_iteration( self, item ):
-        if item is None or self.root is None:
+        if item is None or self.node is None:
             return False
-        node = self.root
+        node = self.node
         while node:
             if item > node.value:
                 node = node.right
@@ -146,10 +146,10 @@ class Binary_Search_Tree(object):
 
     # find maximum element in tree(with recursion)
     def maximum_element_with_recursion( self ):
-        if self.root is None:
+        if self.node is None:
             print('Tree doesn\'t exist!')
         else:
-            print('Maximum element recursively is: '+str(self._max_element_with_recursion(self.root)))
+            print('Maximum element recursively is: '+str(self._max_element_with_recursion(self.node)))
 
     max_elem = float( '-inf' )
     def _max_element_with_recursion( self, node):
@@ -208,10 +208,10 @@ class Binary_Search_Tree(object):
 
     # find k-th smallest element(recursively)
     def kth_smallest_element( self, k ):
-        if self.root is None or k is None:
+        if self.node is None or k is None:
             return
         stack = Stack()
-        return self._kth_smallest_element(self.root, stack).items[k-1]
+        return self._kth_smallest_element(self.node, stack).items[k-1]
 
     def _kth_smallest_element( self, node, stack ):
         # inorder traversal to store the elements of bst in sorted order
@@ -223,34 +223,34 @@ class Binary_Search_Tree(object):
         return stack
 
     # given 2 nodes, find the lowest common ancestor in BST
-    def lowest_common_ancestor( self, root, value1, value2 ):
-        if root is None:
+    def lowest_common_ancestor( self, node, value1, value2 ):
+        if node is None:
             return
-        if root.value > max(value1, value2):
-            return self.lowest_common_ancestor(root.left, value1, value2)
-        elif root.value < min(value1, value2):
-            return self.lowest_common_ancestor(root.right, value1, value2)
+        if node.value > max(value1, value2):
+            return self.lowest_common_ancestor(node.left, value1, value2)
+        elif node.value < min(value1, value2):
+            return self.lowest_common_ancestor(node.right, value1, value2)
         else:
-            return root
+            return node
 
     # find shortest distance between 2 nodes
-    def shortest_distance_between_two_nodes( self,root, value1, value2 ):
-        if root is None:
+    def shortest_distance_between_two_nodes( self,node, value1, value2 ):
+        if node is None:
             return 0
-        if root.value > max(value1, value2):
-            return self.shortest_distance_between_two_nodes(root.left, value1, value2)
-        if root.value < min(value1, value2):
-            return self.shortest_distance_between_two_nodes(root.right, value1, value2)
-        if value1 <= root.value <= value2 or value2 <= root.value <= value1:
-            return self.distance_from_root(root, value1) + self.distance_from_root(root, value2)
+        if node.value > max(value1, value2):
+            return self.shortest_distance_between_two_nodes(node.left, value1, value2)
+        if node.value < min(value1, value2):
+            return self.shortest_distance_between_two_nodes(node.right, value1, value2)
+        if value1 <= node.value <= value2 or value2 <= node.value <= value1:
+            return self.distance_from_node(node, value1) + self.distance_from_node(node, value2)
 
-    def distance_from_root( self, node, value ):
+    def distance_from_node( self, node, value ):
         if node.value == value:
             return 0
         elif node.value > value:
-            return 1+ self.distance_from_root(node.left, value)
+            return 1+ self.distance_from_node(node.left, value)
         else:
-            return 1+ self.distance_from_root(node.right, value)
+            return 1+ self.distance_from_node(node.right, value)
 
     # count number of BSTs possible with n nodes = catalan number (2nCn)/n+1 = 2n! / (n+1! n!)
     # count of number of Binary Trees with n nodes  = n! * catalan number
@@ -278,10 +278,10 @@ class Binary_Search_Tree(object):
     def sorted_array_to_bst( self, arr ):
         if len(arr) == 0: return
         if len(arr) == 1:
-            root = Node(arr[0])
-            return root
+            node = Node(arr[0])
+            return node
         mid = len(arr)//2
-        root = Node(arr[mid])
+        node = Node(arr[mid])
 
         if arr[mid-1] < arr[mid+1]:
             arr1 = arr[0:mid]
@@ -290,122 +290,122 @@ class Binary_Search_Tree(object):
             arr1 = arr[(mid + 1):]
             arr2 = arr[0:mid]
 
-        root.left = self.sorted_array_to_bst(arr1)
-        root.right = self.sorted_array_to_bst(arr2)
+        node.left = self.sorted_array_to_bst(arr1)
+        node.right = self.sorted_array_to_bst(arr2)
 
-        return root
+        return node
 
     # find floor of given data (largest data <= given data)
-    def floor_of_given_value( self, root, value ):
-        if root is None:
+    def floor_of_given_value( self, node, value ):
+        if node is None:
             return -1
-        if root.value == value: return root.value
+        if node.value == value: return node.value
 
-        # if root.value > value, then floor would be in left subtree
-        if root.value > value:
-            if root.left: return self.floor_of_given_value(root.left, value)
+        # if node.value > value, then floor would be in left subtree
+        if node.value > value:
+            if node.left: return self.floor_of_given_value(node.left, value)
 
-        # if root.value < value then floor is either the root or in right subtree
-        if root.right:
-            right_value = self.floor_of_given_value(root.right, value)
-            return right_value if right_value <= value else root.value
+        # if node.value < value then floor is either the node or in right subtree
+        if node.right:
+            right_value = self.floor_of_given_value(node.right, value)
+            return right_value if right_value <= value else node.value
 
-        return root.value
+        return node.value
 
     # find ceiling of given data (smallest data > given data)
-    def ceil_of_given_value( self, root, value ):
-        if root is None:
+    def ceil_of_given_value( self, node, value ):
+        if node is None:
             return -1
 
         # equal to key value
-        if value == root.value: return root.value
+        if value == node.value: return node.value
 
-        # if root.value < value, ceil must be in right subtree
-        if root.value < value:
-            if root.right: return  self.ceil_of_given_value(root.right, value)
+        # if node.value < value, ceil must be in right subtree
+        if node.value < value:
+            if node.right: return  self.ceil_of_given_value(node.right, value)
 
-        # if root.value > value, ceil is either root.value or in left subtree
-        if root.left:
-            left_value = self.ceil_of_given_value(root.left, value)
-            return left_value if left_value >= value else root.value
+        # if node.value > value, ceil is either node.value or in left subtree
+        if node.left:
+            left_value = self.ceil_of_given_value(node.left, value)
+            return left_value if left_value >= value else node.value
 
-        return root.value
+        return node.value
 
     # print all elements in increasing order in range r1 to r2
-    def print_all_in_range( self, root, r1, r2 ):
-        if root is None:
+    def print_all_in_range( self, node, r1, r2 ):
+        if node is None:
             return
 
         # since desired output is sorted, recurse for left subtree first
-        # if root.value > r1 only then we can get elements in left subtree
-        if r1 < root.value:
-            self.print_all_in_range(root.left, r1, r2)
+        # if node.value > r1 only then we can get elements in left subtree
+        if r1 < node.value:
+            self.print_all_in_range(node.left, r1, r2)
 
-        if r1 <= root.value <= r2:
-            print (root.value, end=', ')
+        if r1 <= node.value <= r2:
+            print (node.value, end=', ')
 
-        # if r2 > root.value only then we can get elements in right subtree
-        if r2 > root.value:
-            self.print_all_in_range(root.right, r1, r2)
+        # if r2 > node.value only then we can get elements in right subtree
+        if r2 > node.value:
+            self.print_all_in_range(node.right, r1, r2)
 
     # remove BST elements outside the given range, and modified tree should also be BST
-    def remove_elements_outside_range( self, root, r1, r2 ):
-        if root is None: return
+    def remove_elements_outside_range( self, node, r1, r2 ):
+        if node is None: return
 
         # basically we need to fix the tree in post-order fashion
-        root.left = self.remove_elements_outside_range(root.left, r1, r2)
-        root.right = self.remove_elements_outside_range(root.right, r1, r2)
+        node.left = self.remove_elements_outside_range(node.left, r1, r2)
+        node.right = self.remove_elements_outside_range(node.right, r1, r2)
 
-        # now fix the root if root is not in range
-        # case 1: root.value < r1, delete root and return right subtree
-        if root.value < r1:
-            right_child = root.right
-            self.delete(root, root.value)
+        # now fix the node if node is not in range
+        # case 1: node.value < r1, delete node and return right subtree
+        if node.value < r1:
+            right_child = node.right
+            self.delete(node, node.value)
             return right_child
-        # case 2: if root.value > r2, delete root and return left subtree
-        if root.value > r2:
-            left_child = root.left
-            self.delete(root, root.value)
+        # case 2: if node.value > r2, delete node and return left subtree
+        if node.value > r2:
+            left_child = node.left
+            self.delete(node, node.value)
             return left_child
 
-        return root
+        return node
 
     # delete an element
-    def delete( self, root, item):
-        if root is None:
+    def delete( self, node, item):
+        if node is None:
             return False
 
-        # if value to be deleted is less than root then the value lies in left subtree
-        if item < root.value:
-            root.left = self.delete(root.left, item)
+        # if value to be deleted is less than node then the value lies in left subtree
+        if item < node.value:
+            node.left = self.delete(node.left, item)
 
-        # if value to be deleted is greater than root then the value lies in right subtree
-        elif item > root.value:
-            root.right = self.delete(root.right, item)
+        # if value to be deleted is greater than node then the value lies in right subtree
+        elif item > node.value:
+            node.right = self.delete(node.right, item)
 
-        # else the value is same as root.value
+        # else the value is same as node.value
         else:
             # case 1: node to be deleted has 1 child or no child
-            if root.left is None:
-                return root.right
-            if root.right is None:
-                return root.left
+            if node.left is None:
+                return node.right
+            if node.right is None:
+                return node.left
 
             # case 2: node to be deleted has 2 children
 
-            # get the inorder successor of root node
-            temp = root.right
+            # get the inorder successor of node node
+            temp = node.right
             while temp.left is not None:
                 temp = temp.left
 
             smallest_value = temp
-            # copy inorder successor node.value to this root.value
-            root.value = smallest_value.value
+            # copy inorder successor node.value to this node.value
+            node.value = smallest_value.value
 
             # delete the inorder successor
-            root.right = self.delete(root.right, smallest_value.value)
+            node.right = self.delete(node.right, smallest_value.value)
 
-        return root
+        return node
 
     # tell inorder successor of given key in BST
     def inorder_successor( self, node ):
@@ -420,8 +420,8 @@ class Binary_Search_Tree(object):
             return temp
 
         # case 2: if node doesn't have right subtree
-        # then search that node starting from root and the node from where we take the last left is the answer
-        tmp = self.root
+        # then search that node starting from node and the node from where we take the last left is the answer
+        tmp = self.node
         parent = None
         while tmp.value != node.value:
             if tmp.value > node.value:
@@ -444,15 +444,15 @@ class Binary_Search_Tree(object):
             return temp
 
         # case 2: if node doesn't have left subtree
-        # then search that node starting from root and the node from where we take the last right is the answer
-        root = self.root
+        # then search that node starting from node and the node from where we take the last right is the answer
+        node = self.node
         parent = None
-        while root.value != node.value:
-            if node.value > root.value:
-                parent = root
-                root = root.right
+        while node.value != node.value:
+            if node.value > node.value:
+                parent = node
+                node = node.right
             else:
-                root = root.left
+                node = node.left
         return parent
 
     # convert sorted singly linked list to height balanced BST
@@ -469,16 +469,16 @@ class Binary_Search_Tree(object):
 
         left = self._sorted_ll_to_bst(list_size//2)
 
-        root = Node(self.cur.value)
+        node = Node(self.cur.value)
 
         self.cur = self.cur.right # traversing the linked list, cur = cur.next
 
         right = self._sorted_ll_to_bst(list_size - int(list_size/2) -1)
 
-        root.left = left
-        root.right = right
+        node.left = left
+        node.right = right
 
-        return root
+        return node
 
     def getSize_of_list( self, head ):
         n = 0
@@ -488,46 +488,46 @@ class Binary_Search_Tree(object):
         return n
 
     # check whether elements of 2 BSTs are same or not (order of elements doesn't matter)
-    def check_elements_same_in_bsts( self, root1, root2 ):
+    def check_elements_same_in_bsts( self, node1, node2 ):
         # base cases
-        if not root1 and not root2: return True
-        if (root2 and not root1) or (root1 and not root2): return False
+        if not node1 and not node2: return True
+        if (node2 and not node1) or (node1 and not node2): return False
 
         # create 2 sets and store elements in both bsts to it
         set1, set2 = set(), set()
-        self._insert_to_set(root1, set1)
-        self._insert_to_set(root2, set2)
+        self._insert_to_set(node1, set1)
+        self._insert_to_set(node2, set2)
 
         return set1 == set2
 
-    def _insert_to_set( self, root, s ):
-        if not root: return
-        self._insert_to_set(root.left, s)
-        s.add(root.value)
-        self._insert_to_set(root.right, s)
+    def _insert_to_set( self, node, s ):
+        if not node: return
+        self._insert_to_set(node.left, s)
+        s.add(node.value)
+        self._insert_to_set(node.right, s)
 
     # convert BST to circular doubly linked list with space complexity(1)
     prev = None
 
-    def bst_to_circular_doubly_linkedlist( self, root, head ):
-        # initially, root points to root of the linked list and head is None
+    def bst_to_circular_doubly_linkedlist( self, node, head ):
+        # initially, node points to node of the linked list and head is None
 
-        if root is None: return
+        if node is None: return
 
         # basically we are doing inorder traversal and inside we write steps for converting bst to dll
 
-        self.bst_to_circular_doubly_linkedlist( root.left, head )
+        self.bst_to_circular_doubly_linkedlist( node.left, head )
 
         if self.prev is None:
-            head = root
+            head = node
         else:
-            root.left = self.prev
-            self.prev.right = root
+            node.left = self.prev
+            self.prev.right = node
 
         # make current node as prev node
-        self.prev = root
+        self.prev = node
 
-        self.bst_to_circular_doubly_linkedlist( root.right, head )
+        self.bst_to_circular_doubly_linkedlist( node.right, head )
 
 
 # BST
@@ -549,14 +549,14 @@ print('In-order tree traversal:', end=' ')
 bst.print()
 
 print('\nTree sort in ascending order:', end=' ')
-bst.tree_sort(bst.root)
+bst.tree_sort(bst.node)
 
 print('\nSearch an item recursively: ', str(bst.search_with_recursion(700)))
 print('Search an item iteratively: ', str(bst.search_with_iteration(700)))
 
-print('height of tree:', str(bst.height(bst.root)))
+print('height of tree:', str(bst.height(bst.node)))
 
-print('Minimum element in tree(iteratively):', str(bst.minimum_element_with_iteration(bst.root)))
+print('Minimum element in tree(iteratively):', str(bst.minimum_element_with_iteration(bst.node)))
 
 # binary tree
 #       110
@@ -565,41 +565,41 @@ print('Minimum element in tree(iteratively):', str(bst.minimum_element_with_iter
 #  /  \     /
 # 140  50   6
 tree = binary_tree.BinaryTree(310)
-tree.root.left = Node(200)
-tree.root.right = Node(400)
-tree.root.left.left = Node(140)
-tree.root.left.right = Node(250)
-tree.root.right.left = Node(350)
+tree.node.left = Node(200)
+tree.node.right = Node(400)
+tree.node.left.left = Node(140)
+tree.node.left.right = Node(250)
+tree.node.right.left = Node(350)
 print('Binary tree', end = ' ')
 tree.print_tree()
-print('\nIs this binary tree a bst?(non-effecient solution):', str(bst.check_binarytree_is_bst(tree.root)))
-print('Is this binary tree a bst?(effecient solution):', str(bst.check_binarytree_is_bst_effeciently(tree.root)))
+print('\nIs this binary tree a bst?(non-effecient solution):', str(bst.check_binarytree_is_bst(tree.node)))
+print('Is this binary tree a bst?(effecient solution):', str(bst.check_binarytree_is_bst_effeciently(tree.node)))
 
 print('kth smallest element in tree:', str(bst.kth_smallest_element(2)))
 
-print('lowest common ancestor of two nodes:', str(bst.lowest_common_ancestor(bst.root, 700, 900).value))
+print('lowest common ancestor of two nodes:', str(bst.lowest_common_ancestor(bst.node, 700, 900).value))
 
-print('shortest distance between two nodes:', str(bst.shortest_distance_between_two_nodes(bst.root, 200, 800)))
+print('shortest distance between two nodes:', str(bst.shortest_distance_between_two_nodes(bst.node, 200, 800)))
 
 print('count of number of BSTs possible with n nodes:', str(bst.count_of_BST_possible(7)))
 
 print('\nConvert sorted array to BST:', end=' ')
 bst._print(bst.sorted_array_to_bst([70,60,50,40,30,20,10]))
 
-print('\nFloor of given value:', bst.floor_of_given_value(bst.root, 810))
-print('ceiling of given value:', bst.ceil_of_given_value(bst.root, 720))
+print('\nFloor of given value:', bst.floor_of_given_value(bst.node, 810))
+print('ceiling of given value:', bst.ceil_of_given_value(bst.node, 720))
 
-print('Inorder successor of node:', str(bst.inorder_successor(bst.root).value))
-print('Inorder predecessor of node:', str(bst.inorder_predecessor(bst.root).value))
+print('Inorder successor of node:', str(bst.inorder_successor(bst.node).value))
+print('Inorder predecessor of node:', str(bst.inorder_predecessor(bst.node).value))
 
 print('Print all elements in the range r1 to r2 in increasing order:')
-bst.print_all_in_range(bst.root, 100, 900)
+bst.print_all_in_range(bst.node, 100, 900)
 
 print('\nRemove all elements outside the range:', end=' ')
-bst._print(bst.remove_elements_outside_range(bst.root, 100, 750))
+bst._print(bst.remove_elements_outside_range(bst.node, 100, 750))
 
 print('\nDelete a node in tree:', end=' ')
-bst._print(bst.delete(bst.root, 500))
+bst._print(bst.delete(bst.node, 500))
 
 # 5->100->2050->10000
 linked_list = Node(5)
@@ -609,7 +609,7 @@ linked_list.right.right.right = Node(10000)
 print('\nConvert sorted linked list to bst:',end = ' ')
 bst._print(bst.sorted_ll_to_bst(linked_list))
 
-print('\nCheck whether 2 BSTs have same set of elements', bst.check_elements_same_in_bsts(bst.root, bst.root))
+print('\nCheck whether 2 BSTs have same set of elements', bst.check_elements_same_in_bsts(bst.node, bst.node))
 
 # print('\nConvert BST to circular doubly linked list:', end='\n ')
-# bst.bst_to_circular_doubly_linkedlist(bst.root, None)
+# bst.bst_to_circular_doubly_linkedlist(bst.node, None)

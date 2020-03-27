@@ -39,13 +39,13 @@ class Node(object):
 
 class BinaryTree(object):
     def __init__(self, value):
-        self.root = Node(value)
+        self.node = Node(value)
 
     # Inorder traversal
     def print_tree( self ):
-        if self.root is not None:
+        if self.node is not None:
             print('Inorder Traversal:', end=' ')
-            self._print_tree(self.root)
+            self._print_tree(self.node)
 
     def _print_tree( self, cur_node ):
         if cur_node is not None:
@@ -74,10 +74,10 @@ class BinaryTree(object):
 
     # find maximum element(with recursion)
     def maximum_element_with_recursion( self ):
-        if self.root is None:
+        if self.node is None:
             print('Tree doesn\'t exist!')
         else:
-            print('Maximum element recursively is: '+str(self._max_element_with_recursion(self.root)))
+            print('Maximum element recursively is: '+str(self._max_element_with_recursion(self.node)))
 
     max_elem = float('-inf')
     def _max_element_with_recursion( self, node ):
@@ -90,10 +90,10 @@ class BinaryTree(object):
 
     # find maximum element(without recursion, using level-order traversal)
     def maximum_element_without_recursion( self ):
-        if self.root is None:
+        if self.node is None:
             return
         max = float("-inf")
-        node = self.root
+        node = self.node
         queue = Queue()
 
         queue.enqueue(node)
@@ -111,10 +111,10 @@ class BinaryTree(object):
 
     # search an element(with recursion)
     # def search_element_with_recursion( self, element ):
-    #     if self.root is None or element is None:
+    #     if self.node is None or element is None:
     #         return('Sorry, not found in this tree')
     #     else:
-    #         self._search_element_with_recursion(self.root, element)
+    #         self._search_element_with_recursion(self.node, element)
     #
     # count = flag = 0
     # def _search_element_with_recursion( self, node, element ):
@@ -133,10 +133,10 @@ class BinaryTree(object):
 
     # search an element(without recursion)
     def search_element_without_recursion( self, element ):
-        if self.root is None or element is None:
+        if self.node is None or element is None:
             return('Sorry, not found in this tree')
         queue = Queue()
-        node = self.root
+        node = self.node
         queue.enqueue(node)
         node_counter = 1
 
@@ -158,11 +158,11 @@ class BinaryTree(object):
         newNode = None
         if value:
             newNode = Node(value)
-        if self.root is None:
-            self.root = newNode
+        if self.node is None:
+            self.node = newNode
             return
         queue= Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
 
         while queue.items:
             node = queue.dequeue()
@@ -221,10 +221,10 @@ class BinaryTree(object):
 
     # delete the tree
     def delete_tree( self ):
-        if self.root is None:
+        if self.node is None:
             return
         queue = Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
 
         while not queue.is_empty():
             node = queue.dequeue()
@@ -238,17 +238,17 @@ class BinaryTree(object):
 
     # delete a given element in tree
     def delete_node( self, item ):
-        if self.root is None or item is None:
+        if self.node is None or item is None:
             return
         last_node = self.deepest_node()
 
-        if self.root.value == item:
-            self.root.value = last_node.value
+        if self.node.value == item:
+            self.node.value = last_node.value
             self.deepest_node().value = None
             return 1
 
         queue= Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
 
         while not queue.is_empty():
             node = queue.dequeue()
@@ -295,10 +295,10 @@ class BinaryTree(object):
 
     # find deepest node of tree
     def deepest_node( self ):
-        if self.root is None:
+        if self.node is None:
             return
         queue = Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
         node = None
 
         while not queue.is_empty():
@@ -312,10 +312,10 @@ class BinaryTree(object):
 
     # find number of leaves(without recursion)
     def number_of_leaves( self ):
-        if self.root is None:
+        if self.node is None:
             return 0
         queue = Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
         leaves_count = 0
 
         while not queue.is_empty():
@@ -331,10 +331,10 @@ class BinaryTree(object):
 
     # find number of full nodes(without recursion)
     def number_of_fullnodes( self ):
-        if self.root is None:
+        if self.node is None:
             return 0
         queue = Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
         fullnodes_count = 0
 
         while not queue.is_empty():
@@ -350,10 +350,10 @@ class BinaryTree(object):
 
     # find number of half nodes(nodes with one child only)(without recursion)
     def number_of_halfnodes( self ):
-        if self.root is None:
+        if self.node is None:
             return 0
         queue = Queue()
-        queue.enqueue(self.root)
+        queue.enqueue(self.node)
         halfnodes_count = 0
 
         while not queue.is_empty():
@@ -368,30 +368,30 @@ class BinaryTree(object):
         return halfnodes_count
 
     # structurally identical trees, return true
-    def structurally_identical( self, root1, root2 ):
-        if root1 is root2 is None:
+    def structurally_identical( self, node1, node2 ):
+        if node1 is node2 is None:
             return True
 
-        if root1 and root2:
-            return(root1.value == root2.value
-                   and self.structurally_identical(root1.left, root2.left)
-                   and self.structurally_identical(root1.right, root2.right))
+        if node1 and node2:
+            return(node1.value == node2.value
+                   and self.structurally_identical(node1.left, node2.left)
+                   and self.structurally_identical(node1.right, node2.right))
 
         return False
 
-    # print all root-to-leaf paths, recursively
-    def paths_root_to_leaf( self ):
-        if self.root is None:
+    # print all node-to-leaf paths, recursively
+    def paths_node_to_leaf( self ):
+        if self.node is None:
             return
         path, result = Stack(), []
-        self._paths_root_to_leaf(self.root, path, result)
+        self._paths_node_to_leaf(self.node, path, result)
         return result
 
-    def _paths_root_to_leaf( self, node, path, result ):
+    def _paths_node_to_leaf( self, node, path, result ):
         if node is None:
             return
 
-        # for leaf node, form a string with all nodes' value from root to the leaf path
+        # for leaf node, form a string with all nodes' value from node to the leaf path
         if node.left is node.right is None:
             ans = ''
             for p in path.items:
@@ -401,20 +401,20 @@ class BinaryTree(object):
 
         if node.left:
             path.push(node)
-            self._paths_root_to_leaf(node.left, path, result)
+            self._paths_node_to_leaf(node.left, path, result)
             path.pop()
 
         if node.right:
             path.push(node)
-            self._paths_root_to_leaf(node.right, path, result)
+            self._paths_node_to_leaf(node.right, path, result)
             path.pop()
 
-    # print all root-to-leaf paths, iteratively
-    def all_paths_root_to_leaf_iteratively(self, node):
+    # print all node-to-leaf paths, iteratively
+    def all_paths_node_to_leaf_iteratively(self, node):
         if node is None:
             return None
         parent = dict() # store parent node
-        parent[node] = None # parent of root is None
+        parent[node] = None # parent of node is None
         q = Queue()
         q.items.insert(0, node)
         while not q.is_empty():
@@ -454,10 +454,10 @@ class BinaryTree(object):
 
     # maximum path sum
     def maximum_path_sum( self ):
-        if self.root is None:
+        if self.node is None:
             return
         path, result = Stack(), []
-        self._maximum_path_sum(self.root, path, result)
+        self._maximum_path_sum(self.node, path, result)
         return max(result)
 
     def _maximum_path_sum( self, node, path, result ):
@@ -483,7 +483,7 @@ class BinaryTree(object):
         if node is None:
             return None
         parent = dict() # store parent node
-        parent[node] = None # parent of root is None
+        parent[node] = None # parent of node is None
         q = Queue()
         q.items.insert(0, node) # enqueue
         maxSum = float('-inf')
@@ -535,17 +535,17 @@ class BinaryTree(object):
             return ans
 
     # least common ancestor of two nodes
-    def least_common_ancestors( self,root, value1, value2 ):
-        if root is None:
+    def least_common_ancestors( self,node, value1, value2 ):
+        if node is None:
             return
-        if root.value == value1 or root.value == value2:
-            return root
-        left = self.least_common_ancestors(root.left, value1, value2)
-        right = self.least_common_ancestors(root.right, value1, value2)
+        if node.value == value1 or node.value == value2:
+            return node
+        left = self.least_common_ancestors(node.left, value1, value2)
+        right = self.least_common_ancestors(node.right, value1, value2)
         if left is right is None:
             return
         if left and right:
-            return root
+            return node
         if left:
             return left
         else:
@@ -553,9 +553,9 @@ class BinaryTree(object):
 
     # find all ancestors of a node (non-recursive)
     def all_ancestors_iteratively( self, key ):
-        if self.root is None:
+        if self.node is None:
             return
-        return self._all_ancestors_iteratively(self.root, key)
+        return self._all_ancestors_iteratively(self.node, key)
 
     def _all_ancestors_iteratively( self, node, key ):
         if node is None:
@@ -606,12 +606,12 @@ class BinaryTree(object):
     # zigzag tree traversal / level-order traversal in spiral order
     # 1st way -- using 2 stacks, 2nd way -- using a deque or linked list
     def zigzag_traversal( self ):
-        if self.root is None:
+        if self.node is None:
             return
         stack1 = Stack()
         stack2 = Stack()
         result = []
-        stack1.push(self.root)
+        stack1.push(self.node)
         while not stack1.is_empty() or not stack2.is_empty():
             while not stack1.is_empty():
                 node = stack1.pop()
@@ -634,10 +634,10 @@ class BinaryTree(object):
     # zigzag tree traversal / level-order traversal in spiral order
     # 2nd way -- using a deque or linked list
     def zigzag_using_deque(self):
-        if self.root is None:
+        if self.node is None:
             return
         tmp = []
-        tmp.append(self.root)
+        tmp.append(self.node)
         result = []
         direction = 0
         while len(tmp) != 0:
@@ -712,7 +712,7 @@ class BinaryTree(object):
     def vertical_order_traversal(self, nde):
         if nde is None:
             return
-        # map, key= node, value= horizontal distance from root node
+        # map, key= node, value= horizontal distance from node node
         horizontal_distance = dict()
         horizontal_distance[nde] = 0
 
@@ -751,7 +751,7 @@ class BinaryTree(object):
     def topView(self, nde):
         if nde is None:
             return
-        # map, key= node, value= horizontal distance from root node
+        # map, key= node, value= horizontal distance from node node
         horizontal_distance = dict()
         horizontal_distance[nde] = 0
 
@@ -804,11 +804,11 @@ class BinaryTree(object):
 
     # Print Nodes in Bottom View of Binary Tree
     # Bottom View is the bottommost node at its horizontal distance,
-    # If there are multiple bottom-most nodes for a horizontal distance from root, then print the later one in level traversal
+    # If there are multiple bottom-most nodes for a horizontal distance from node, then print the later one in level traversal
     def bottomView(self, nde):
         if nde is None:
             return
-        # map, key= node, value= horizontal distance from root node
+        # map, key= node, value= horizontal distance from node node
         horizontal_distance = dict()
         horizontal_distance[nde] = 0
 
@@ -847,21 +847,21 @@ class BinaryTree(object):
 # 1
 if __name__ == "__main__":
     tree = BinaryTree(110)
-    tree.root.left = Node(200)
-    tree.root.right = Node(30)
-    tree.root.left.left = Node(140)
-    tree.root.left.right = Node(50)
-    tree.root.right.left = Node(6)
+    tree.node.left = Node(200)
+    tree.node.right = Node(30)
+    tree.node.left.left = Node(140)
+    tree.node.left.right = Node(50)
+    tree.node.right.left = Node(6)
     tree.print_tree()
     print('')
 
-    tree.level_order_traversal(tree.root)
-    tree.vertical_order_traversal(tree.root)
-    tree.topView(tree.root)
+    tree.level_order_traversal(tree.node)
+    tree.vertical_order_traversal(tree.node)
+    tree.topView(tree.node)
     print('\nLeft view of the tree:', end=' ')
-    tree.leftView(tree.root)
+    tree.leftView(tree.node)
     print()
-    tree.bottomView(tree.root)
+    tree.bottomView(tree.node)
     print()
     tree.maximum_element_without_recursion()
     tree.maximum_element_with_recursion()
@@ -869,8 +869,8 @@ if __name__ == "__main__":
     print(tree.search_element_without_recursion(140))
     # print(tree.search_element_with_recursion(30))
 
-    print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.root.left)))
-    print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.root.right)))
+    print('Height of tree, recursively calculated: '+ str(tree.height_with_recursion(tree.node.left)))
+    print('Height of tree, iteratively calculated: '+ str(tree.height_without_recursion(tree.node.right)))
 
     tree.insert_node(32)
     tree.insert_node(1)
@@ -878,8 +878,8 @@ if __name__ == "__main__":
     tree.print_tree()
     print('')
 
-    print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.root)))
-    print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.root)))
+    print('size of tree, recursively: '+ str(tree.size_with_recursion(tree.node)))
+    print('size of tree, iteratively: '+ str(tree.size_without_recursion(tree.node)))
 
     print('Deepest node value: '+ str(tree.deepest_node().value))
 
@@ -889,10 +889,10 @@ if __name__ == "__main__":
 
     print('Number of Half nodes: '+ str(tree.number_of_halfnodes()))
 
-    print('Paths from root to leaf, recursively:' + str(tree.paths_root_to_leaf()))
+    print('Paths from node to leaf, recursively:' + str(tree.paths_node_to_leaf()))
 
-    print('Paths from root to leaf, iteratively:', end =' ')
-    tree.all_paths_root_to_leaf_iteratively(tree.root)
+    print('Paths from node to leaf, iteratively:', end =' ')
+    tree.all_paths_node_to_leaf_iteratively(tree.node)
     print()
 
     tree2 = BinaryTree(110)
@@ -903,29 +903,29 @@ if __name__ == "__main__":
     tree2.insert_node(6)
     tree2.insert_node(32)
     tree2.insert_node(1)
-    if tree.structurally_identical(tree.root, tree2.root ):
+    if tree.structurally_identical(tree.node, tree2.node ):
         print('Trees are structurally identical')
     else:
         print('Trees are not structurally identical')
 
     print('Maximum sum among all paths(recursively) is: '+ str(tree.maximum_path_sum()))
 
-    print('Maximum sum among all paths(iteratively) is:', tree.maxPathSumIteratively(tree.root))
+    print('Maximum sum among all paths(iteratively) is:', tree.maxPathSumIteratively(tree.node))
 
-    print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.root, 451)))
+    print('Existence of path with given sum: '+ str(tree.path_existence_with_sum(tree.node, 451)))
 
-    print('Least common ancestor of two given nodes: ' + str(tree.least_common_ancestors(tree.root, 200, 6).value))
+    print('Least common ancestor of two given nodes: ' + str(tree.least_common_ancestors(tree.node, 200, 6).value))
 
     tree.all_ancestors_iteratively(50)
     print('')
 
-    tree.all_ancestors_recursively(tree.root, 50)
+    tree.all_ancestors_recursively(tree.node, 50)
     print('are the Ancestors of node (recursively) ')
 
     print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_traversal()))
     print('Zigzag traversal/ spiral traversal:', str(tree.zigzag_using_deque()))
 
-    print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.root)))
+    print ('Diameter of tree: '+ str(tree.diameter_of_tree(tree.node)))
 
     in_order = [9, 8, 4, 2, 10, 5, 10, 1, 6, 3, 13, 12, 7]
     pre_order = [1, 2, 4, 8, 9, 5, 10, 10, 3, 6, 7, 12, 13]
@@ -933,14 +933,14 @@ if __name__ == "__main__":
     tree._print_tree(tree.construct_from_inorder_and_preorder(in_order, pre_order, 0, len(in_order)-1))
     print('')
 
-    tree.tree_mirror(tree.root)
+    tree.tree_mirror(tree.node)
     print('Mirror of tree ...')
     tree.print_tree()
     print('')
 
-    tree.tree_mirror(tree.root) # going back to the original tree
+    tree.tree_mirror(tree.node) # going back to the original tree
     print('Reversing the tree ...')
-    tree.reverse_tree(tree.root)
+    tree.reverse_tree(tree.node)
     tree.print_tree()
     print('')
 
