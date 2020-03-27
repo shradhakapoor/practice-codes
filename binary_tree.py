@@ -955,3 +955,5 @@ if __name__ == "__main__":
     tree.delete_tree()
     tree.print_tree()
     print('')
+
+    print('check')
