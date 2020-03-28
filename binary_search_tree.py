@@ -411,7 +411,7 @@ class Binary_Search_Tree(object):
     def inorder_successor( self, node ):
         if node is None: return
 
-        # case 1: if node has right subtree then find least value node from that right subtree
+        # case 1: if node has right subtree then go to left most element in right subtree
         if node.right:
             temp = node.right
             while temp.left:
@@ -420,11 +420,11 @@ class Binary_Search_Tree(object):
             return temp
 
         # case 2: if node doesn't have right subtree
-        # then search that node starting from node and the node from where we take the last left is the answer
+        # then search that node starting from root and the node from where we take the last left is the answer
         tmp = self.node
         parent = None
         while tmp.value != node.value:
-            if tmp.value > node.value:
+            if node.value < tmp.value:
                 parent = tmp
                 tmp = tmp.left
             else:
@@ -435,7 +435,7 @@ class Binary_Search_Tree(object):
     def inorder_predecessor( self, node ):
         if node is None: return
 
-        # case 1: if node has left subtree then find the max value node from that left subtree
+        # case 1: if node has left subtree then go to right most element in left subtree
         if node.left:
             temp = node.left
             while temp.right:
@@ -445,14 +445,14 @@ class Binary_Search_Tree(object):
 
         # case 2: if node doesn't have left subtree
         # then search that node starting from node and the node from where we take the last right is the answer
-        node = self.node
+        tmp = self.node
         parent = None
-        while node.value != node.value:
-            if node.value > node.value:
-                parent = node
-                node = node.right
+        while tmp.value != node.value:
+            if node.value > tmp.value:
+                parent = tmp
+                tmp = node.right
             else:
-                node = node.left
+                tmp = node.left
         return parent
 
     # convert sorted singly linked list to height balanced BST
@@ -559,11 +559,11 @@ print('height of tree:', str(bst.height(bst.node)))
 print('Minimum element in tree(iteratively):', str(bst.minimum_element_with_iteration(bst.node)))
 
 # binary tree
-#       110
+#       310
 #      /   \
-#   200      30
+#   200      400
 #  /  \     /
-# 140  50   6
+# 140  250  350
 tree = binary_tree.BinaryTree(310)
 tree.node.left = Node(200)
 tree.node.right = Node(400)
