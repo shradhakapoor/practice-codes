@@ -469,16 +469,16 @@ class Binary_Search_Tree(object):
 
         left = self._sorted_ll_to_bst(list_size//2)
 
-        node = Node(self.cur.value)
+        root = Node(self.cur.value)
 
         self.cur = self.cur.right # traversing the linked list, cur = cur.next
 
         right = self._sorted_ll_to_bst(list_size - int(list_size/2) -1)
 
-        node.left = left
-        node.right = right
+        root.left = left
+        root.right = right
 
-        return node
+        return root
 
     def getSize_of_list( self, head ):
         n = 0
