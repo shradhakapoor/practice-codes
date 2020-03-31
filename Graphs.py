@@ -35,10 +35,10 @@ class Stack(object):
 
 # graph representation using adjacency matrix
 class Graph_adj_matrix(object):
-    def __init__(self, no_of_vertices):
-        self.no_of_vertices = no_of_vertices
-        self.adjacency_matrix = [[-1] * no_of_vertices for x in range(no_of_vertices)]
-        self.vertices_list = [0] * no_of_vertices
+    def __init__(self, vertices):
+        self.vertices = vertices
+        self.adjacency_matrix = [[-1] * vertices for x in range(vertices)]
+        self.vertices_list = [0] * vertices
 
         def defaultvalue(): # return value for defaultdict if key is not present
             return -1
@@ -46,7 +46,7 @@ class Graph_adj_matrix(object):
         self.vertex_id_to_num_map = defaultdict(defaultvalue)
 
     def add_vertex( self, vertex_num, vertex_id ):
-        if 0 <= vertex_num < self.no_of_vertices:
+        if 0 <= vertex_num < self.vertices:
             self.vertex_id_to_num_map[vertex_id] = vertex_num
             self.vertices_list[vertex_num] = vertex_id
 
@@ -66,8 +66,8 @@ class Graph_adj_matrix(object):
 
     def get_edges( self ):
         edges = []
-        for i in range(self.no_of_vertices):
-            for j in range(self.no_of_vertices):
+        for i in range(self.vertices):
+            for j in range(self.vertices):
                 if self.adjacency_matrix[i][j] != -1:
                     edges.append((self.vertices_list[i], self.vertices_list[j], self.adjacency_matrix[i][j]))
 
@@ -81,12 +81,12 @@ class Graph_adj_matrix(object):
 
     # implementing slower solution, using adj matrix
     def dijkstra_algorithm( self, source ):
-        dist = [float( 'inf' )] * self.no_of_vertices
+        dist = [float( 'inf' )] * self.vertices
         source = self.vertex_id_to_num_map[source]
         dist[source] = 0
-        visited = [False] * self.no_of_vertices
+        visited = [False] * self.vertices
 
-        for i in range( self.no_of_vertices ):
+        for i in range( self.vertices ):
             # find min distance vertex from vertices not yet processed
             # u is always equal to source in first iteration
             u = self._min_distance( dist, visited )
@@ -97,7 +97,7 @@ class Graph_adj_matrix(object):
             # update distance for adjacent vertices of current vertex,
             # only if new distance is shorter than the current distance
             # and vertex is not in shortest path tree
-            for v in range( self.no_of_vertices ):
+            for v in range( self.vertices ):
                 newDistance = dist[u] + self.adjacency_matrix[u][v]
                 if self.adjacency_matrix[u][v] > 0 and visited[v] == False and \
                     newDistance < dist[v]:
@@ -109,7 +109,7 @@ class Graph_adj_matrix(object):
     def _min_distance( self, dist, visited ):
         min_dist = float('inf')
         min_index = 0
-        for v in range(self.no_of_vertices):
+        for v in range(self.vertices):
             if dist[v] < min_dist and visited[v] == False:
                 min_dist = dist[v]
                 min_index = v
@@ -120,12 +120,12 @@ class Graph_adj_matrix(object):
     def bellman_ford_algorithm( self, src ):
         src = self.vertex_id_to_num_map[src]
         # 1. initialize distances from src to all other vertices as INFINITE
-        dist = [float( 'inf' )] * self.no_of_vertices
+        dist = [float( 'inf' )] * self.vertices
         dist[src] = 0
 
         # 2. Relax all edges | V | - 1 times.
         # A simple shortest path from src to any other vertex can have at-most |V| - 1 edges
-        for i in range( self.no_of_vertices - 1 ):
+        for i in range( self.vertices - 1 ):
             # Update dist value and parent index of the adjacent vertices of the picked vertex.
             # Consider only those vertices which are still in queue
             for u, v, w in self.get_edges():
@@ -146,16 +146,16 @@ class Graph_adj_matrix(object):
     # for unweighted graphs we consider all weights are equal
     def prims_algorithm( self ):
         # used to pick the minimum weight edge
-        min_weight_edge = [float('inf')] * self.no_of_vertices
-        parnt = [-1] * self.no_of_vertices
+        min_weight_edge = [float('inf')] * self.vertices
+        parnt = [-1] * self.vertices
 
-        visited = [False] * self.no_of_vertices
+        visited = [False] * self.vertices
 
         # make vertex 0 as 0 so that it is picked as first vertex
         min_weight_edge[0] = 0
         parnt[0] = -1
 
-        for i in range(self.no_of_vertices):
+        for i in range(self.vertices):
             # find min distance vertex from vertices not yet processed
             # u is always equal to source in first iteration
             u = self._min_distance( min_weight_edge, visited )
@@ -166,13 +166,13 @@ class Graph_adj_matrix(object):
             # update distance for adjacent vertices of current vertex,
             # only if new distance is shorter than the current distance
             # and vertex is not in shortest path tree
-            for v in range( self.no_of_vertices ):
+            for v in range( self.vertices ):
                 if 0 < self.adjacency_matrix[u][v] < min_weight_edge[v] and visited[v] == False:
                     min_weight_edge[v] = self.adjacency_matrix[u][v]
                     parnt[v] = u
 
         result = []
-        for i in range(1, self.no_of_vertices):
+        for i in range(1, self.vertices):
             result.append('edge'+str(parnt[i])+'-'+str(i)+'->weight'+str(self.adjacency_matrix[i][parnt[i]]))
 
         return result
@@ -184,7 +184,7 @@ class Graph_adj_matrix(object):
     # Given a graph as adjacency matrix, print all simple paths from source to destination in graph
     def print_all_paths_src_to_dst( self, src, dst ):
         # Mark all the vertices as not visited
-        visited = [False] * self.no_of_vertices
+        visited = [False] * self.vertices
 
         # Create an array to store paths
         path = []
@@ -202,7 +202,7 @@ class Graph_adj_matrix(object):
             print(path)
         else:
             # recur for all vertices adjacent to current vertex
-            for i in range(self.no_of_vertices):
+            for i in range(self.vertices):
                 if not visited[i]:
                     self._print_all_paths_src_to_dst(i, dst, visited, path)
 
@@ -213,21 +213,21 @@ class Graph_adj_matrix(object):
     # find shortest path between every pair of vertices in graph. Assume graph has negative edges but not -ve cycle
     # Floyd-Warshall algorithm , time O(n^3)
     def floyd_warshall_algorithm( self ):
-        tmp = [float('inf')* self.no_of_vertices for x in range(self.no_of_vertices)]
+        tmp = [float('inf')* self.vertices for x in range(self.vertices)]
         # create tmp array according to the given graph
         # d[v][u] = infinity for each pair (v,u)
         # d[v][v] = 0 for each vertex v
 
-        for k in range( self.no_of_vertices ):
-            for i in range( self.no_of_vertices ):
-                for j in range( self.no_of_vertices ):
+        for k in range( self.vertices ):
+            for i in range( self.vertices ):
+                for j in range( self.vertices ):
                     tmp[i][j] = min( tmp[i][j], tmp[i][k] + tmp[k][j] )
 
         return tmp
 
     # find a cycle in undirected graph that visits every vertex (Hamiltonian cycle problem) using backtracking
     def detect_hamiltonian_cycle_undirected_graph( self ):
-        path = [-1] * self.no_of_vertices
+        path = [-1] * self.vertices
 
         # put vertex 0 as first vertex in path.
         # If there is a Hamiltonian Cycle, then path can be started from any point of cycle as the graph is undirected
@@ -244,7 +244,7 @@ class Graph_adj_matrix(object):
 
     def _detect_hamiltonian_cycle_undirected_graph( self, path, position ):
         # base case: if all vertices are included in path
-        if position == self.no_of_vertices:
+        if position == self.vertices:
             # Last vertex must be adjacent to the first vertex in path to make a cycle
             if self.adjacency_matrix[path[position-1]][path[0]] == 1:
                 return True
@@ -252,7 +252,7 @@ class Graph_adj_matrix(object):
                 return False
 
         # try different vertices as a next candidate in Hamiltonian cycle, except 0 because we took 0 as starting point
-        for v in range(1, self.no_of_vertices):
+        for v in range(1, self.vertices):
             if self.is_safe(v, position, path):
                 path[position] = v
                 if self._detect_hamiltonian_cycle_undirected_graph(path, position+1):
@@ -300,15 +300,15 @@ class Graph_adj_list(object):
             return None
         # key = id , value = vertex node of that id
         self.vertices_list = defaultdict(defaultvalue)
-        self.no_of_vertices = 0
+        self.vertices = 0
 
     def add_vertex( self, id ):
-        self.no_of_vertices += 1
+        self.vertices += 1
         newVertex = adj_list_vertex(id)
         self.vertices_list[id] = newVertex
 
     def remove_vertex( self, id ):
-        self.no_of_vertices -= 1
+        self.vertices -= 1
         if id in self.vertices_list.keys():
             del self.vertices_list[id]
 
