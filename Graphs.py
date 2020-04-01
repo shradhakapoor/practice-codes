@@ -38,7 +38,7 @@ class Graph_adj_matrix(object):
     def __init__(self, vertices):
         self.vertices = vertices
         self.adjacency_matrix = [[-1] * vertices for x in range(vertices)]
-        self.vertices_list = [0] * vertices
+        self.vertex_list = [0] * vertices
 
         def defaultvalue(): # return value for defaultdict if key is not present
             return -1
@@ -48,7 +48,7 @@ class Graph_adj_matrix(object):
     def add_vertex( self, vertex_num, vertex_id ):
         if 0 <= vertex_num < self.vertices:
             self.vertex_id_to_num_map[vertex_id] = vertex_num
-            self.vertices_list[vertex_num] = vertex_id
+            self.vertex_list[vertex_num] = vertex_id
 
     def add_edge( self, frm, to, cost = 0 ):
         frm_num = self.vertex_id_to_num_map[frm]
@@ -62,14 +62,14 @@ class Graph_adj_matrix(object):
         self.adjacency_matrix[frm_num][to_num] = cost
 
     def get_vertices( self ):
-        return self.vertices_list
+        return self.vertex_list
 
     def get_edges( self ):
         edges = []
         for i in range(self.vertices):
             for j in range(self.vertices):
                 if self.adjacency_matrix[i][j] != -1:
-                    edges.append((self.vertices_list[i], self.vertices_list[j], self.adjacency_matrix[i][j]))
+                    edges.append((self.vertex_list[i], self.vertex_list[j], self.adjacency_matrix[i][j]))
 
         return edges
 
@@ -237,8 +237,8 @@ class Graph_adj_matrix(object):
             return False
 
         for vertex in path:
-            print(self.vertices_list[vertex], end=', ')
-        print(self.vertices_list[path[0]], end='\n')
+            print(self.vertex_list[vertex], end=', ')
+        print(self.vertex_list[path[0]], end='\n')
 
         return True
 
@@ -299,46 +299,46 @@ class Graph_adj_list(object):
         def defaultvalue():
             return None
         # key = id , value = vertex node of that id
-        self.vertices_list = defaultdict(defaultvalue)
+        self.vertex_list = defaultdict(defaultvalue)
         self.vertices = 0
 
     def add_vertex( self, id ):
         self.vertices += 1
         newVertex = adj_list_vertex(id)
-        self.vertices_list[id] = newVertex
+        self.vertex_list[id] = newVertex
 
     def remove_vertex( self, id ):
         self.vertices -= 1
-        if id in self.vertices_list.keys():
-            del self.vertices_list[id]
+        if id in self.vertex_list.keys():
+            del self.vertex_list[id]
 
     def get_vertex( self, v ):
-        if v in self.vertices_list:
-            return self.vertices_list[v]
+        if v in self.vertex_list:
+            return self.vertex_list[v]
         else:
             return
 
     def add_edge( self, frm, to, cost =0 ):
-        if frm not in self.vertices_list:
+        if frm not in self.vertex_list:
             self.add_vertex(frm)
-        if to not in self.vertices_list:
+        if to not in self.vertex_list:
             self.add_vertex(to)
-        self.vertices_list[frm].add_neighbor(self.vertices_list[to], cost)
-        self.vertices_list[to].add_neighbor( self.vertices_list[frm], cost) # for undirected graphs only
+        self.vertex_list[frm].add_neighbor(self.vertex_list[to], cost)
+        self.vertex_list[to].add_neighbor( self.vertex_list[frm], cost) # for undirected graphs only
 
     def add_edge_directed_graph( self, frm, to, cost = 0 ):
-        if frm not in self.vertices_list:
+        if frm not in self.vertex_list:
             self.add_vertex(frm)
-        if to not in self.vertices_list:
+        if to not in self.vertex_list:
             self.add_vertex(to)
-        self.vertices_list[frm].add_neighbor(self.vertices_list[to], cost)
+        self.vertex_list[frm].add_neighbor(self.vertex_list[to], cost)
 
     def get_vertices( self ):
-        return self.vertices_list.keys()
+        return self.vertex_list.keys()
 
     def __iter__(self):
         # iter creates an object that can be iterated one at a time
-        return iter(self.vertices_list.values())
+        return iter(self.vertex_list.values())
 
     # graph traversal - Depth First Search, time O(V+E)
     def depth_first_search( self):
@@ -348,7 +348,7 @@ class Graph_adj_list(object):
         visited = defaultdict(defaultvalue)
 
         # this loop is to handle the disconnected vertices of graph
-        for id in self.vertices_list.keys():
+        for id in self.vertex_list.keys():
             if not visited[id]:
                 self._depth_first_search(id, visited)
 
@@ -359,7 +359,7 @@ class Graph_adj_list(object):
         print(curr_id, end= ', ')
 
         # recur for all vertices adjacent to the curr_id
-        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+        neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
         for node in neighbor_nodes:
             if not visited[node.id]:
@@ -377,7 +377,7 @@ class Graph_adj_list(object):
         queue = Queue()
 
         # this loop is to handle the disconnected vertices of graph
-        for id in self.vertices_list.keys():
+        for id in self.vertex_list.keys():
             # if an id is not visited then BFS through it
             if not visited[id]:
                 visited[id] = True
@@ -389,7 +389,7 @@ class Graph_adj_list(object):
                     print(curr_id, end = ', ')
 
                     # get adj vertices of curr_id. If any id is found with visited False then mark it and enqueue
-                    neighbor_nodes = self.vertices_list[curr_id].connectedTo
+                    neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
                     for node in neighbor_nodes:
                         if not visited[node.id]:
@@ -407,7 +407,7 @@ class Graph_adj_list(object):
         stack = Stack()
 
         # this loop is to handle the disconnected vertices of graph
-        for id in self.vertices_list.keys():
+        for id in self.vertex_list.keys():
             if not visited[id]:
                 self._topological_sort_DAG(id, visited, stack)
 
@@ -418,7 +418,7 @@ class Graph_adj_list(object):
         visited[curr_id] = True
 
         # recur for all adjacent/ neighbor vertices
-        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+        neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
         for node in neighbor_nodes:
             if not visited[node.id]:
@@ -452,7 +452,7 @@ class Graph_adj_list(object):
         while not queue.is_empty():
             curr_id = queue.dequeue()
             # get adj vertices of curr_id. If any id is found with visited False then mark it and enqueue
-            neighbor_nodes = self.vertices_list[curr_id].connectedTo
+            neighbor_nodes = self.vertex_list[curr_id].connectedTo
             for node in neighbor_nodes:
                 if not visited[node.id]:
                     queue.enqueue( node.id )
@@ -479,7 +479,7 @@ class Graph_adj_list(object):
         stack = Stack()
 
         # this loop is to handle the disconnected vertices of graph
-        for id in self.vertices_list.keys():
+        for id in self.vertex_list.keys():
             if not visited[id]:
                 if self._detect_cycle_directed_graph(id, visited, stack):
                     return True
@@ -493,7 +493,7 @@ class Graph_adj_list(object):
         stack.push(curr_id)
 
         # recur for all adjacent/ neighbor vertices
-        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+        neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
         for node in neighbor_nodes:
             # if any neighbor is visited or it is in stack then graph is cyclic
@@ -515,7 +515,7 @@ class Graph_adj_list(object):
         visited = defaultdict( defaultvalue )
 
         # this loop is to handle the disconnected vertices of graph
-        for id in self.vertices_list.keys():
+        for id in self.vertex_list.keys():
             if not visited[id]:
                 if self._detect_cycle_undirected_graph( id, visited, -1 ):
                     return True
@@ -526,7 +526,7 @@ class Graph_adj_list(object):
         visited[curr_id] = True
 
         # recur for all adjacent/ neighbor vertices
-        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+        neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
         for node in neighbor_nodes:
             # if a neighbor node is not visited then recurse on it
@@ -564,9 +564,9 @@ class Graph_adj_list(object):
         low_time = defaultdict( dvalue )
 
         # find articulation points in DFS tree rooted at vertex i
-        for id in self.vertices_list:
+        for id in self.vertex_list:
             if not visited[id]:
-                self._articulation_points(self.vertices_list[id], visited, articulation_points, parnt, low_time, discovery_time)
+                self._articulation_points(self.vertex_list[id], visited, articulation_points, parnt, low_time, discovery_time)
 
         for index, value in enumerate( articulation_points):
             if value: print( index, end=', ' )
@@ -591,7 +591,7 @@ class Graph_adj_list(object):
             if not visited[v]:
                 parnt[v] = curr
                 children += 1
-                self._articulation_points( self.vertices_list[v], visited, articulation_points,
+                self._articulation_points( self.vertex_list[v], visited, articulation_points,
                                            parnt, low_time, discovery_time )
 
                 # if the subtree rooted with v has a connection to one of the ancestors of curr
@@ -630,7 +630,7 @@ class Graph_adj_list(object):
         visited = defaultdict( defaultvalue )
 
         # push vertices in stack according to their finishing time
-        for id in self.vertices_list:
+        for id in self.vertex_list:
             if not visited[id]:
                 self._push_vertices_in_order(id, visited, stack)
 
@@ -654,7 +654,7 @@ class Graph_adj_list(object):
         visited[curr_id] = True
 
         # recur for all adjacent/ neighbor vertices
-        neighbor_nodes = self.vertices_list[curr_id].connectedTo
+        neighbor_nodes = self.vertex_list[curr_id].connectedTo
 
         for node in neighbor_nodes:
             # if a neighbor node is not visited then recurse on it
@@ -667,8 +667,8 @@ class Graph_adj_list(object):
         g = Graph_adj_list()
 
         # recur for all adjacent/ neighbor vertices
-        for id in self.vertices_list:
-            neighbor_nodes = self.vertices_list[id].connectedTo
+        for id in self.vertex_list:
+            neighbor_nodes = self.vertex_list[id].connectedTo
             for node in neighbor_nodes:
                 g.add_edge_directed_graph(node.id, id)
 
@@ -681,7 +681,7 @@ class Graph_adj_list(object):
             return False
         visited = defaultdict( defaultvalue )
         count = 0
-        for id in self.vertices_list:
+        for id in self.vertex_list:
             if not visited[id]:
                 # print all reachable vertices from id
                 self._depth_first_search(id, visited)
