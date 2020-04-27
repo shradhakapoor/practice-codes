@@ -169,31 +169,33 @@ print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 # best: O(n.logn), worst: O(n^2), average: O(n.logn), worst space: O(1)
 # sort an array of 0's, 1's and 2's. put all o first, then 1 and all 2 in last. (quick sort)
 
-# def quick_sort(inp, start, end):
-#     if start < end:
-#         # inp[partioning_index] will now be at it's right place
-#         partioning_index = _partition(inp, start, end)
-#
-#         quick_sort(inp, start, partioning_index-1)
-#         quick_sort(inp, partioning_index+1, end)
-#
-#     return inp
-#
-#
-# def _partition(inp, start, end):
-#     pivot = inp[end]
-#     # index of smaller element
-#     i = start - 1
-#
-#     for j in range(start, end+1):
-#         # if current element is <= pivot
-#         if inp[j] <= pivot:
-#             # increment index of smaller element
-#             i += 1
-#             if i < j:
-#                 inp[i], inp[j] = inp[j], inp[i]
-#
-#     return i
+def quick_sort_right(inp, start, end):
+    if start < end:
+        # inp[partioning_index] will now be at it's right place
+        partioning_index = _partition(inp, start, end)
+
+        quick_sort_right(inp, start, partioning_index-1)
+        quick_sort_right(inp, partioning_index+1, end)
+
+    return inp
+
+
+def _partition(inp, start, end):
+    pivot = inp[end]
+    # index of smaller element
+    i = start - 1
+
+    for j in range(start, end+1):
+        # if current element is <= pivot
+        if inp[j] <= pivot:
+            # increment index of smaller element
+            i += 1
+            if i < j:
+                inp[i], inp[j] = inp[j], inp[i]
+
+    return i
+
+print('Quick sort in ascending order:', quick_sort_right([64, 34, 25, 12, 22, 11, 90], 0, 6))
 
 def quick_sort(inp, start, end):
     if start < end:
