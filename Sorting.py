@@ -172,10 +172,10 @@ print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 def quick_sort_right(inp, start, end):
     if start < end:
         # inp[partioning_index] will now be at it's right place
-        partioning_index = _partition(inp, start, end)
+        pivot = _partition(inp, start, end)
 
-        quick_sort_right(inp, start, partioning_index-1)
-        quick_sort_right(inp, partioning_index+1, end)
+        quick_sort_right(inp, start, pivot-1)
+        quick_sort_right(inp, pivot+1, end)
 
     return inp
 
@@ -195,7 +195,7 @@ def _partition(inp, start, end):
 
     return i
 
-print('Quick sort in ascending order:', quick_sort_right([64, 34, 25, 12, 22, 11, 90], 0, 6))
+print('Quick sort using right as pivot in ascending order:', quick_sort_right([64, 34, 25, 12, 22, 11, 90], 0, 6))
 
 def quick_sort(inp, start, end):
     if start < end:
@@ -222,7 +222,7 @@ def quick_sort(inp, start, end):
 
     return inp
 
-print('Quick sort in ascending order:', quick_sort([64, 34, 25, 12, 22, 11, 90], 0, 6))
+print('Quick sort using mid as pivot in ascending order:', quick_sort([64, 34, 25, 12, 22, 11, 90], 0, 6))
 
 
 # Tree Sort
