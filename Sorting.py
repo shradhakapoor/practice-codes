@@ -171,7 +171,7 @@ print( 'Heap Sort in ascending order:', minH.heap_sort_ascending_order() )
 
 def quick_sort_right(inp, start, end):
     if start < end:
-        # inp[partioning_index] will now be at it's right place
+        # inp[pivot] will now be at it's right place
         pivot = _partition(inp, start, end)
 
         quick_sort_right(inp, start, pivot-1)
