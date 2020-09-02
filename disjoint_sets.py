@@ -9,14 +9,11 @@ class Disjoint_Sets(object):
         self.parent[0] = None
 
     def find_root_of_vertex( self, x ):
-        # if value at index of x is not -1 then it is not the parent of itself
-        if self.parent[x] > 0:
-            # find the parent of value at x, by recursively calling find
-            # move the vertex directly under the root of this set
-            self.parent[x] = self.find_root_of_vertex(self.parent[x])
-            return self.parent[x]
-        else:
+        # if value at index of x is -1 then it is the parent of itself
+        if self.parent[x] < 0:
             return x
+        else: # find the parent of value at x, by recursively calling find
+            return self.find_root_of_vertex(self.parent[x])
 
     # unites the sets that contain vertex x and y
     def union_by_rank( self, x, y ):
