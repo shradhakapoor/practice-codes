@@ -31,7 +31,7 @@ class Disjoint_Sets(object):
             self.parent[x] = y_root
             self.parent[y_root] -= 1
         # else if x's rank >= y's rank
-        elif abs(self.parent[x_root]) >= abs(self.parent[y_root]):
+        else:
             # move y under x
             self.parent[y] = x_root
             self.parent[x_root] -= 1
