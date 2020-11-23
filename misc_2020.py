@@ -81,6 +81,8 @@ print('largestItemAssociation:',largestItemAssociation(input))
 
 # DP 15 Tushar roy
 # Maximum sum rectangular submatrix in 2D matrix, using 2D kadane's solution
+# kadane take O(N) time
+# time O(ncols*ncols*nrows) space O(nrows)
 class Result():
     def __init__(self, maxSum=0, maxleft=0, maxright=0, maxup=0, maxdown=0):
         self.maxSum = maxSum
