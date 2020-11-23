@@ -78,3 +78,59 @@ input = [[1, 0],
          [0, 4],
          [2, 5]]
 print('largestItemAssociation:',largestItemAssociation(input))
+
+# DP 15 Tushar roy
+# Maximum sum rectangular submatrix in 2D matrix, using 2D kadane's solution
+class Result():
+    def __init__(self, maxSum=0, maxleft=0, maxright=0, maxup=0, maxdown=0):
+        self.maxSum = maxSum
+        self.maxleft = maxleft
+        self.maxright = maxright
+        self.maxup = maxup
+        self.maxdown = maxdown
+
+    def recSubmatrixSum(self, grid):
+        nrows= len(grid)
+        ncols = len(grid[0])
+        tmp = [0]*nrows
+        result = Result()
+        for left in range(ncols):
+            for i in range(nrows):
+                tmp[i] = 0
+            for right in range(left, ncols):
+                for i in range(nrows):
+                    tmp[i] += grid[i][right]
+                kadaneResult = self.kadane(tmp) # kadaneResult = [maxSum, start, end]
+                if kadaneResult[0] > result.maxSum:
+                    result.maxSum = kadaneResult[0]
+                    result.maxleft = left
+                    result.maxright = right
+                    result.maxup = kadaneResult[1]
+                    result.maxdown = kadaneResult[2]
+
+        return result
+
+    def kadane(self, arr):
+        max = 0
+        maxStart = -1
+        maxEnd = -1
+        currStart = 0
+        maxSoFar = 0
+        for i in range(len(arr)):
+            maxSoFar += arr[i]
+            if maxSoFar < 0:
+                maxSoFar = 0
+                currStart = i+1
+            if max < maxSoFar:
+                maxStart = currStart
+                maxEnd = i
+                max = maxSoFar
+
+        return [max,maxStart, maxEnd]
+
+input = [[2,  1, -3, -4,  5],
+        [0,  6,  3,  4,  1],
+        [2, -2, -1,  4, -5],
+        [-3,  3,  1,  0,  3]]
+result = Result().recSubmatrixSum(input)
+print(result.maxSum , result.maxleft ,result.maxright ,result.maxup ,result.maxdown )

@@ -252,9 +252,7 @@ def counting_sort(inp):
     min_value = min(inp)
     max_value = max(inp)
     length = len(inp)
-    def defaultvalue():
-        return 0
-    temp = defaultdict(defaultvalue)
+    temp = defaultdict(int)
 
     for i in range(length):
         # count the occurence of each integer in input
