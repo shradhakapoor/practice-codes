@@ -165,3 +165,24 @@ jobs[3] = Job(6, 7, 4)
 jobs[4] = Job(5, 8, 11)
 jobs[5] = Job(7, 9, 2)
 print(weightedSchedulingProfit(jobs))
+
+# DP 18 Tushar roy
+# longest common substring
+def longestCommonSubstring(string1, string2):
+    T = [[0]*(len(string1)+1) for _ in range(len(string2)+1)]
+    maxnumber = 0
+    x=y=0
+    for i in range(1, len(string1)):
+        for j in range(1, len(string2)):
+            if string1[i-1]== string2[j-1]:
+                T[i][j] = T[i-1][j-1] + 1
+                if maxnumber < T[i][j]:
+                    maxnumber = T[i][j]
+    return maxnumber
+
+print(longestCommonSubstring('abcdaf', 'zbcdf')) # returns length of longest common substring
+
+
+
+
+
