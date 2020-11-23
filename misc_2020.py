@@ -136,3 +136,32 @@ input = [[2,  1, -3, -4,  5],
         [-3,  3,  1,  0,  3]]
 result = Result().recSubmatrixSum(input)
 print(result.maxSum , result.maxleft ,result.maxright ,result.maxup ,result.maxdown )
+
+# DP 17 Tushar roy
+# given jobs with start and end time and profit on finishing the job. what max profit can you make when finish all jobs?
+class Job():
+    def __init__(self, s=0, e=0, profit =0):
+        self.start= s
+        self.end = e
+        self.profit = profit
+
+def weightedSchedulingProfit(jobs):
+    T = [0]*len(jobs)
+    jobs.sort(key = lambda x : x.end)
+    T[0] = jobs[0].profit
+    for i in range(len(jobs)): # initialise
+        T[i] = max(T[i-1], jobs[i].profit)
+        for j in range(i-1, -1, -1):
+            if jobs[j].end <= jobs[i].start: # do not overlap
+                T[i] = max(T[i], jobs[i].profit+T[j])
+                break
+    return max(T)
+
+jobs = [Job()]*9
+jobs[0] = Job(1, 3, 5)
+jobs[1] = Job(2, 5, 6)
+jobs[2] = Job(4, 6, 5)
+jobs[3] = Job(6, 7, 4)
+jobs[4] = Job(5, 8, 11)
+jobs[5] = Job(7, 9, 2)
+print(weightedSchedulingProfit(jobs))
