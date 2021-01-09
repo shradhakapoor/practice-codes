@@ -873,7 +873,7 @@ if __name__ == '__main__':
     print('count of connected components is:',graph5.number_of_connected_components())
 
 
-    # Dijkstra algorithm-- find shortest path from single source to all other nodes
+    # Dijkstra algorithm-- find shortest path (on a weighted graph) from single source to all other nodes
     # time O(V**2), if minheap is used then time O(E log V)
     # space O(V)
     # The program is for adjacency matrix representation of the graph
