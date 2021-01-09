@@ -182,6 +182,27 @@ def longestCommonSubstring(string1, string2):
 
 print(longestCommonSubstring('abcdaf', 'zbcdf')) # returns length of longest common substring
 
+# Implement the Unix find command as an API. Given a path and criteria, print the names of files in the path matching
+# the criteria.
+#
+# Example:
+# •	Find all files with size > 5MB
+# •	Find all XML files
+# •	Find all files modified less than a week ago
+#
+# Milestones:
+# 1.	Able to understand that a File API is needed. Candidate will then be given a File API with helper methods
+# (isDirectory, getSize, getChildren, getLastModifiedDate, etc).
+# 2.	Come up with basic FileFind API for a single directory. Then able to extend it to perform recursive search.
+# 3.	Implement a single criterion a time. Able to understand that various criteria can be abstracted behind a
+# FileMatcher interface. Implement the interface and implementations
+# 4.	Able to extend from a single criterion at a time to combining criteria (AND/OR)
+# 5.	Able to follow symlinks
+#
+# SDE2 candidate should be able to hit first 3 milestone with minimal guidance and milestone 4 with some help.
+# Milestone 5 is a stretch goal for extra signal, but optional.
+#
+
 
 
 
