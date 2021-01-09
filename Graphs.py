@@ -880,8 +880,8 @@ if __name__ == '__main__':
         dist = [float('inf')] * V
         dist[source] = 0
         visited = set()
-        for vertex in range(V):
-            # Pick the minimum distance vertex from the set of vertices not yet visited.
+        for _ in range(V):
+            # Pick the minimum distance vertex from vertices not yet visited.
             # u is always equal to src in first iteration
             u = minimumDistance(dist, visited, graph)
             visited.add(u)
@@ -890,8 +890,7 @@ if __name__ == '__main__':
                     dist[v] = dist[u] + graph[u][v]
         return dist
 
-
-    # find the vertex with minimum distance value, from the set of vertices not yet visited
+    # find the vertex with minimum distance value, from vertices not yet visited
     def minimumDistance(dist, visited, graph):
         minDistance = float('inf')
         min_index = 0
