@@ -871,3 +871,51 @@ if __name__ == '__main__':
     graph5.add_edge( 'd', 'e', 30 )
     print('\nConnected components in undirected adj list graph:', end='')
     print('count of connected components is:',graph5.number_of_connected_components())
+
+
+    # Dijkstra algorithm-- find shortest path from singlew source to all other nodes
+    # The program is for adjacency matrix representation of the graph
+    def dijkstra(graph, source):
+        V = len(graph)  # number of vertices
+        dist = [float('inf')] * V
+        dist[source] = 0
+        visited = set()
+        for vertex in range(V):
+            # Pick the minimum distance vertex from the set of vertices not yet visited.
+            # u is always equal to src in first iteration
+            u = minimumDistance(dist, visited, graph)
+            visited.add(u)
+            for v in range(V):
+                if graph[u][v] > 0 and v not in visited and dist[v] > dist[u] + graph[u][v]:
+                    dist[v] = dist[u] + graph[u][v]
+        return dist
+
+
+    # find the vertex with minimum distance value, from the set of vertices not yet visited
+    def minimumDistance(dist, visited, graph):
+        minDistance = float('inf')
+        min_index = 0
+        for v in range(len(graph)):
+            if dist[v] < minDistance and v not in visited:
+                minDistance = dist[v]
+                min_index = v
+        return min_index
+
+
+    # Driver program
+    graph = [[0, 4, 0, 0, 0, 0, 0, 8, 0],
+             [4, 0, 8, 0, 0, 0, 0, 11, 0],
+             [0, 8, 0, 7, 0, 4, 0, 0, 2],
+             [0, 0, 7, 0, 9, 14, 0, 0, 0],
+             [0, 0, 0, 9, 0, 10, 0, 0, 0],
+             [0, 0, 4, 14, 10, 0, 2, 0, 0],
+             [0, 0, 0, 0, 0, 2, 0, 1, 6],
+             [8, 11, 0, 0, 0, 0, 1, 0, 7],
+             [0, 0, 2, 0, 0, 0, 6, 7, 0]
+             ]
+    source = 1
+    dist = dijkstra(graph, source)
+    print('-----------DIJKSTRA ALGORITHM---------')
+    for node in range(len(graph)):
+        print('from', source, 'to', node, 'in', dist[node])
+    print('---------------------------------')
