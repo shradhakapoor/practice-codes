@@ -1,4 +1,4 @@
-from collections import defaultdict
+import collections
 import os
 __path__=[os.path.dirname(os.path.abspath(__file__))]
 from . import binary_heaps
@@ -40,10 +40,10 @@ class Graph_adj_matrix(object):
         self.adjacency_matrix = [[-1] * vertices for x in range(vertices)]
         self.adj_list = [0] * vertices
 
-        def defaultvalue(): # return value for defaultdict if key is not present
+        def defaultvalue(): # return value for collections.defaultdict if key is not present
             return -1
         # ex: a->0, b->1, c->2...
-        self.vertex_id_to_num_map = defaultdict(defaultvalue)
+        self.vertex_id_to_num_map = collections.defaultdict(defaultvalue)
 
     def add_vertex( self, vertex_num, vertex_id ):
         if 0 <= vertex_num < self.vertices:
@@ -282,7 +282,7 @@ class adj_list_vertex(object):
         def defaultvalue():
             return -1
         # key = neighbor_id, value = cost
-        self.connectedTo = defaultdict(defaultvalue)
+        self.connectedTo = collections.defaultdict(defaultvalue)
 
     def add_neighbor( self, neighbor, cost ):
         self.connectedTo[neighbor] = cost
@@ -299,7 +299,7 @@ class Graph_adj_list(object):
         def defaultvalue():
             return None
         # key = id , value = vertex node of that id
-        self.adj_list = defaultdict(defaultvalue)
+        self.adj_list = collections.defaultdict(defaultvalue)
         self.vertices = 0
 
     def add_vertex( self, id ):
@@ -345,7 +345,7 @@ class Graph_adj_list(object):
         def defaultvalue():
             return False
         # key= id, value= True/False
-        visited = defaultdict(defaultvalue)
+        visited = collections.defaultdict(defaultvalue)
 
         # this loop is to handle the disconnected vertices of graph
         for id in self.adj_list.keys():
@@ -371,7 +371,7 @@ class Graph_adj_list(object):
             return False
 
         # key= id, value= True/False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
 
         # queue for BFS
         queue = Queue()
@@ -403,7 +403,7 @@ class Graph_adj_list(object):
             return False
 
         # key= id, value= True/False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
         stack = Stack()
 
         # this loop is to handle the disconnected vertices of graph
@@ -432,17 +432,17 @@ class Graph_adj_list(object):
 
         def defaultvalue():
             return False
-        visited = defaultdict(defaultvalue)
+        visited = collections.defaultdict(defaultvalue)
 
         # key = id, value = shortest distance from source to this vertex
         def defvalue():
             return 0
-        distance = defaultdict(defvalue)
+        distance = collections.defaultdict(defvalue)
 
         # key = vertex id, value = parent to this vertex
         def defaultval():
             return None
-        parent = defaultdict(defaultval)
+        parent = collections.defaultdict(defaultval)
 
         # queue for bfs
         queue = Queue()
@@ -474,7 +474,7 @@ class Graph_adj_list(object):
         def defaultvalue():
             return False
         # key= id, value= True/False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
 
         stack = Stack()
 
@@ -512,7 +512,7 @@ class Graph_adj_list(object):
         def defaultvalue():
             return False
         # key= id, value= True/False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
 
         # this loop is to handle the disconnected vertices of graph
         for id in self.adj_list.keys():
@@ -545,23 +545,23 @@ class Graph_adj_list(object):
         # mark all vertices as not visited
         def defaultvalue():
             return False
-        visited = defaultdict(defaultvalue)
+        visited = collections.defaultdict(defaultvalue)
 
         # store articulation points
-        articulation_points = defaultdict( defaultvalue )
+        articulation_points = collections.defaultdict( defaultvalue )
 
         # key = vertex id, value = parent to this vertex
         def defaultval():
             return None
-        parnt = defaultdict( defaultval )
+        parnt = collections.defaultdict( defaultval )
 
         # discovery time of visited vertices
         def dvalue():
             return float('inf')
-        discovery_time = defaultdict(dvalue)
+        discovery_time = collections.defaultdict(dvalue)
 
         # low time
-        low_time = defaultdict( dvalue )
+        low_time = collections.defaultdict( dvalue )
 
         # find articulation points in DFS tree rooted at vertex i
         for id in self.adj_list:
@@ -627,7 +627,7 @@ class Graph_adj_list(object):
         # mark all vertices as not visited, for first DFS
         def defaultvalue():
             return False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
 
         # push vertices in stack according to their finishing time
         for id in self.adj_list:
@@ -640,7 +640,7 @@ class Graph_adj_list(object):
         # Mark all the vertices as not visited, for second DFS
         def defaultvalue():
             return False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
 
         # Now process all vertices in order defined by Stack
         while not stack.is_empty():
@@ -679,7 +679,7 @@ class Graph_adj_list(object):
         # mark all vertices as not visited
         def defaultvalue():
             return False
-        visited = defaultdict( defaultvalue )
+        visited = collections.defaultdict( defaultvalue )
         count = 0
         for id in self.adj_list:
             if not visited[id]:
@@ -920,3 +920,76 @@ if __name__ == '__main__':
     for node in range(len(graph)):
         print('from', source, 'to', node, 'in', dist[node])
     print('---------------------------------')
+
+# given a matrix of 0 and 1, find path from source to destination .1 is open to go, 0 is blocker.
+
+# q1: find if there is a path possible from source to destination
+def isPath(matrix, s, d):
+    visited = set()
+    exists = False # flag to indicate whether path exists or not
+    for r in range(len(matrix)):
+        for c in range(len(matrix[0])):
+            # if matrix r,c is source and is not visited, then find path from r,c to other nodes
+            if (r,c) == s and (r,c) not in visited:
+                if doesPathExist(matrix, r,c, visited, d):
+                    exists = True
+                    break
+    if exists:
+        print('Yes path exists')
+    else:
+        print('No path doesnt exist')
+
+def doesPathExist(matrix, r,c, visited, d):
+    if 0 <= r < len(matrix) and 0 <= c < len(matrix[0]) and matrix[r][c] != 0 and (r,c) not in visited:
+        visited.add((r,c))
+        if (r,c) == d:
+            return True
+        for newr, newc in [(r+1,c), (r-1,c), (r, c+1), (r, c-1)]:
+            if doesPathExist(matrix, newr, newc, visited, d):
+                return True
+    return False
+
+# q2: find shortest path from s to d by BFS
+class Node(object):
+    def __init__(self, r,c, parent= None):
+        self.r = r
+        self.c = c
+        self.parent = parent
+
+def findShortestPath(matrix, s, d):
+    nrows = len(matrix)
+    ncols = len(matrix[0])
+    q = collections.deque()
+    source = Node(s[0], s[1], None) # (r,c, parent)
+    q.append(source)
+    while q:
+        node = q.popleft()
+        r = node.r
+        c = node.c
+        if (r, c)== d:
+            return node
+        matrix[r][c] = 0 # mark it as blocked because its visited
+        for newr, newc in [(r+1,c), (r-1,c), (r, c+1), (r, c-1)]:
+            if 0 <= newr < nrows and 0 <= newc < ncols and matrix[newr][newc] != 0:
+                q.append(Node(newr, newc, node))
+    return -1 # if path not possible
+
+def printPath(node):
+    if node.parent == None:
+        return 0
+    length = printPath(node.parent)
+    print((node.r,node.c), end= ', ')
+    return length+1
+
+# q3: find all paths from source to destination
+
+
+# driver code
+if __name__ == "__main__":
+    matrix = [[1,1,0,0],
+              [1,1,1,1],
+              [1,0,0,1]]
+    isPath(matrix, (0,0), (2,3))
+    lastNode = findShortestPath(matrix, (0,0), (2,3))
+    if lastNode == -1: print('No path possible')
+    else: printPath(lastNode)
